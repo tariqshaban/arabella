@@ -1,0 +1,17 @@
+{
+  "app_name": "Arabella",
+  "nav_drawer": {
+    "drawer_background": {
+      "just": {
+        "name": "Jordan University of Science & Technology",
+        "description": "Established at 1986"
+      },
+      "yarmouk_university": {
+        "name": "Yarmouk University",
+        "description": "Established at 1976"
+      }
+    },
+    "dark_theme": "Dark Theme",
+    "language": "Language"
+  }
+}

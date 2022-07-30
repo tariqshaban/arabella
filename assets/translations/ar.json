@@ -1,0 +1,17 @@
+{
+  "app_name": "أرابيلا",
+  "nav_drawer": {
+    "drawer_background": {
+      "just": {
+        "name": "جامعة العلوم والتكنولوجيا الأردنية",
+        "description": "تأسست عام 1986"
+      },
+      "yarmouk_university": {
+        "name": "جامعة اليرموك",
+        "description": "تأسست عام 1976"
+      }
+    },
+    "dark_theme": "سمة داكنة",
+    "language": "اللغة"
+  }
+}
