@@ -4,7 +4,9 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
+import 'assets/models/providers/chapters.dart';
 import 'home.dart';
 
 Future<void> main() async {
@@ -33,57 +35,63 @@ class _MainState extends State<Main> {
   Widget build(BuildContext context) {
     preCacheImages(context);
 
-    return AdaptiveTheme(
-      light: ThemeData(
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.transparent,
-          foregroundColor: Colors.black,
-          elevation: 0,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<Chapters>(
+            create: (context) => Chapters(), lazy: false),
+        // TODO: try to remove lazy flag
+      ],
+      child: AdaptiveTheme(
+        light: ThemeData(
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Colors.transparent,
+            foregroundColor: Colors.black,
+            elevation: 0,
+          ),
+          primaryColor: const Color(0xFF0E8B8B),
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color(0xFF0E8B8B),
+            brightness: Brightness.light,
+          ),
+          listTileTheme: const ListTileThemeData(iconColor: Color(0xFF0E8B8B)),
         ),
-        primaryColor: const Color(0xFF0E8B8B),
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF0E8B8B),
-          brightness: Brightness.light,
+        dark: ThemeData(
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Colors.transparent,
+            foregroundColor: Colors.white,
+            elevation: 0,
+          ),
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color(0xFF0E8B8B),
+            brightness: Brightness.dark,
+          ),
+          listTileTheme: const ListTileThemeData(iconColor: Color(0xFF0E8B8B)),
         ),
-        listTileTheme: const ListTileThemeData(iconColor: Color(0xFF0E8B8B)),
+        initial: AdaptiveThemeMode.light,
+        builder: (theme, darkTheme) {
+          return MaterialApp(
+            localizationsDelegates: context.localizationDelegates,
+            supportedLocales: context.supportedLocales,
+            locale: context.locale,
+            theme: theme,
+            darkTheme: darkTheme,
+            initialRoute: '/',
+            routes: {
+              '/': (context) => const Home(),
+            },
+          );
+        },
       ),
-      dark: ThemeData(
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.transparent,
-          foregroundColor: Colors.white,
-          elevation: 0,
-        ),
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF0E8B8B),
-          brightness: Brightness.dark,
-        ),
-        listTileTheme: const ListTileThemeData(iconColor: Color(0xFF0E8B8B)),
-      ),
-      initial: AdaptiveThemeMode.light,
-      builder: (theme, darkTheme) {
-        return MaterialApp(
-          localizationsDelegates: context.localizationDelegates,
-          supportedLocales: context.supportedLocales,
-          locale: context.locale,
-          theme: theme,
-          darkTheme: darkTheme,
-          initialRoute: '/',
-          routes: {
-            '/': (context) => const Home(),
-          },
-        );
-      },
     );
   }
 
   preCacheImages(BuildContext context) async {
     final manifestJson =
-        await DefaultAssetBundle.of(context).loadString('AssetManifest.json');
+        await rootBundle.loadString('AssetManifest.json');
     final images = json
         .decode(manifestJson)
         .keys
-        .where(
-            (String key) => key.startsWith('assets/images/'))
+        .where((String key) => key.startsWith('assets/images/'))
         .toList();
 
     images.forEach((image) => precacheImage(AssetImage(image), context));

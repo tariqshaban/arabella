@@ -4,14 +4,42 @@
     "drawer_background": {
       "just": {
         "name": "Jordan University of Science & Technology",
-        "description": "Established at 1986"
+        "description": "Established in 1986"
       },
       "yarmouk_university": {
         "name": "Yarmouk University",
-        "description": "Established at 1976"
+        "description": "Established in 1976"
       }
     },
     "dark_theme": "Dark Theme",
     "language": "Language"
+  },
+  "chapters": {
+    "history": {
+      "name": "History",
+      "lessons": {
+        "bronze_age": "Bronze Age",
+        "hellenistic_era": "Hellenistic Era",
+        "roman_era": "Roman Era",
+        "islam_era": "Islam Era",
+        "present_day": "Present Day"
+      }
+    },
+    "geography": {
+      "name": "Geography",
+      "lessons": {}
+    },
+    "culture": {
+      "name": "Culture",
+      "lessons": {}
+    },
+    "tourism_and_archaeological_sites": {
+      "name": "Tourism & Archaeological Sites",
+      "lessons": {}
+    },
+    "education": {
+      "name": "Education",
+      "lessons": {}
+    }
   }
 }

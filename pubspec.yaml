@@ -14,6 +14,7 @@ dependencies:
   adaptive_theme: ^3.1.1
   easy_localization: ^3.0.1
   provider: ^6.0.3
+  carousel_slider: ^4.1.1
 
 dev_dependencies:
   flutter_test:
@@ -24,4 +25,20 @@ flutter:
   uses-material-design: true
   assets:
     - assets/translations/
+    - assets/chapters/1-history/
+    - assets/chapters/1-history/quiz/
+    - assets/chapters/2-geography/
+    - assets/chapters/2-geography/quiz/
+    - assets/chapters/3-culture/
+    - assets/chapters/3-culture/quiz/
+    - assets/chapters/4-tourism_and_archaeological_sites/
+    - assets/chapters/4-tourism_and_archaeological_sites/quiz/
+    - assets/chapters/5-education/
+    - assets/chapters/5-education/quiz/
+    - assets/images/chapters/1-history/
+    - assets/images/chapters/2-geography/
+    - assets/images/chapters/3-culture/
+    - assets/images/chapters/4-tourism_and_archaeological_sites/
+    - assets/images/chapters/5-education/
     - assets/images/drawer_background/
+    - assets/images/drawer_circular/

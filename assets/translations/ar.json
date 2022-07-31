@@ -13,5 +13,33 @@
     },
     "dark_theme": "سمة داكنة",
     "language": "اللغة"
+  },
+  "chapters": {
+    "history": {
+      "name": "التاريخ",
+      "lessons": {
+        "bronze_age": "العصر البرونزي",
+        "hellenistic_era": "العصر الهيليني",
+        "roman_era": "العصر الروماني",
+        "islam_era": "العصر الإسلامي",
+        "present_day": "الوقت الحاضر"
+      }
+    },
+    "geography": {
+      "name": "الجغرافية",
+      "lessons": {}
+    },
+    "culture": {
+      "name": "الثقافة",
+      "lessons": {}
+    },
+    "tourism_and_archaeological_sites": {
+      "name": "السياحة والمواقع الأثرية",
+      "lessons": {}
+    },
+    "education": {
+      "name": "التعليم",
+      "lessons": {}
+    }
   }
 }

@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({Key? key, required this.context}) : super(key: key);
@@ -42,6 +43,20 @@ class AppDrawer extends StatelessWidget {
           return UserAccountsDrawerHeader(
               accountName: Text(imageText),
               accountEmail: Text(imageDescription),
+              otherAccountsPictures: const [
+                CircleAvatar(
+                  backgroundImage: AssetImage('assets/images/drawer_circular/just.png'),
+                  backgroundColor: Colors.transparent,
+                ),
+                CircleAvatar(
+                  backgroundImage: AssetImage('assets/images/drawer_circular/ministry.png'),
+                  backgroundColor: Colors.transparent,
+                ),
+                CircleAvatar(
+                  backgroundImage: AssetImage('assets/images/drawer_circular/irbid.png'),
+                  backgroundColor: Colors.transparent,
+                ),
+              ],
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.secondary,
                 image: DecorationImage(
@@ -150,7 +165,7 @@ class AppDrawer extends StatelessWidget {
 
   getRandomBackgroundImage() async {
     final manifestJson =
-        await DefaultAssetBundle.of(context).loadString('AssetManifest.json');
+        await rootBundle.loadString('AssetManifest.json');
     final images = json
         .decode(manifestJson)
         .keys
