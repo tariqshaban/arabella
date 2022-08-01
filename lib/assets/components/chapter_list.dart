@@ -33,7 +33,12 @@ class _ChapterListState extends State<ChapterList> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(15),
                 child: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, '/lessons', arguments: {
+                      'chapter': widget.chapters.chapters[widget.which],
+                      'lesson': lesson
+                    });
+                  },
                   borderRadius: BorderRadius.circular(15),
                   splashColor: Theme.of(context).colorScheme.primary,
                   child: Ink(

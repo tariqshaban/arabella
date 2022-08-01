@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:arabella/lessons.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -39,7 +40,6 @@ class _MainState extends State<Main> {
       providers: [
         ChangeNotifierProvider<Chapters>(
             create: (context) => Chapters(), lazy: false),
-        // TODO: try to remove lazy flag
       ],
       child: AdaptiveTheme(
         light: ThemeData(
@@ -76,8 +76,24 @@ class _MainState extends State<Main> {
             theme: theme,
             darkTheme: darkTheme,
             initialRoute: '/',
-            routes: {
-              '/': (context) => const Home(),
+            onGenerateRoute: (settings) {
+              Map arguments = {};
+
+              if (settings.arguments != null) {
+                arguments = settings.arguments as Map;
+              }
+
+              switch (settings.name) {
+                case '/':
+                  return MaterialPageRoute(builder: (_) => const Home());
+                case '/lessons':
+                  return MaterialPageRoute(
+                      builder: (_) => Lessons(
+                            chapter: arguments['chapter'],
+                            lesson: arguments['lesson'],
+                          ));
+              }
+              return null;
             },
           );
         },
@@ -86,8 +102,7 @@ class _MainState extends State<Main> {
   }
 
   preCacheImages(BuildContext context) async {
-    final manifestJson =
-        await rootBundle.loadString('AssetManifest.json');
+    final manifestJson = await rootBundle.loadString('AssetManifest.json');
     final images = json
         .decode(manifestJson)
         .keys

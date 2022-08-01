@@ -15,6 +15,7 @@ dependencies:
   easy_localization: ^3.0.1
   provider: ^6.0.3
   carousel_slider: ^4.1.1
+  flutter_markdown: ^0.6.10+3
 
 dev_dependencies:
   flutter_test:
@@ -25,20 +26,53 @@ flutter:
   uses-material-design: true
   assets:
     - assets/translations/
-    - assets/chapters/1-history/
-    - assets/chapters/1-history/quiz/
-    - assets/chapters/2-geography/
-    - assets/chapters/2-geography/quiz/
-    - assets/chapters/3-culture/
-    - assets/chapters/3-culture/quiz/
-    - assets/chapters/4-tourism_and_archaeological_sites/
-    - assets/chapters/4-tourism_and_archaeological_sites/quiz/
-    - assets/chapters/5-education/
-    - assets/chapters/5-education/quiz/
-    - assets/images/chapters/1-history/
-    - assets/images/chapters/2-geography/
-    - assets/images/chapters/3-culture/
-    - assets/images/chapters/4-tourism_and_archaeological_sites/
-    - assets/images/chapters/5-education/
+
+    - assets/chapters/ar/1-history/lessons/
+    - assets/chapters/ar/1-history/quiz/
+    - assets/chapters/en/1-history/lessons/
+    - assets/chapters/en/1-history/quiz/
+
+    - assets/chapters/ar/2-geography/lessons/
+    - assets/chapters/ar/2-geography/quiz/
+    - assets/chapters/en/2-geography/lessons/
+    - assets/chapters/en/2-geography/quiz/
+
+    - assets/chapters/ar/3-culture/lessons/
+    - assets/chapters/ar/3-culture/quiz/
+    - assets/chapters/en/3-culture/lessons/
+    - assets/chapters/en/3-culture/quiz/
+
+    - assets/chapters/ar/4-tourism_and_archaeological_sites/lessons/
+    - assets/chapters/ar/4-tourism_and_archaeological_sites/quiz/
+    - assets/chapters/en/4-tourism_and_archaeological_sites/lessons/
+    - assets/chapters/en/4-tourism_and_archaeological_sites/quiz/
+
+    - assets/chapters/ar/5-education/lessons/
+    - assets/chapters/ar/5-education/quiz/
+    - assets/chapters/en/5-education/lessons/
+    - assets/chapters/en/5-education/quiz/
+
+
+    - assets/images/chapters/1-history/cover_images/
+    - assets/images/chapters/1-history/lessons_images/
+    - assets/images/chapters/1-history/quiz_images/
+
+    - assets/images/chapters/2-geography/cover_images/
+    - assets/images/chapters/2-geography/lessons_images/
+    - assets/images/chapters/2-geography/quiz_images/
+
+    - assets/images/chapters/3-culture/cover_images/
+    - assets/images/chapters/3-culture/lessons_images/
+    - assets/images/chapters/3-culture/quiz_images/
+
+    - assets/images/chapters/4-tourism_and_archaeological_sites/cover_images/
+    - assets/images/chapters/4-tourism_and_archaeological_sites/lessons_images/
+    - assets/images/chapters/4-tourism_and_archaeological_sites/quiz_images/
+
+    - assets/images/chapters/5-education/cover_images/
+    - assets/images/chapters/5-education/lessons_images/
+    - assets/images/chapters/5-education/quiz_images/
+
+
     - assets/images/drawer_background/
     - assets/images/drawer_circular/

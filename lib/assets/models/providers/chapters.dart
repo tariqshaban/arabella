@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:arabella/assets/models/question.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
@@ -26,12 +27,19 @@ class Chapters with ChangeNotifier {
     return 'chapters.${chapter.substring(chapter.indexOf('-') + 1)}.name';
   }
 
+  static Future<String> getLessonContents(
+      BuildContext context, String chapter, String lesson) async {
+    String path =
+        'assets/chapters/${context.locale.toString()}/$chapter/lessons/$lesson';
+    return await rootBundle.loadString(path);
+  }
+
   static String getLessonTranslatableName(String chapter, String lesson) {
     return 'chapters.${chapter.substring(chapter.indexOf('-') + 1)}.lessons.${lesson.substring(lesson.indexOf('-') + 1, lesson.lastIndexOf('.'))}.name';
   }
 
   static String getImageFromLesson(String chapter, String lesson) {
-    return 'assets/images/chapters/$chapter/${lesson.substring(0, lesson.indexOf("."))}.jpg';
+    return 'assets/images/chapters/$chapter/cover_images/${lesson.substring(0, lesson.indexOf("."))}.jpg';
   }
 
   Future<void> mountChapters() async {
@@ -39,11 +47,12 @@ class Chapters with ChangeNotifier {
     final components = json
         .decode(manifestJson)
         .keys
-        .where((String key) => key.startsWith('assets/chapters/'))
+        .where((String key) =>
+            key.startsWith('assets/chapters/') && key.contains('/en/'))
         .toList();
 
     for (String component in components) {
-      String root = 'assets/chapters/';
+      String root = 'assets/chapters/en/';
 
       component = component.replaceFirst(root, '');
       String chapterComponent = component.substring(0, component.indexOf('/'));
