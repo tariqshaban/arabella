@@ -1,7 +1,7 @@
-class Question {
+class QuestionModel {
   String question;
   List<String> options = [];
   List<int> correctOptionsIndex = [];
 
-  Question(this.question);
+  QuestionModel(this.question);
 }

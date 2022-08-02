@@ -15,13 +15,19 @@ class AppDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Drawer(
-        child: ListView(
-          children: <Widget>[
-            _header(this.context),
-            _themeSwitch(this.context),
-            _languageDropdown(this.context),
-            const Divider(),
-          ],
+        child: NotificationListener<OverscrollIndicatorNotification>(
+          onNotification: (notification) {
+            notification.disallowIndicator();
+            return true;
+          },
+          child: ListView(
+            children: <Widget>[
+              _header(this.context),
+              _themeSwitch(this.context),
+              _languageDropdown(this.context),
+              const Divider(),
+            ],
+          ),
         ),
       ),
     );

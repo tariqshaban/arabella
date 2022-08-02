@@ -1,13 +1,16 @@
 import 'dart:convert';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
-import 'package:arabella/lessons.dart';
+import 'package:arabella/assets/models/providers/scroll_direction_provider.dart';
+import 'package:arabella/lesson.dart';
+import 'package:arabella/question.dart';
+import 'package:arabella/quiz.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import 'assets/models/providers/chapters.dart';
+import 'assets/models/providers/chapters_provider.dart';
 import 'home.dart';
 
 Future<void> main() async {
@@ -38,8 +41,10 @@ class _MainState extends State<Main> {
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<Chapters>(
-            create: (context) => Chapters(), lazy: false),
+        ChangeNotifierProvider<ChaptersProvider>(
+            create: (context) => ChaptersProvider(), lazy: false),
+        ChangeNotifierProvider<ScrollDirectionProvider>(
+            create: (context) => ScrollDirectionProvider()),
       ],
       child: AdaptiveTheme(
         light: ThemeData(
@@ -78,20 +83,34 @@ class _MainState extends State<Main> {
             initialRoute: '/',
             onGenerateRoute: (settings) {
               Map arguments = {};
-
               if (settings.arguments != null) {
                 arguments = settings.arguments as Map;
               }
-
               switch (settings.name) {
                 case '/':
                   return MaterialPageRoute(builder: (_) => const Home());
                 case '/lessons':
                   return MaterialPageRoute(
-                      builder: (_) => Lessons(
-                            chapter: arguments['chapter'],
-                            lesson: arguments['lesson'],
-                          ));
+                    builder: (_) => Lesson(
+                      chapter: arguments['chapter'],
+                      lesson: arguments['lesson'],
+                    ),
+                  );
+                case '/quiz':
+                  return MaterialPageRoute(
+                    builder: (_) => Quiz(
+                      chapterName: arguments['chapterName'],
+                      questions: arguments['questions'],
+                    ),
+                  );
+                case '/question':
+                  return MaterialPageRoute(
+                    builder: (_) => Question(
+                      chapterName: arguments['chapterName'],
+                      questions: arguments['questions'],
+                      currentQuestion: arguments['currentQuestion'],
+                    ),
+                  );
               }
               return null;
             },

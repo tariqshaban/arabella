@@ -1,24 +1,24 @@
 import 'dart:convert';
 
-import 'package:arabella/assets/models/question.dart';
+import 'package:arabella/assets/models/question_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
-import '../chapter.dart';
+import '../chapter_model.dart';
 
-class Chapters with ChangeNotifier {
-  List<Chapter> _chapters = [];
+class ChaptersProvider with ChangeNotifier {
+  List<ChapterModel> _chapters = [];
 
-  Chapters() {
+  ChaptersProvider() {
     mountChapters();
 
     notifyListeners();
   }
 
-  List<Chapter> get chapters => _chapters;
+  List<ChapterModel> get chapters => _chapters;
 
-  set chapters(List<Chapter> value) {
+  set chapters(List<ChapterModel> value) {
     _chapters = value;
     notifyListeners();
   }
@@ -34,12 +34,40 @@ class Chapters with ChangeNotifier {
     return await rootBundle.loadString(path);
   }
 
+  static Future<String> getQuizQuestionContents(
+      BuildContext context, String chapter, String quiz) async {
+    String path =
+        'assets/chapters/${context.locale.toString()}/$chapter/quiz/$quiz';
+
+    return await rootBundle.loadString(path);
+  }
+
+  static Future<List<String>> getQuizOptionsContents(
+      BuildContext context, String chapter, List<String> options) async {
+    List<String> contents = [];
+
+    for (String option in options) {
+      String path =
+          'assets/chapters/${context.locale.toString()}/$chapter/quiz/$option';
+      contents.add(await rootBundle.loadString(path));
+    }
+
+    return contents;
+  }
+
   static String getLessonTranslatableName(String chapter, String lesson) {
     return 'chapters.${chapter.substring(chapter.indexOf('-') + 1)}.lessons.${lesson.substring(lesson.indexOf('-') + 1, lesson.lastIndexOf('.'))}.name';
   }
 
   static String getImageFromLesson(String chapter, String lesson) {
     return 'assets/images/chapters/$chapter/cover_images/${lesson.substring(0, lesson.indexOf("."))}.jpg';
+  }
+
+  static bool isMultipleChoiceQuestion(QuestionModel question) {
+    return question.correctOptionsIndex
+            .where((correct) => correct == 1)
+            .length ==
+        1;
   }
 
   Future<void> mountChapters() async {
@@ -59,7 +87,7 @@ class Chapters with ChangeNotifier {
 
       if (!_chapters
           .any((chapter) => chapter.chapterName == chapterComponent)) {
-        _chapters.add(Chapter(chapterComponent));
+        _chapters.add(ChapterModel(chapterComponent));
       }
 
       if (component.contains('/quiz/')) {
@@ -71,11 +99,11 @@ class Chapters with ChangeNotifier {
         }
 
         String questionName =
-            questionComponent.substring(0, questionComponent.indexOf('-'));
+            '${questionComponent.substring(0, questionComponent.indexOf('-'))}.md';
 
         if (!_chapters.last.questions
             .any((question) => question.question == questionName)) {
-          _chapters.last.questions.add(Question(questionName));
+          _chapters.last.questions.add(QuestionModel(questionName));
         }
 
         if (questionComponent.contains('option')) {
@@ -92,8 +120,8 @@ class Chapters with ChangeNotifier {
       }
     }
 
-    for (Chapter chapter in _chapters) {
-      for (Question question in chapter.questions) {
+    for (ChapterModel chapter in _chapters) {
+      for (QuestionModel question in chapter.questions) {
         List<String> shuffledOptions = List.from(question.options);
         List<int> shuffledCorrectOptionsIndex = [];
         shuffledOptions.shuffle();
