@@ -6,6 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
 import 'assets/components/extended_floating_action_button.dart';
+import 'assets/components/question_state.dart';
 import 'assets/models/providers/scroll_direction_provider.dart';
 
 class Quiz extends StatefulWidget {
@@ -59,10 +60,10 @@ class _QuizState extends State<Quiz> {
                       });
                     },
                     child: ListTile(
-                        leading: const Icon(Icons.access_time),
-                        // leading: const Icon(Icons.save_as),
-                        // leading: const Icon(Icons.check),
-                        // leading: const Icon(Icons.close),
+                        leading: QuestionState(
+                          chapterName: widget.chapterName,
+                          questionIndex: i,
+                        ),
                         title: Text('${'quiz.question_number'.tr()} ${i + 1}'),
                         trailing: (ChaptersProvider.isMultipleChoiceQuestion(
                                 widget.questions[i]))
