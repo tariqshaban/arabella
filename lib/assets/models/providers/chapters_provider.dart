@@ -23,22 +23,6 @@ class ChaptersProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  List<List<List<int>>> getUninitializedQuestionsOptions() {
-    List<List<List<int>>> uninitializedQuestionsOptionsAllChapters = [];
-
-    for (ChapterModel chapterModel in _chapters) {
-      List<List<int>> uninitializedQuestionsOptions = [];
-      for (QuestionModel question in chapterModel.questions) {
-        uninitializedQuestionsOptions
-            .add(List.filled(question.correctOptionsIndex.length, 0));
-      }
-      uninitializedQuestionsOptionsAllChapters
-          .add(uninitializedQuestionsOptions);
-    }
-
-    return uninitializedQuestionsOptionsAllChapters;
-  }
-
   static String getChapterTranslatableName(String chapter) {
     return 'chapters.${chapter.substring(chapter.indexOf('-') + 1)}.name';
   }

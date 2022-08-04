@@ -1,6 +1,8 @@
+import 'package:arabella/assets/models/providers/covered_material_provider.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../models/providers/chapters_provider.dart';
 
@@ -40,51 +42,75 @@ class _ChapterListState extends State<ChapterList> {
                 borderRadius: BorderRadius.circular(15),
                 splashColor: Theme.of(context).colorScheme.primary,
                 child: Ink(
-                  child: Stack(children: <Widget>[
-                    Hero(
-                      tag: 'lesson_image $lesson',
-                      child: Image.asset(
-                        ChaptersProvider.getImageFromLesson(
-                          widget.chapters.chapters[widget.which].chapterName,
-                          lesson,
-                        ),
-                        width: 250,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 0.0,
-                      left: 0.0,
-                      right: 0.0,
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Color.fromARGB(255, 0, 0, 0),
-                              Color.fromARGB(0, 0, 0, 0)
-                            ],
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.topCenter,
+                  child: Stack(
+                    children: <Widget>[
+                      Hero(
+                        tag: 'lesson_image $lesson',
+                        child: Image.asset(
+                          ChaptersProvider.getImageFromLesson(
+                            widget.chapters.chapters[widget.which].chapterName,
+                            lesson,
                           ),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 5,
-                          horizontal: 10,
-                        ),
-                        child: Text(
-                          ChaptersProvider.getLessonTranslatableName(
-                                  widget.chapters.chapters[widget.which]
-                                      .chapterName,
-                                  lesson)
-                              .tr(),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
+                          width: 250,
+                          fit: BoxFit.cover,
                         ),
                       ),
-                    ),
-                  ]),
+                      Consumer<CoveredMaterialProvider>(
+                        builder: (context, coveredMaterial, child) {
+                          return (isLessonFinished(coveredMaterial, lesson))
+                              ? Positioned.directional(
+                                  textDirection: Directionality.of(context),
+                                  top: 5,
+                                  end: 5,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(5),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(100),
+                                      color: Colors.green,
+                                    ),
+                                    child: const Icon(
+                                      Icons.check,
+                                      size: 10,
+                                    ),
+                                  ),
+                                )
+                              : const SizedBox();
+                        },
+                      ),
+                      Positioned.directional(
+                        textDirection: Directionality.of(context),
+                        start: 0,
+                        bottom: 0,
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Color.fromARGB(255, 0, 0, 0),
+                                Color.fromARGB(0, 0, 0, 0)
+                              ],
+                              begin: Alignment.bottomCenter,
+                              end: Alignment.topCenter,
+                            ),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 5,
+                            horizontal: 10,
+                          ),
+                          child: Text(
+                            ChaptersProvider.getLessonTranslatableName(
+                                    widget.chapters.chapters[widget.which]
+                                        .chapterName,
+                                    lesson)
+                                .tr(),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );
@@ -92,5 +118,11 @@ class _ChapterListState extends State<ChapterList> {
         );
       }).toList(),
     );
+  }
+
+  bool isLessonFinished(
+      CoveredMaterialProvider coveredMaterial, String lesson) {
+    return coveredMaterial.isLessonFinished(
+        widget.chapters.chapters[widget.which].chapterName, lesson);
   }
 }

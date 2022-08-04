@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import 'Assets/Components/app_drawer.dart';
 import 'assets/components/chapter_list.dart';
 import 'assets/models/providers/chapters_provider.dart';
+import 'assets/models/providers/covered_material_provider.dart';
+import 'assets/models/quiz_metadata.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -51,20 +53,31 @@ class _HomeState extends State<Home> {
                               color: Theme.of(context).colorScheme.primary,
                             ),
                           ).tr(),
-                          IconButton(
-                            tooltip: 'chapters.attempt_quiz'.tr(),
-                            iconSize: 20,
-                            icon: const Icon(
-                              Icons.note_alt,
-                            ),
-                            onPressed: () {
-                              Navigator.pushNamed(context, '/quiz', arguments: {
-                                'chapterName': chapters.chapters[i].chapterName,
-                                'questions': chapters.chapters[i].questions
-                              });
+                          Consumer<CoveredMaterialProvider>(
+                            builder: (context, coveredMaterial, child) {
+                              return IconButton(
+                                tooltip: 'chapters.attempt_quiz'.tr(),
+                                iconSize: 20,
+                                icon: const Icon(
+                                  Icons.note_alt,
+                                ),
+                                onPressed: () {
+                                  Navigator.pushNamed(context, '/quiz',
+                                      arguments: {
+                                        'chapterName':
+                                            chapters.chapters[i].chapterName,
+                                        'questions':
+                                            chapters.chapters[i].questions
+                                      });
+                                },
+                                color: (coveredMaterial.getQuizMark(
+                                            chapters.chapters[i].chapterName) >=
+                                        QuizMetadata.passingMark)
+                                    ? Colors.green
+                                    : Theme.of(context).colorScheme.primary,
+                                splashRadius: 20,
+                              );
                             },
-                            color: Theme.of(context).colorScheme.primary,
-                            splashRadius: 20,
                           ),
                         ],
                       ),

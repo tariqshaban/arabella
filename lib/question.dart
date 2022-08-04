@@ -7,8 +7,10 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:provider/provider.dart';
 
 import 'assets/components/extended_floating_action_button.dart';
+import 'assets/components/snack_bar.dart';
 import 'assets/models/providers/scroll_direction_provider.dart';
 import 'assets/models/question_model.dart';
+import 'assets/models/quiz_metadata.dart';
 
 class Question extends StatefulWidget {
   const Question(
@@ -83,8 +85,7 @@ class _QuestionState extends State<Question> {
                                 return (answeredQuestions
                                         .containsMultipleAnswers(
                                             widget.chapterName,
-                                            widget.questions.indexOf(
-                                                widget.currentQuestion)))
+                                            widget.currentQuestion.question))
                                     ? CheckboxListTile(
                                         contentPadding: EdgeInsets.zero,
                                         controlAffinity:
@@ -101,7 +102,7 @@ class _QuestionState extends State<Question> {
                                     : RadioListTile(
                                         contentPadding: EdgeInsets.zero,
                                         value: i,
-                                        groupValue: getRadioState(context, i),
+                                        groupValue: getRadioState(context),
                                         onChanged: (value) {
                                           radioEventHandler(
                                               context, i, value as int);
@@ -139,7 +140,29 @@ class _QuestionState extends State<Question> {
                 });
               },
             )
-          : null,
+          : ExtendedFloatingActionButton(
+              text: const Text('quiz.submit').tr(),
+              icon: const Icon(Icons.upload_file),
+              onPressed: () {
+                if (context
+                    .read<AnsweredQuestionsProvider>()
+                    .areAnswersEligibleForSubmission(widget.chapterName)) {
+                  QuizMetadata results = context
+                      .read<AnsweredQuestionsProvider>()
+                      .getQuizResults(widget.chapterName);
+
+                  if (results.isPassed) {
+                    SnackBars.showTextSnackBar(context, 'quiz.passed'.tr());
+                  } else {
+                    SnackBars.showTextSnackBar(context, 'quiz.failed'.tr());
+                  }
+                  Navigator.of(context).pop();
+                } else {
+                  SnackBars.showTextSnackBar(
+                      context, 'quiz.not_all_answered'.tr());
+                }
+              },
+            ),
     );
   }
 
@@ -147,26 +170,36 @@ class _QuestionState extends State<Question> {
     AnsweredQuestionsProvider answeredQuestions =
         context.read<AnsweredQuestionsProvider>();
 
-    return answeredQuestions.shouldCheckBoxBeChecked(widget.chapterName,
-        widget.questions.indexOf(widget.currentQuestion), i);
+    String optionName = widget.currentQuestion.options[i];
+
+    return answeredQuestions.shouldCheckBoxBeChecked(
+        widget.chapterName, widget.currentQuestion.question, optionName);
   }
 
   void checkboxEventHandler(BuildContext context, int i, bool value) {
     AnsweredQuestionsProvider answeredQuestions =
         context.read<AnsweredQuestionsProvider>();
 
-    answeredQuestions.answerQuestionCheckBox(widget.chapterName,
-        widget.questions.indexOf(widget.currentQuestion), i, value);
+    String optionName = widget.currentQuestion.options[i];
+
+    answeredQuestions.answerQuestionCheckBox(
+        widget.chapterName, widget.currentQuestion.question, optionName, value);
   }
 
-  int getRadioState(BuildContext context, int i) {
+  int getRadioState(BuildContext context) {
     AnsweredQuestionsProvider answeredQuestions =
         context.read<AnsweredQuestionsProvider>();
 
-    return answeredQuestions
-        .getQuestionAnswer(widget.chapterName,
-            widget.questions.indexOf(widget.currentQuestion))
-        .indexOf(1);
+    List<String> selectedOption = answeredQuestions.getQuestionAnswer(
+        widget.chapterName, widget.currentQuestion.question);
+
+    if (selectedOption.isEmpty) {
+      return -1;
+    }
+
+    List<String> options = widget.currentQuestion.options;
+
+    return options.indexOf(selectedOption.first);
   }
 
   void radioEventHandler(BuildContext context, int i, int value) {
@@ -174,7 +207,7 @@ class _QuestionState extends State<Question> {
         context.read<AnsweredQuestionsProvider>();
 
     answeredQuestions.answerQuestionRadio(widget.chapterName,
-        widget.questions.indexOf(widget.currentQuestion), value);
+        widget.currentQuestion.question, widget.currentQuestion.options[i]);
   }
 
   int getQuestionIndex() {

@@ -1,3 +1,4 @@
+import 'package:arabella/assets/models/providers/covered_material_provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -24,6 +25,12 @@ class Lesson extends StatefulWidget {
 class _LessonState extends State<Lesson> {
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context
+          .read<CoveredMaterialProvider>()
+          .setLessonAsFinished(widget.chapter.chapterName, widget.lesson);
+    });
+
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) => <Widget>[

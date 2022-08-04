@@ -1,4 +1,6 @@
+import 'package:arabella/assets/models/chapter_model.dart';
 import 'package:arabella/assets/models/providers/answered_questions_provider.dart';
+import 'package:arabella/assets/models/providers/chapters_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -19,8 +21,7 @@ class _QuestionStateState extends State<QuestionState> {
   Widget build(BuildContext context) {
     return Consumer<AnsweredQuestionsProvider>(
       builder: (context, answeredQuestions, child) {
-        switch (answeredQuestions.getQuestionStatus(
-            widget.chapterName, widget.questionIndex)) {
+        switch (getQuestionState(answeredQuestions)) {
           case 1:
             return const Icon(Icons.save_as);
           case 2:
@@ -32,5 +33,15 @@ class _QuestionStateState extends State<QuestionState> {
         }
       },
     );
+  }
+
+  int getQuestionState(AnsweredQuestionsProvider answeredQuestions) {
+    ChapterModel chapter = context
+        .read<ChaptersProvider>()
+        .chapters
+        .firstWhere((chapter) => chapter.chapterName == widget.chapterName);
+
+    return answeredQuestions.getQuestionStatus(
+        widget.chapterName, chapter.questions[widget.questionIndex].question);
   }
 }

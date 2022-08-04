@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:arabella/assets/models/providers/answered_questions_provider.dart';
+import 'package:arabella/assets/models/providers/covered_material_provider.dart';
 import 'package:arabella/assets/models/providers/scroll_direction_provider.dart';
 import 'package:arabella/lesson.dart';
 import 'package:arabella/question.dart';
@@ -46,9 +47,13 @@ class _MainState extends State<Main> {
             create: (context) => ChaptersProvider(), lazy: false),
         ChangeNotifierProvider<ScrollDirectionProvider>(
             create: (context) => ScrollDirectionProvider()),
-        ChangeNotifierProxyProvider<ChaptersProvider, AnsweredQuestionsProvider>(
-          update: (context, chapters, answeredQuestions) => AnsweredQuestionsProvider(chapters),
-          create: (BuildContext context) => AnsweredQuestionsProvider(null),
+        ChangeNotifierProxyProvider<ChaptersProvider, CoveredMaterialProvider>(
+          create: (BuildContext context) => CoveredMaterialProvider(),
+          update: (context, chapters, coveredMaterial) => coveredMaterial!..update(chapters),
+        ),
+        ChangeNotifierProxyProvider2<ChaptersProvider, CoveredMaterialProvider, AnsweredQuestionsProvider>(
+          create: (BuildContext context) => AnsweredQuestionsProvider(),
+          update: (context, chapters, coveredMaterial, answeredQuestions) => answeredQuestions!..update(chapters, coveredMaterial),
         ),
       ],
       child: AdaptiveTheme(

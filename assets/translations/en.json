@@ -48,8 +48,13 @@
   },
   "quiz": {
     "quiz": "Quiz",
+    "passing_grade": "Passing Grade",
+    "your_grade": "Your Grade",
     "question_number": "Question Number",
-    "submit": "Submit"
+    "submit": "Submit",
+    "not_all_answered": "Not all questions have been answered.",
+    "passed": "Congratulations! You have passed.",
+    "failed": "You haven't passed yet. But you can try multiple times, and the highest score will be saved."
   },
   "question": {
     "next": "Next Question"
