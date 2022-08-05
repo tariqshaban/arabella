@@ -58,14 +58,14 @@ class _QuizState extends State<Quiz> {
                     (coveredMaterial.getQuizMark(widget.chapterName) >=
                             QuizMetadata.passingMark)
                         ? Container(
-                            padding: const EdgeInsets.all(5),
+                            padding: const EdgeInsets.all(2),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(100),
                               color: Colors.green,
                             ),
                             child: const Icon(
                               Icons.check,
-                              size: 10,
+                              size: 15,
                             ),
                           )
                         : const SizedBox(),

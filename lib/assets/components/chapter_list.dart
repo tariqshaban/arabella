@@ -63,14 +63,14 @@ class _ChapterListState extends State<ChapterList> {
                                   top: 5,
                                   end: 5,
                                   child: Container(
-                                    padding: const EdgeInsets.all(5),
+                                    padding: const EdgeInsets.all(2),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(100),
                                       color: Colors.green,
                                     ),
                                     child: const Icon(
                                       Icons.check,
-                                      size: 10,
+                                      size: 15,
                                     ),
                                   ),
                                 )

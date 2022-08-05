@@ -1,9 +1,11 @@
+import 'dart:convert';
+
 import 'package:arabella/assets/models/chapter_model.dart';
 import 'package:arabella/assets/models/providers/covered_material_provider.dart';
 import 'package:arabella/assets/models/question_model.dart';
 import 'package:arabella/assets/models/quiz_metadata.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'chapters_provider.dart';
 
@@ -12,6 +14,25 @@ class AnsweredQuestionsProvider with ChangeNotifier {
   CoveredMaterialProvider? _coveredMaterialProvider;
   Map<String, Map<String, List<String>>> _answers = {};
   Map<String, bool> _isSubmitted = {};
+
+  AnsweredQuestionsProvider() {
+    loadPersistentSate();
+  }
+
+  Future<void> loadPersistentSate() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.containsKey('answeredQuestions')) {
+      fromJson(json.decode(prefs.getString('answeredQuestions')!));
+    }
+    notifyListeners();
+  }
+
+  Future<void> savePersistentSate() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String state = json.encode(toJson());
+    prefs.setString('answeredQuestions', state);
+    notifyListeners();
+  }
 
   void update(ChaptersProvider chaptersProvider,
       CoveredMaterialProvider coveredMaterialProvider) {
@@ -27,14 +48,14 @@ class AnsweredQuestionsProvider with ChangeNotifier {
 
   set answers(Map<String, Map<String, List<String>>> value) {
     _answers = value;
-    notifyListeners();
+    savePersistentSate();
   }
 
   Map<String, bool> get isSubmitted => _isSubmitted;
 
   set isSubmitted(Map<String, bool> value) {
     _isSubmitted = value;
-    notifyListeners();
+    savePersistentSate();
   }
 
   void initializeAnswers() {
@@ -75,7 +96,7 @@ class AnsweredQuestionsProvider with ChangeNotifier {
     _isSubmitted[chapterName] = false;
     _answers[chapterName]![questionName] = [optionName];
 
-    notifyListeners();
+    savePersistentSate();
   }
 
   void answerQuestionCheckBox(String chapterName, String questionName,
@@ -87,7 +108,7 @@ class AnsweredQuestionsProvider with ChangeNotifier {
       _answers[chapterName]![questionName]!.remove(optionName);
     }
 
-    notifyListeners();
+    savePersistentSate();
   }
 
   bool shouldCheckBoxBeChecked(
@@ -166,7 +187,7 @@ class AnsweredQuestionsProvider with ChangeNotifier {
     _coveredMaterialProvider!.setQuizMark(
         chapterName, quizMetadata.obtainedMark / quizMetadata.totalMarks);
 
-    notifyListeners();
+    savePersistentSate();
     return quizMetadata;
   }
 
@@ -186,4 +207,18 @@ class AnsweredQuestionsProvider with ChangeNotifier {
     return setEquals(
         _answers[chapterName]![questionName]!.toSet(), correctOptions.toSet());
   }
+
+  void fromJson(Map<String, dynamic> parsedJson) {
+    _answers = Map<String, dynamic>.from(parsedJson['answers']).map(
+        (String a, dynamic b) => MapEntry(
+            a,
+            Map<String, dynamic>.from(b).map(
+                (String c, dynamic d) => MapEntry(c, List<String>.from(d)))));
+    _isSubmitted = Map<String, bool>.from(parsedJson['isSubmitted']);
+  }
+
+  Map<String, dynamic> toJson() => {
+        'answers': _answers,
+        'isSubmitted': _isSubmitted,
+      };
 }
