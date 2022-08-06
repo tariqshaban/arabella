@@ -43,13 +43,14 @@ class _BadgeState extends State<Badge> {
                         child: getBadgeIcon(key, eligibleBadges[key]!),
                       ),
                       child: ListTile(
+                        minVerticalPadding: 10,
                         leading: Hero(
                           tag: 'badge $i',
                           child: getBadgeIcon(key, eligibleBadges[key]!),
                         ),
                         title: getBadgeTitle(key, eligibleBadges[key]!),
                         subtitle: (eligibleBadges[key]!)
-                            ? const Text('')
+                            ? const Text('\n')
                             : Text('badges.complete_to_unlock'.tr()),
                       ),
                     );
@@ -97,12 +98,13 @@ class _BadgeState extends State<Badge> {
         child: Image.asset('assets/images/badges/completion.png'),
       ),
       child: ListTile(
+        minVerticalPadding: 10,
         leading: Hero(
           tag: 'completion badge',
           child: Image.asset('assets/images/badges/completion.png'),
         ),
         title: Text('badges.completion'.tr()),
-        subtitle: const Text(''),
+        subtitle: const Text('\n'),
       ),
     );
   }

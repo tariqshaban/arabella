@@ -140,7 +140,10 @@ class _QuestionState extends State<Question> {
                 });
               },
             )
-          : ExtendedFloatingActionButton(
+          : Consumer<AnsweredQuestionsProvider>(
+        builder: (context, answeredQuestions, child) {
+          if (!answeredQuestions.isSubmitted[widget.chapterName]!) {
+            return ExtendedFloatingActionButton(
               text: const Text('quiz.submit').tr(),
               icon: const Icon(Icons.upload_file),
               onPressed: () {
@@ -162,7 +165,11 @@ class _QuestionState extends State<Question> {
                       context, 'quiz.not_all_answered'.tr());
                 }
               },
-            ),
+            );
+          }
+          return const SizedBox();
+        },
+      ),
     );
   }
 

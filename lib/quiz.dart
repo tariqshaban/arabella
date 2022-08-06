@@ -130,25 +130,33 @@ class _QuizState extends State<Quiz> {
           ),
         ],
       ),
-      floatingActionButton: ExtendedFloatingActionButton(
-        text: const Text('quiz.submit').tr(),
-        icon: const Icon(Icons.upload_file),
-        onPressed: () {
-          if (context
-              .read<AnsweredQuestionsProvider>()
-              .areAnswersEligibleForSubmission(widget.chapterName)) {
-            QuizMetadata results = context
-                .read<AnsweredQuestionsProvider>()
-                .getQuizResults(widget.chapterName);
+      floatingActionButton: Consumer<AnsweredQuestionsProvider>(
+        builder: (context, answeredQuestions, child) {
+          if (!answeredQuestions.isSubmitted[widget.chapterName]!) {
+            return ExtendedFloatingActionButton(
+              text: const Text('quiz.submit').tr(),
+              icon: const Icon(Icons.upload_file),
+              onPressed: () {
+                if (context
+                    .read<AnsweredQuestionsProvider>()
+                    .areAnswersEligibleForSubmission(widget.chapterName)) {
+                  QuizMetadata results = context
+                      .read<AnsweredQuestionsProvider>()
+                      .getQuizResults(widget.chapterName);
 
-            if (results.isPassed) {
-              SnackBars.showTextSnackBar(context, 'quiz.passed'.tr());
-            } else {
-              SnackBars.showTextSnackBar(context, 'quiz.failed'.tr());
-            }
-          } else {
-            SnackBars.showTextSnackBar(context, 'quiz.not_all_answered'.tr());
+                  if (results.isPassed) {
+                    SnackBars.showTextSnackBar(context, 'quiz.passed'.tr());
+                  } else {
+                    SnackBars.showTextSnackBar(context, 'quiz.failed'.tr());
+                  }
+                } else {
+                  SnackBars.showTextSnackBar(
+                      context, 'quiz.not_all_answered'.tr());
+                }
+              },
+            );
           }
+          return const SizedBox();
         },
       ),
     );
