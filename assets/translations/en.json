@@ -12,7 +12,8 @@
       }
     },
     "dark_theme": "Dark Theme",
-    "language": "Language"
+    "language": "Language",
+    "badge": "Badges"
   },
   "chapters": {
     "attempt_quiz": "Attempt Quiz",
@@ -44,7 +45,8 @@
     }
   },
   "lessons": {
-    "next_lesson": "Next Lesson"
+    "next_lesson": "Next Lesson",
+    "finish_chapter": "Finish Chapter"
   },
   "quiz": {
     "quiz": "Quiz",
@@ -58,5 +60,11 @@
   },
   "question": {
     "next": "Next Question"
+  },
+  "badges": {
+    "badges": "Badges",
+    "complete_to_unlock": "Complete this chapter to unlock the badge",
+    "fundamentals": "Fundamentals",
+    "completion": "Completion Badge"
   }
 }

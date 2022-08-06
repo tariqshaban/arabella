@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:arabella/assets/models/chapter_model.dart';
+import 'package:arabella/assets/models/quiz_metadata.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -115,6 +116,38 @@ class CoveredMaterialProvider with ChangeNotifier {
   Map<String, dynamic> deserializeFinishedQuizzes(
       String serializedFinishedQuizzes) {
     return json.decode(serializedFinishedQuizzes);
+  }
+
+  bool _isEligibleForBadge(String chapterName) {
+    List<String> lessons = _chaptersProvider!.chapters
+        .firstWhere((chapter) => chapter.chapterName == chapterName)
+        .lessons;
+
+    for (String lesson in lessons) {
+      if (!_finishedLessons[chapterName]!.contains(lesson)) {
+        return false;
+      }
+    }
+
+    if (!_finishedQuizzes.containsKey(chapterName) ||
+        _finishedQuizzes[chapterName]! < QuizMetadata.passingMark) {
+      return false;
+    }
+
+    return true;
+  }
+
+  Map<String, bool> getEligibleBadges() {
+    Map<String, bool> eligibleBadges = {};
+    for (ChapterModel chapter in _chaptersProvider!.chapters) {
+      eligibleBadges[chapter.chapterName] =
+          _isEligibleForBadge(chapter.chapterName);
+    }
+    return eligibleBadges;
+  }
+
+  bool isEligibleForCompletionBadge() {
+    return !getEligibleBadges().values.contains(false);
   }
 
   void fromJson(Map<String, dynamic> parsedJson) {

@@ -12,7 +12,8 @@
       }
     },
     "dark_theme": "سمة داكنة",
-    "language": "اللغة"
+    "language": "اللغة",
+    "badge": "الشارات"
   },
   "chapters": {
     "attempt_quiz": "تقديم الاختبار",
@@ -44,7 +45,8 @@
     }
   },
   "lessons": {
-    "next_lesson": "الدرس القادم"
+    "next_lesson": "الدرس القادم",
+    "finish_chapter": "انهاء الفصل"
   },
   "quiz": {
     "quiz": "اختبار",
@@ -58,5 +60,11 @@
   },
   "question": {
     "next": "السؤال التالي"
+  },
+  "badges": {
+    "badges": "الشارات",
+    "complete_to_unlock": "أكمل هذا الفصل لفتح الشارة",
+    "fundamentals": "أساسيات",
+    "completion":  "شارة الإكتمال"
   }
 }

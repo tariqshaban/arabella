@@ -119,7 +119,14 @@ class _LessonState extends State<Lesson> {
                 });
               },
             )
-          : null,
+          : ExtendedFloatingActionButton(
+              text: const Text('lessons.finish_chapter').tr(),
+              icon: const Icon(Icons.exit_to_app),
+              iconFirst: false,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
     );
   }
 

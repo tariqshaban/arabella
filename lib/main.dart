@@ -4,6 +4,7 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:arabella/assets/models/providers/answered_questions_provider.dart';
 import 'package:arabella/assets/models/providers/covered_material_provider.dart';
 import 'package:arabella/assets/models/providers/scroll_direction_provider.dart';
+import 'package:arabella/badge.dart';
 import 'package:arabella/lesson.dart';
 import 'package:arabella/question.dart';
 import 'package:arabella/quiz.dart';
@@ -121,6 +122,8 @@ class _MainState extends State<Main> {
                       currentQuestion: arguments['currentQuestion'],
                     ),
                   );
+                case '/badge':
+                  return MaterialPageRoute(builder: (_) => const Badge());
               }
               return null;
             },

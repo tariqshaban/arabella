@@ -26,6 +26,7 @@ class AppDrawer extends StatelessWidget {
               _themeSwitch(this.context),
               _languageDropdown(this.context),
               const Divider(),
+              _badge(this.context),
             ],
           ),
         ),
@@ -43,23 +44,26 @@ class AppDrawer extends StatelessWidget {
                   '.name'
               .tr();
           String imageDescription = 'nav_drawer.drawer_background.'
-              '${backgroundImage.substring(backgroundImage.lastIndexOf("/") + 1, backgroundImage.lastIndexOf("."))}'
-              '.description'
+                  '${backgroundImage.substring(backgroundImage.lastIndexOf("/") + 1, backgroundImage.lastIndexOf("."))}'
+                  '.description'
               .tr();
           return UserAccountsDrawerHeader(
               accountName: Text(imageText),
               accountEmail: Text(imageDescription),
               otherAccountsPictures: const [
                 CircleAvatar(
-                  backgroundImage: AssetImage('assets/images/drawer_circular/just.png'),
+                  backgroundImage:
+                      AssetImage('assets/images/drawer_circular/just.png'),
                   backgroundColor: Colors.transparent,
                 ),
                 CircleAvatar(
-                  backgroundImage: AssetImage('assets/images/drawer_circular/ministry.png'),
+                  backgroundImage:
+                      AssetImage('assets/images/drawer_circular/ministry.png'),
                   backgroundColor: Colors.transparent,
                 ),
                 CircleAvatar(
-                  backgroundImage: AssetImage('assets/images/drawer_circular/irbid.png'),
+                  backgroundImage:
+                      AssetImage('assets/images/drawer_circular/irbid.png'),
                   backgroundColor: Colors.transparent,
                 ),
               ],
@@ -139,6 +143,16 @@ class AppDrawer extends StatelessWidget {
     );
   }
 
+  Widget _badge(BuildContext context) {
+    return ListTile(
+      leading: const Icon(Icons.military_tech),
+      title: const Text('nav_drawer.badge').tr(),
+      onTap: () {
+        Navigator.pushNamed(context, '/badge');
+      },
+    );
+  }
+
   void _openDropdown(GlobalKey dropdownKey) {
     GestureDetector? detector;
     void searchForGestureDetector(BuildContext? element) {
@@ -170,8 +184,7 @@ class AppDrawer extends StatelessWidget {
   }
 
   getRandomBackgroundImage() async {
-    final manifestJson =
-        await rootBundle.loadString('AssetManifest.json');
+    final manifestJson = await rootBundle.loadString('AssetManifest.json');
     final images = json
         .decode(manifestJson)
         .keys
