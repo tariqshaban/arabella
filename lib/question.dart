@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 import 'assets/components/extended_floating_action_button.dart';
 import 'assets/components/snack_bar.dart';
+import 'assets/models/providers/confettiProvider.dart';
 import 'assets/models/providers/scroll_direction_provider.dart';
 import 'assets/models/question_model.dart';
 import 'assets/models/quiz_metadata.dart';
@@ -156,6 +157,7 @@ class _QuestionState extends State<Question> {
 
                   if (results.isPassed) {
                     SnackBars.showTextSnackBar(context, 'quiz.passed'.tr());
+                    context.read<ConfettiProvider>().play();
                   } else {
                     SnackBars.showTextSnackBar(context, 'quiz.failed'.tr());
                   }

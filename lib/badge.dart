@@ -1,4 +1,5 @@
 import 'package:arabella/assets/models/providers/chapters_provider.dart';
+import 'package:arabella/assets/models/providers/confettiProvider.dart';
 import 'package:arabella/assets/models/providers/covered_material_provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,29 @@ class Badge extends StatefulWidget {
 }
 
 class _BadgeState extends State<Badge> {
+  CoveredMaterialProvider? coveredMaterialProvider;
+  ConfettiProvider? confettiProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      coveredMaterialProvider = context.read<CoveredMaterialProvider>();
+      confettiProvider = context.read<ConfettiProvider>();
+      if (coveredMaterialProvider!.isEligibleForCompletionBadge()) {
+        confettiProvider!.play(shouldLoop: true);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    if (coveredMaterialProvider!.isEligibleForCompletionBadge()) {
+      confettiProvider!.stop();
+    }
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

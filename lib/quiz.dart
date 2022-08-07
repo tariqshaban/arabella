@@ -1,4 +1,5 @@
 import 'package:arabella/assets/models/providers/chapters_provider.dart';
+import 'package:arabella/assets/models/providers/confettiProvider.dart';
 import 'package:arabella/assets/models/question_model.dart';
 import 'package:arabella/assets/models/quiz_metadata.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -146,6 +147,7 @@ class _QuizState extends State<Quiz> {
 
                   if (results.isPassed) {
                     SnackBars.showTextSnackBar(context, 'quiz.passed'.tr());
+                    context.read<ConfettiProvider>().play();
                   } else {
                     SnackBars.showTextSnackBar(context, 'quiz.failed'.tr());
                   }

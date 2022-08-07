@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:arabella/assets/models/providers/answered_questions_provider.dart';
@@ -8,12 +9,14 @@ import 'package:arabella/badge.dart';
 import 'package:arabella/lesson.dart';
 import 'package:arabella/question.dart';
 import 'package:arabella/quiz.dart';
+import 'package:confetti/confetti.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'assets/models/providers/chapters_provider.dart';
+import 'assets/models/providers/confettiProvider.dart';
 import 'home.dart';
 
 Future<void> main() async {
@@ -50,12 +53,17 @@ class _MainState extends State<Main> {
             create: (context) => ScrollDirectionProvider()),
         ChangeNotifierProxyProvider<ChaptersProvider, CoveredMaterialProvider>(
           create: (BuildContext context) => CoveredMaterialProvider(),
-          update: (context, chapters, coveredMaterial) => coveredMaterial!..update(chapters),
+          update: (context, chapters, coveredMaterial) =>
+              coveredMaterial!..update(chapters),
         ),
-        ChangeNotifierProxyProvider2<ChaptersProvider, CoveredMaterialProvider, AnsweredQuestionsProvider>(
+        ChangeNotifierProxyProvider2<ChaptersProvider, CoveredMaterialProvider,
+            AnsweredQuestionsProvider>(
           create: (BuildContext context) => AnsweredQuestionsProvider(),
-          update: (context, chapters, coveredMaterial, answeredQuestions) => answeredQuestions!..update(chapters, coveredMaterial),
+          update: (context, chapters, coveredMaterial, answeredQuestions) =>
+              answeredQuestions!..update(chapters, coveredMaterial),
         ),
+        ChangeNotifierProvider<ConfettiProvider>(
+            create: (context) => ConfettiProvider()),
       ],
       child: AdaptiveTheme(
         light: ThemeData(
@@ -92,19 +100,101 @@ class _MainState extends State<Main> {
             theme: theme,
             darkTheme: darkTheme,
             initialRoute: '/',
+            builder: (context, child) {
+              return Stack(
+                children: [
+                  child!,
+                  Consumer<ConfettiProvider>(
+                    builder: (context, confetti, child) {
+                      return Stack(
+                        children: [
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: ConfettiWidget(
+                              confettiController: confetti.controller,
+                              blastDirectionality:
+                              BlastDirectionality.directional,
+                              blastDirection: 135 * pi / 180,
+                              maxBlastForce: confetti.maxBlastForce,
+                              minBlastForce: confetti.minBlastForce,
+                              emissionFrequency: confetti.emissionFrequency,
+                              numberOfParticles: confetti.numberOfParticles,
+                              gravity: confetti.gravity,
+                              shouldLoop: confetti.shouldLoop,
+                              createParticlePath: confetti.particlePath,
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: ConfettiWidget(
+                              confettiController: confetti.controller,
+                              blastDirectionality:
+                              BlastDirectionality.directional,
+                              blastDirection: 45 * pi / 180,
+                              maxBlastForce: confetti.maxBlastForce,
+                              minBlastForce: confetti.minBlastForce,
+                              emissionFrequency: confetti.emissionFrequency,
+                              numberOfParticles: confetti.numberOfParticles,
+                              gravity: confetti.gravity,
+                              shouldLoop: confetti.shouldLoop,
+                              createParticlePath: confetti.particlePath,
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: ConfettiWidget(
+                              confettiController: confetti.controller,
+                              blastDirectionality:
+                              BlastDirectionality.directional,
+                              blastDirection: 135 * pi / 180,
+                              maxBlastForce: confetti.maxBlastForce,
+                              minBlastForce: confetti.minBlastForce,
+                              emissionFrequency: confetti.emissionFrequency,
+                              numberOfParticles: confetti.numberOfParticles,
+                              gravity: confetti.gravity,
+                              shouldLoop: confetti.shouldLoop,
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: ConfettiWidget(
+                              confettiController: confetti.controller,
+                              blastDirectionality:
+                              BlastDirectionality.directional,
+                              blastDirection: 45 * pi / 180,
+                              maxBlastForce: confetti.maxBlastForce,
+                              minBlastForce: confetti.minBlastForce,
+                              emissionFrequency: confetti.emissionFrequency,
+                              numberOfParticles: confetti.numberOfParticles,
+                              gravity: confetti.gravity,
+                              shouldLoop: confetti.shouldLoop,
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ],
+              );
+            },
             onGenerateRoute: (settings) {
               Map arguments = {};
               if (settings.arguments != null) {
                 arguments = settings.arguments as Map;
               }
+
               switch (settings.name) {
                 case '/':
                   return MaterialPageRoute(builder: (_) => const Home());
                 case '/lessons':
                   return MaterialPageRoute(
-                    builder: (_) => Lesson(
-                      chapter: arguments['chapter'],
-                      lesson: arguments['lesson'],
+                    builder: (_) => Stack(
+                      children: [
+                        Lesson(
+                          chapter: arguments['chapter'],
+                          lesson: arguments['lesson'],
+                        )
+                      ],
                     ),
                   );
                 case '/quiz':
@@ -123,8 +213,11 @@ class _MainState extends State<Main> {
                     ),
                   );
                 case '/badge':
-                  return MaterialPageRoute(builder: (_) => const Badge());
+                  return MaterialPageRoute(
+                    builder: (_) => const Badge(),
+                  );
               }
+
               return null;
             },
           );

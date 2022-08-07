@@ -148,7 +148,7 @@ class AppDrawer extends StatelessWidget {
       leading: const Icon(Icons.military_tech),
       title: const Text('nav_drawer.badge').tr(),
       onTap: () {
-        Navigator.pushNamed(context, '/badge');
+        Navigator.popAndPushNamed(context, '/badge');
       },
     );
   }
