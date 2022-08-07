@@ -4,19 +4,29 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter/cupertino.dart';
 
 class ConfettiProvider with ChangeNotifier {
-  late ConfettiController _controller;
-  double minBlastForce = 2;
-  double maxBlastForce = 50;
-  double emissionFrequency = 0.01;
-  int numberOfParticles = 10;
-  double gravity = 0.4;
-  bool shouldLoop = false;
-  Path Function(Size)? particlePath;
-
-  ConfettiProvider([Duration duration = const Duration(seconds: 2)]) {
+  ConfettiProvider([
+    this.duration = const Duration(seconds: 2),
+    this.minBlastForce = 2,
+    this.maxBlastForce = 50,
+    this.emissionFrequency = 0.01,
+    this.numberOfParticles = 10,
+    this.gravity = 0.08,
+    this.shouldLoop = false,
+    this.particlePath,
+  ]) {
     _controller = ConfettiController(duration: duration);
-    particlePath = star;
+    particlePath ??= star;
   }
+
+  late ConfettiController _controller;
+  Duration duration;
+  double minBlastForce;
+  double maxBlastForce;
+  double emissionFrequency;
+  int numberOfParticles;
+  double gravity;
+  bool shouldLoop;
+  Path Function(Size)? particlePath;
 
   ConfettiController get controller => _controller;
 

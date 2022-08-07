@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:arabella/assets/models/providers/answered_questions_provider.dart';
+import 'package:arabella/assets/models/providers/celebrateProvider.dart';
 import 'package:arabella/assets/models/providers/covered_material_provider.dart';
 import 'package:arabella/assets/models/providers/scroll_direction_provider.dart';
 import 'package:arabella/badge.dart';
@@ -64,6 +65,8 @@ class _MainState extends State<Main> {
         ),
         ChangeNotifierProvider<ConfettiProvider>(
             create: (context) => ConfettiProvider()),
+        ChangeNotifierProvider<CelebrateProvider>(
+            create: (context) => CelebrateProvider()),
       ],
       child: AdaptiveTheme(
         light: ThemeData(
@@ -113,7 +116,7 @@ class _MainState extends State<Main> {
                             child: ConfettiWidget(
                               confettiController: confetti.controller,
                               blastDirectionality:
-                              BlastDirectionality.directional,
+                                  BlastDirectionality.directional,
                               blastDirection: 135 * pi / 180,
                               maxBlastForce: confetti.maxBlastForce,
                               minBlastForce: confetti.minBlastForce,
@@ -129,7 +132,7 @@ class _MainState extends State<Main> {
                             child: ConfettiWidget(
                               confettiController: confetti.controller,
                               blastDirectionality:
-                              BlastDirectionality.directional,
+                                  BlastDirectionality.directional,
                               blastDirection: 45 * pi / 180,
                               maxBlastForce: confetti.maxBlastForce,
                               minBlastForce: confetti.minBlastForce,
@@ -145,7 +148,7 @@ class _MainState extends State<Main> {
                             child: ConfettiWidget(
                               confettiController: confetti.controller,
                               blastDirectionality:
-                              BlastDirectionality.directional,
+                                  BlastDirectionality.directional,
                               blastDirection: 135 * pi / 180,
                               maxBlastForce: confetti.maxBlastForce,
                               minBlastForce: confetti.minBlastForce,
@@ -160,7 +163,7 @@ class _MainState extends State<Main> {
                             child: ConfettiWidget(
                               confettiController: confetti.controller,
                               blastDirectionality:
-                              BlastDirectionality.directional,
+                                  BlastDirectionality.directional,
                               blastDirection: 45 * pi / 180,
                               maxBlastForce: confetti.maxBlastForce,
                               minBlastForce: confetti.minBlastForce,
@@ -182,7 +185,6 @@ class _MainState extends State<Main> {
               if (settings.arguments != null) {
                 arguments = settings.arguments as Map;
               }
-
               switch (settings.name) {
                 case '/':
                   return MaterialPageRoute(builder: (_) => const Home());
@@ -217,7 +219,6 @@ class _MainState extends State<Main> {
                     builder: (_) => const Badge(),
                   );
               }
-
               return null;
             },
           );

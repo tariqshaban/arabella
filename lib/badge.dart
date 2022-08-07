@@ -1,3 +1,4 @@
+import 'package:arabella/assets/models/providers/celebrateProvider.dart';
 import 'package:arabella/assets/models/providers/chapters_provider.dart';
 import 'package:arabella/assets/models/providers/confettiProvider.dart';
 import 'package:arabella/assets/models/providers/covered_material_provider.dart';
@@ -15,25 +16,26 @@ class Badge extends StatefulWidget {
 }
 
 class _BadgeState extends State<Badge> {
-  CoveredMaterialProvider? coveredMaterialProvider;
-  ConfettiProvider? confettiProvider;
+  late CoveredMaterialProvider coveredMaterialProvider;
+  late ConfettiProvider confettiProvider;
 
   @override
   void initState() {
     super.initState();
+    coveredMaterialProvider = context.read<CoveredMaterialProvider>();
+    confettiProvider = context.read<ConfettiProvider>();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      coveredMaterialProvider = context.read<CoveredMaterialProvider>();
-      confettiProvider = context.read<ConfettiProvider>();
-      if (coveredMaterialProvider!.isEligibleForCompletionBadge()) {
-        confettiProvider!.play(shouldLoop: true);
+      if (context.read<CelebrateProvider>().isCelebrating) {
+        confettiProvider.play(shouldLoop: true);
       }
     });
   }
 
   @override
   void dispose() {
-    if (coveredMaterialProvider!.isEligibleForCompletionBadge()) {
-      confettiProvider!.stop();
+    if (coveredMaterialProvider.isEligibleForCompletionBadge()) {
+      confettiProvider.stop();
     }
     super.dispose();
   }
@@ -41,7 +43,35 @@ class _BadgeState extends State<Badge> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('badges.badges'.tr())),
+      appBar: AppBar(
+        title: Text('badges.badges'.tr()),
+        actions: <Widget>[
+          Consumer<CelebrateProvider>(
+            builder: (context, celebrate, child) {
+              if (!coveredMaterialProvider.isEligibleForCompletionBadge()) {
+                return const SizedBox();
+              }
+
+              return IconButton(
+                tooltip: 'badges.celebrate'.tr(),
+                icon: Icon(
+                  celebrate.isCelebrating
+                      ? Icons.celebration
+                      : Icons.celebration_outlined,
+                ),
+                onPressed: () {
+                  celebrate.isCelebrating = !celebrate.isCelebrating;
+                  if (celebrate.isCelebrating) {
+                    confettiProvider.play(shouldLoop: true);
+                  } else {
+                    confettiProvider.stop();
+                  }
+                },
+              );
+            },
+          ),
+        ],
+      ),
       body: Consumer<CoveredMaterialProvider>(
         builder: (context, coveredMaterial, child) {
           Map<String, bool> eligibleBadges =
