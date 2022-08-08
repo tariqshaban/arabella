@@ -33,6 +33,7 @@ class _ChapterListState extends State<ChapterList> {
             return ClipRRect(
               borderRadius: BorderRadius.circular(15),
               child: Stack(
+                fit: StackFit.passthrough,
                 children: <Widget>[
                   Hero(
                     tag: 'lesson_image $lesson',
