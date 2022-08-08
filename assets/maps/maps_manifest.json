@@ -1,0 +1,65 @@
+{
+  "history": {
+    "bronze_age": {
+      "initial_position": {
+        "lat": 32.554408,
+        "lng": 35.847411,
+        "zoom": 15.0
+      },
+      "points_of_interest": [
+        {
+          "name": "test",
+          "type": "point",
+          "lat": 32.554408,
+          "lng": 35.847411
+        },
+        {
+          "name": "test",
+          "type": "point",
+          "lat": 32.553408,
+          "lng": 35.847411
+        },
+        {
+          "name": "test",
+          "type": "polyline",
+          "points": [
+            {
+              "lat": 32.554408,
+              "lng": 35.845411
+            },
+            {
+              "lat": 32.552408,
+              "lng": 35.845411
+            }
+          ]
+        },
+        {
+          "name": "test",
+          "type": "polygon",
+          "points": [
+            {
+              "lat": 32.554408,
+              "lng": 35.843411
+            },
+            {
+              "lat": 32.552408,
+              "lng": 35.843411
+            },
+            {
+              "lat": 32.553408,
+              "lng": 35.842411
+            }
+          ]
+        }
+      ]
+    },
+    "hellenistic_era": {
+    },
+    "roman_era": {
+    },
+    "islam_era": {
+    },
+    "present_day": {
+    }
+  }
+}

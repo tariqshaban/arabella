@@ -20,11 +20,27 @@
     "history": {
       "name": "History",
       "lessons": {
-        "bronze_age": "Bronze Age",
-        "hellenistic_era": "Hellenistic Era",
-        "roman_era": "Roman Era",
-        "islam_era": "Islam Era",
-        "present_day": "Present Day"
+        "bronze_age": {
+          "name": "Bronze Age",
+          "points_of_interest": {
+            "test": {
+              "title": "Location",
+              "content": "Some content"
+            }
+          }
+        },
+        "hellenistic_era": {
+          "name": "Hellenistic Era"
+        },
+        "roman_era": {
+          "name": "Roman Era"
+        },
+        "islam_era": {
+          "name": "Islam Era"
+        },
+        "present_day": {
+          "name": "Present Day"
+        }
       }
     },
     "geography": {
@@ -46,7 +62,8 @@
   },
   "lessons": {
     "next_lesson": "Next Lesson",
-    "finish_chapter": "Finish Chapter"
+    "finish_chapter": "Finish Chapter",
+    "points_of_interest": "Points of Interest"
   },
   "quiz": {
     "quiz": "Quiz",
@@ -66,6 +83,6 @@
     "complete_to_unlock": "Complete this chapter to unlock the badge",
     "fundamentals": "Fundamentals",
     "completion": "Completion Badge",
-    "celebrate":  "Celebrate"
+    "celebrate": "Celebrate"
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:arabella/assets/models/providers/covered_material_provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:provider/provider.dart';
 
 import 'assets/components/extended_floating_action_button.dart';
+import 'assets/components/points_of_interest.dart';
 import 'assets/models/chapter_model.dart';
 import 'assets/models/providers/chapters_provider.dart';
 import 'assets/models/providers/scroll_direction_provider.dart';
@@ -41,24 +44,23 @@ class _LessonState extends State<Lesson> {
               sliver: SliverAppBar(
                 pinned: true,
                 expandedHeight: 150,
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                systemOverlayStyle: SystemUiOverlayStyle.light,
-                iconTheme: const IconThemeData(
-                  color: Colors.white,
-                ),
                 flexibleSpace: FlexibleSpaceBar(
                   title: Text(
                     ChaptersProvider.getLessonTranslatableName(
                         widget.chapter.chapterName, widget.lesson),
+                    style: Theme.of(context).textTheme.headline6,
                   ).tr(),
                   background: Hero(
                     tag: 'lesson_image ${widget.lesson}',
-                    child: Image.asset(
-                      ChaptersProvider.getImageFromLesson(
-                        widget.chapter.chapterName,
-                        widget.lesson,
+                    child: ColorFiltered(
+                      colorFilter: ColorFilter.mode(Theme.of(context).colorScheme.primary.withOpacity(0.6), BlendMode.dstATop),
+                      child: Image.asset(
+                        ChaptersProvider.getImageFromLesson(
+                          widget.chapter.chapterName,
+                          widget.lesson,
+                        ),
+                        fit: BoxFit.cover,
                       ),
-                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
@@ -91,8 +93,39 @@ class _LessonState extends State<Lesson> {
                             notification.disallowIndicator();
                             return true;
                           },
-                          child: SingleChildScrollView(
-                            child: MarkdownBody(data: snapshot.data as String),
+                          child: ListView(
+                            children: [
+                              MarkdownBody(data: snapshot.data as String),
+                              FutureBuilder(
+                                builder: (ctx, snapshot) {
+                                  if (snapshot.connectionState ==
+                                          ConnectionState.done &&
+                                      snapshot.data as bool) {
+                                    return ListView(
+                                      shrinkWrap: true,
+                                      children: [
+                                        const Divider(),
+                                        const Text(
+                                          'lessons.points_of_interest',
+                                          style: TextStyle(fontSize: 20),
+                                        ).tr(),
+                                        PointsOfInterest(
+                                          chapterName:
+                                              widget.chapter.chapterName,
+                                          lessonName: widget.lesson,
+                                          padding: const EdgeInsetsDirectional
+                                              .fromSTEB(0, 5, 0, 20),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                      ],
+                                    );
+                                  }
+                                  return const SizedBox();
+                                },
+                                future: containsPointsOfInterest(),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -134,5 +167,23 @@ class _LessonState extends State<Lesson> {
     int nextIndex = widget.chapter.lessons.indexOf(widget.lesson) + 1;
 
     return (nextIndex == widget.chapter.lessons.length) ? -1 : nextIndex;
+  }
+
+  Future<bool> containsPointsOfInterest() async {
+    String chapterName = widget.chapter.chapterName
+        .substring(widget.chapter.chapterName.indexOf('-') + 1);
+    String lessonName = widget.lesson
+        .substring(widget.lesson.indexOf('-') + 1, widget.lesson.indexOf('.'));
+
+    String file = await rootBundle.loadString('assets/maps/maps_manifest.json');
+
+    try {
+      dynamic pointsOfInterest =
+          json.decode(file)[chapterName][lessonName]['points_of_interest'];
+
+      return pointsOfInterest != null;
+    } catch (_) {
+      return false;
+    }
   }
 }

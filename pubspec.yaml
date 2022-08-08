@@ -18,6 +18,7 @@ dependencies:
   flutter_markdown: ^0.6.10+3
   shared_preferences: ^2.0.15
   confetti: ^0.7.0
+  google_maps_flutter: ^2.1.10
 
 dev_dependencies:
   flutter_test:
@@ -27,8 +28,6 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/translations/
-
     - assets/chapters/ar/1-history/lessons/
     - assets/chapters/ar/1-history/quiz/
     - assets/chapters/en/1-history/lessons/
@@ -79,3 +78,7 @@ flutter:
     - assets/images/badges/
     - assets/images/drawer_background/
     - assets/images/drawer_circular/
+
+    - assets/maps/
+
+    - assets/translations/

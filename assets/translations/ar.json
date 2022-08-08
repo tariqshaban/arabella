@@ -20,11 +20,27 @@
     "history": {
       "name": "التاريخ",
       "lessons": {
-        "bronze_age": "العصر البرونزي",
-        "hellenistic_era": "العصر الهيليني",
-        "roman_era": "العصر الروماني",
-        "islam_era": "العصر الإسلامي",
-        "present_day": "الوقت الحاضر"
+        "bronze_age": {
+          "name": "العصر البرونزي",
+          "points_of_interest": {
+            "test": {
+              "title": "موقع",
+              "content": "محتوى معين"
+            }
+          }
+        },
+        "hellenistic_era": {
+          "name": "العصر الهيليني"
+        },
+        "roman_era": {
+          "name": "العصر الروماني"
+        },
+        "islam_era": {
+          "name": "العصر الإسلامي"
+        },
+        "present_day": {
+          "name": "الوقت الحاضر"
+        }
       }
     },
     "geography": {
@@ -46,7 +62,8 @@
   },
   "lessons": {
     "next_lesson": "الدرس القادم",
-    "finish_chapter": "انهاء الفصل"
+    "finish_chapter": "انهاء الفصل",
+    "points_of_interest": "نقاط الاهتمام"
   },
   "quiz": {
     "quiz": "اختبار",
@@ -65,7 +82,7 @@
     "badges": "الشارات",
     "complete_to_unlock": "أكمل هذا الفصل لفتح الشارة",
     "fundamentals": "أساسيات",
-    "completion":  "شارة الإكتمال",
-    "celebrate":  "احتفل"
+    "completion": "شارة الإكتمال",
+    "celebrate": "احتفل"
   }
 }

@@ -44,7 +44,7 @@ class _BadgeState extends State<Badge> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('badges.badges'.tr()),
+        title: const Text('badges.badges').tr(),
         actions: <Widget>[
           Consumer<CelebrateProvider>(
             builder: (context, celebrate, child) {
@@ -105,7 +105,7 @@ class _BadgeState extends State<Badge> {
                         title: getBadgeTitle(key, eligibleBadges[key]!),
                         subtitle: (eligibleBadges[key]!)
                             ? const Text('\n')
-                            : Text('badges.complete_to_unlock'.tr()),
+                            : const Text('badges.complete_to_unlock').tr(),
                       ),
                     );
                   },
@@ -157,7 +157,7 @@ class _BadgeState extends State<Badge> {
           tag: 'completion badge',
           child: Image.asset('assets/images/badges/completion.png'),
         ),
-        title: Text('badges.completion'.tr()),
+        title: const Text('badges.completion').tr(),
         subtitle: const Text('\n'),
       ),
     );
