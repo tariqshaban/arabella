@@ -19,6 +19,7 @@ dependencies:
   shared_preferences: ^2.0.15
   confetti: ^0.7.0
   google_maps_flutter: ^2.1.10
+  animated_background: ^2.0.0
 
 dev_dependencies:
   flutter_test:

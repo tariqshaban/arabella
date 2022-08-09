@@ -18,6 +18,7 @@ import 'package:provider/provider.dart';
 
 import 'assets/models/providers/chapters_provider.dart';
 import 'assets/models/providers/confettiProvider.dart';
+import 'assets/models/providers/scroll_offset_provider.dart';
 import 'home.dart';
 
 Future<void> main() async {
@@ -67,6 +68,8 @@ class _MainState extends State<Main> {
             create: (context) => ConfettiProvider()),
         ChangeNotifierProvider<CelebrateProvider>(
             create: (context) => CelebrateProvider()),
+        ChangeNotifierProvider<ScrollOffsetProvider>(
+            create: (context) => ScrollOffsetProvider()),
       ],
       child: AdaptiveTheme(
         light: ThemeData(
@@ -74,8 +77,14 @@ class _MainState extends State<Main> {
             backgroundColor: Colors.transparent,
             foregroundColor: Colors.black,
             elevation: 0,
+            systemOverlayStyle: SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarBrightness: Brightness.dark,
+              statusBarIconBrightness: Brightness.dark,
+              systemNavigationBarColor: Color(0xfffafafa),
+              systemNavigationBarIconBrightness: Brightness.dark,
+            ),
           ),
-          primaryColor: const Color(0xFF0E8B8B),
           colorScheme: ColorScheme.fromSeed(
             seedColor: const Color(0xFF0E8B8B),
             brightness: Brightness.light,
@@ -87,6 +96,13 @@ class _MainState extends State<Main> {
             backgroundColor: Colors.transparent,
             foregroundColor: Colors.white,
             elevation: 0,
+            systemOverlayStyle: SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarBrightness: Brightness.light,
+              statusBarIconBrightness: Brightness.light,
+              systemNavigationBarColor: Color(0xff303030),
+              systemNavigationBarIconBrightness: Brightness.light,
+            ),
           ),
           colorScheme: ColorScheme.fromSeed(
             seedColor: const Color(0xFF0E8B8B),

@@ -1,3 +1,4 @@
+import 'package:animated_background/animated_background.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,10 +16,11 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: const Text('app_name').tr(),
       ),
@@ -30,62 +32,115 @@ class _HomeState extends State<Home> {
               notification.disallowIndicator();
               return true;
             },
-            child: ListView.separated(
-              separatorBuilder: (BuildContext context, int i) {
-                return const SizedBox(height: 10);
-              },
-              itemCount: chapters.chapters.length,
-              itemBuilder: (context, i) {
-                return Column(
-                  children: [
-                    Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(12, 0, 12, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Stack(
+              children: [
+                ListView.separated(
+                  padding: EdgeInsetsDirectional.fromSTEB(
+                      0, MediaQuery.of(context).size.height * 0.2 + 10, 0, 20),
+                  separatorBuilder: (BuildContext context, int i) {
+                    return const Divider(height: 10, color: Colors.transparent);
+                  },
+                  itemCount: chapters.chapters.length,
+                  itemBuilder: (context, i) {
+                    return Card(
+                      margin: const EdgeInsets.all(5),
+                      elevation: 5,
+                      shadowColor: Theme.of(context).colorScheme.primary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Column(
                         children: [
-                          Text(
-                            ChaptersProvider.getChapterTranslatableName(
-                                chapters.chapters[i].chapterName),
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                          ).tr(),
-                          Consumer<CoveredMaterialProvider>(
-                            builder: (context, coveredMaterial, child) {
-                              return IconButton(
-                                tooltip: 'chapters.attempt_quiz'.tr(),
-                                iconSize: 20,
-                                icon: const Icon(
-                                  Icons.note_alt,
+                          Padding(
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                12, 0, 12, 0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  ChaptersProvider.getChapterTranslatableName(
+                                      chapters.chapters[i].chapterName),
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  ),
+                                ).tr(),
+                                Consumer<CoveredMaterialProvider>(
+                                  builder: (context, coveredMaterial, child) {
+                                    return IconButton(
+                                      tooltip: 'chapters.attempt_quiz'.tr(),
+                                      iconSize: 20,
+                                      icon: const Icon(
+                                        Icons.note_alt,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pushNamed(context, '/quiz',
+                                            arguments: {
+                                              'chapterName': chapters
+                                                  .chapters[i].chapterName,
+                                              'questions':
+                                                  chapters.chapters[i].questions
+                                            });
+                                      },
+                                      color: (coveredMaterial.getQuizMark(
+                                                  chapters.chapters[i]
+                                                      .chapterName) >=
+                                              QuizMetadata.passingMark)
+                                          ? Colors.green
+                                          : Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                      splashRadius: 20,
+                                    );
+                                  },
                                 ),
-                                onPressed: () {
-                                  Navigator.pushNamed(context, '/quiz',
-                                      arguments: {
-                                        'chapterName':
-                                            chapters.chapters[i].chapterName,
-                                        'questions':
-                                            chapters.chapters[i].questions
-                                      });
-                                },
-                                color: (coveredMaterial.getQuizMark(
-                                            chapters.chapters[i].chapterName) >=
-                                        QuizMetadata.passingMark)
-                                    ? Colors.green
-                                    : Theme.of(context).colorScheme.primary,
-                                splashRadius: 20,
-                              );
-                            },
+                              ],
+                            ),
                           ),
+                          ChapterList(chapters: chapters, which: 0),
                         ],
                       ),
+                    );
+                  },
+                ),
+                ClipRRect(
+                  borderRadius: BorderRadius.vertical(
+                    bottom: Radius.elliptical(
+                        MediaQuery.of(context).size.width, 40),
+                  ),
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * 0.2,
+                    decoration: BoxDecoration(
+                      boxShadow: const [BoxShadow(blurRadius: 40)],
+                      gradient: LinearGradient(
+                        colors: [
+                          Theme.of(context).colorScheme.primary,
+                          Theme.of(context).scaffoldBackgroundColor,
+                        ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        stops: const [0, 1],
+                      ),
                     ),
-                    ChapterList(chapters: chapters, which: i),
-                  ],
-                );
-              },
+                    child: AnimatedBackground(
+                      behaviour: RandomParticleBehaviour(
+                        options: ParticleOptions(
+                            particleCount: 50,
+                            minOpacity: 0.1,
+                            maxOpacity: 0.2,
+                            spawnMinSpeed: 5,
+                            spawnMaxSpeed: 10,
+                            baseColor:
+                                Theme.of(context).scaffoldBackgroundColor),
+                      ),
+                      vsync: this,
+                      child: const SizedBox(),
+                    ),
+                  ),
+                ),
+              ],
             ),
           );
         },
