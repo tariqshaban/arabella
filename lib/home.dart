@@ -54,60 +54,22 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                           Padding(
                             padding: const EdgeInsetsDirectional.fromSTEB(
                                 12, 0, 12, 0),
-                            child: Consumer<CoveredMaterialProvider>(
-                              builder: (context, coveredMaterial, child) {
-                                return Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      ChaptersProvider
-                                          .getChapterTranslatableName(
-                                              chapters.chapters[i].chapterName),
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
-                                      ),
-                                    ).tr(),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8),
-                                        child: Row(
-                                          children: [
-                                            Expanded(
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
-                                                child: LinearProgressIndicator(
-                                                  value: coveredMaterial
-                                                      .getChapterProgress(
-                                                          chapters.chapters[i]
-                                                              .chapterName),
-                                                  backgroundColor:
-                                                      Theme.of(context)
-                                                          .colorScheme
-                                                          .primary
-                                                          .withOpacity(0.5),
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(width: 5),
-                                            Text(
-                                              '${(coveredMaterial.getChapterProgress(chapters.chapters[i].chapterName) * 100).round()}%',
-                                              style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .primary,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    IconButton(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  ChaptersProvider.getChapterTranslatableName(
+                                      chapters.chapters[i].chapterName),
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  ),
+                                ).tr(),
+                                Consumer<CoveredMaterialProvider>(
+                                  builder: (context, coveredMaterial, child) {
+                                    return IconButton(
                                       tooltip: 'chapters.attempt_quiz'.tr(),
                                       iconSize: 20,
                                       icon: const Icon(
@@ -131,15 +93,58 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                               .colorScheme
                                               .primary,
                                       splashRadius: 20,
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                          ChapterList(chapters: chapters, which: 0),
+                          Padding(
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                12, 10, 12, 10),
+                            child: Consumer<CoveredMaterialProvider>(
+                              builder: (context, coveredMaterial, child) {
+                                return Row(
+                                  children: [
+                                    Text(
+                                      'chapters.progress',
+                                      style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                      ),
+                                    ).tr(),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8),
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(15),
+                                          child: LinearProgressIndicator(
+                                            minHeight: 5,
+                                            value: coveredMaterial
+                                                .getChapterProgress(chapters
+                                                    .chapters[i].chapterName),
+                                            backgroundColor: Theme.of(context)
+                                                .colorScheme
+                                                .primary
+                                                .withOpacity(0.2),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      '${(coveredMaterial.getChapterProgress(chapters.chapters[i].chapterName) * 100).round()}%',
+                                      style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                      ),
                                     ),
                                   ],
                                 );
                               },
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: ChapterList(chapters: chapters, which: 0),
                           ),
                         ],
                       ),

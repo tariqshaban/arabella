@@ -17,6 +17,7 @@
   },
   "chapters": {
     "attempt_quiz": "Attempt quiz",
+    "progress": "Progress",
     "history": {
       "name": "History",
       "lessons": {
