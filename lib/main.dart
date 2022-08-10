@@ -86,10 +86,10 @@ class _MainState extends State<Main> {
             ),
           ),
           colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color(0xFF0E8B8B),
+            seedColor: const Color(0xFF29b6f6),
             brightness: Brightness.light,
           ),
-          listTileTheme: const ListTileThemeData(iconColor: Color(0xFF0E8B8B)),
+          listTileTheme: const ListTileThemeData(iconColor: Color(0xFF29b6f6)),
         ),
         dark: ThemeData(
           appBarTheme: const AppBarTheme(
@@ -105,10 +105,10 @@ class _MainState extends State<Main> {
             ),
           ),
           colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color(0xFF0E8B8B),
+            seedColor: const Color(0xFF29b6f6),
             brightness: Brightness.dark,
           ),
-          listTileTheme: const ListTileThemeData(iconColor: Color(0xFF0E8B8B)),
+          listTileTheme: const ListTileThemeData(iconColor: Color(0xFF29b6f6)),
         ),
         initial: AdaptiveThemeMode.light,
         builder: (theme, darkTheme) {

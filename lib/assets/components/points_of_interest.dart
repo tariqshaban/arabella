@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:arabella/assets/components/point_of_interest_info.dart';
@@ -7,6 +9,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:image/image.dart' as img;
 
 import '../enums/map_annotation_type.dart';
 
@@ -48,8 +51,6 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
           child: FutureBuilder(
             builder: (ctx, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
-                dynamic manifest = snapshot.data;
-
                 return GoogleMap(
                     gestureRecognizers: {
                       Factory<EagerGestureRecognizer>(
@@ -66,6 +67,7 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
                     markers: markers,
                     polylines: polylines,
                     polygons: polygons,
+                    zoomControlsEnabled: false,
                     onMapCreated: (GoogleMapController controller) async {
                       this.controller = controller;
 
@@ -87,6 +89,36 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
     );
   }
 
+  static Future<Uint8List> _getBytesFromAsset(
+      String path, int width, Color color) async {
+    ByteData byteData = await rootBundle.load(path);
+    Uint8List int8List = byteData.buffer
+        .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes);
+    List<int> doneListInt = int8List.cast<int>();
+
+    img.Image outputImage = img.decodePng(doneListInt)!;
+
+    img.colorOffset(
+      outputImage,
+      red: color.red,
+      green: color.green,
+      blue: color.blue,
+    );
+
+    outputImage = img.copyResize(outputImage, width: width);
+
+    return Uint8List.fromList(img.encodePng(outputImage));
+
+    // ByteData data = await rootBundle.load(path);
+    // ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
+    //     targetWidth: width);
+    // ui.FrameInfo fi = await codec.getNextFrame();
+    //
+    // return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
+    //     .buffer
+    //     .asUint8List();
+  }
+
   dynamic decodeMapsManifest() async {
     String chapterName =
         widget.chapterName.substring(widget.chapterName.indexOf('-') + 1);
@@ -94,21 +126,33 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
         widget.lessonName.indexOf('-') + 1, widget.lessonName.indexOf('.'));
 
     String file = await rootBundle.loadString('assets/maps/maps_manifest.json');
-    dynamic manifest = json.decode(file)[chapterName][lessonName];
+    manifest = json.decode(file)[chapterName][lessonName];
 
-    assignMarkers(manifest);
-    assignPolylines(manifest);
-    assignPolygons(manifest);
+    assignMarkers();
+    assignPolylines();
+    assignPolygons();
 
-    return manifest;
+    return;
   }
 
-  void assignMarkers(dynamic manifest) {
+  void assignMarkers() async {
+    Color primaryColor = Theme.of(context).colorScheme.primary;
     int counter = 0;
     for (dynamic pointOfInterest in manifest['points_of_interest']) {
       if (pointOfInterest['type'] != 'point') {
         continue;
       }
+
+      BitmapDescriptor icon = BitmapDescriptor.fromBytes(
+        await _getBytesFromAsset(
+          'assets/images/markers/marker.png',
+          (min(MediaQuery.of(context).size.height,
+                      MediaQuery.of(context).size.width) /
+                  6)
+              .round(),
+          primaryColor,
+        ),
+      );
 
       markers.add(
         Marker(
@@ -117,6 +161,7 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
             pointOfInterest['lat'],
             pointOfInterest['lng'],
           ),
+          icon: icon,
           onTap: () {
             showSheet(pointOfInterest['name'], MapAnnotationType.marker);
           },
@@ -125,7 +170,7 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
     }
   }
 
-  Future<void> assignPolylines(dynamic manifest) async {
+  Future<void> assignPolylines() async {
     int counter = 0;
     Color primaryColor = Theme.of(context).colorScheme.primary;
     for (dynamic pointOfInterest in manifest['points_of_interest']) {
@@ -167,7 +212,7 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
     }
   }
 
-  Future<void> assignPolygons(dynamic manifest) async {
+  Future<void> assignPolygons() async {
     int counter = 0;
     Color primaryColor = Theme.of(context).colorScheme.primary;
     for (dynamic pointOfInterest in manifest['points_of_interest']) {

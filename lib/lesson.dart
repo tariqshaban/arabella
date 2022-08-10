@@ -53,7 +53,12 @@ class _LessonState extends State<Lesson> {
                   background: Hero(
                     tag: 'lesson_image ${widget.lesson}',
                     child: ColorFiltered(
-                      colorFilter: ColorFilter.mode(Theme.of(context).colorScheme.primary.withOpacity(0.6), BlendMode.dstATop),
+                      colorFilter: ColorFilter.mode(
+                          Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withOpacity(0.6),
+                          BlendMode.dstATop),
                       child: Image.asset(
                         ChaptersProvider.getImageFromLesson(
                           widget.chapter.chapterName,
@@ -101,30 +106,42 @@ class _LessonState extends State<Lesson> {
                                   if (snapshot.connectionState ==
                                           ConnectionState.done &&
                                       snapshot.data as bool) {
-                                    return ListView(
-                                      shrinkWrap: true,
-                                      children: [
-                                        const Divider(),
-                                        const Text(
-                                          'lessons.points_of_interest',
-                                          style: TextStyle(fontSize: 20),
-                                        ).tr(),
-                                        PointsOfInterest(
-                                          chapterName:
-                                              widget.chapter.chapterName,
-                                          lessonName: widget.lesson,
-                                          padding: const EdgeInsetsDirectional
-                                              .fromSTEB(0, 5, 0, 20),
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                        ),
-                                      ],
+                                    return Card(
+                                      margin: const EdgeInsetsDirectional
+                                          .fromSTEB(5, 15, 5, 5),
+                                      elevation: 5,
+                                      shadowColor:
+                                          Theme.of(context).colorScheme.primary,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      child: ListView(
+                                        padding: const EdgeInsetsDirectional
+                                            .fromSTEB(5, 5, 5, 5),
+                                        shrinkWrap: true,
+                                        children: [
+                                          const Text(
+                                            'lessons.points_of_interest',
+                                            style: TextStyle(fontSize: 20),
+                                          ).tr(),
+                                          PointsOfInterest(
+                                            chapterName:
+                                                widget.chapter.chapterName,
+                                            lessonName: widget.lesson,
+                                            padding: const EdgeInsetsDirectional
+                                                .fromSTEB(0, 10, 0, 0),
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                          ),
+                                        ],
+                                      ),
                                     );
                                   }
                                   return const SizedBox();
                                 },
                                 future: containsPointsOfInterest(),
                               ),
+                              const SizedBox(height: 75),
                             ],
                           ),
                         ),
@@ -146,7 +163,7 @@ class _LessonState extends State<Lesson> {
               icon: const Icon(Icons.navigate_next),
               iconFirst: false,
               onPressed: () {
-                Navigator.popAndPushNamed(context, '/lessons', arguments: {
+                Navigator.pushReplacementNamed(context, '/lessons', arguments: {
                   'chapter': widget.chapter,
                   'lesson': widget.chapter.lessons[getNextLessonIndex()]
                 });

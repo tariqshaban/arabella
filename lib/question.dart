@@ -134,7 +134,7 @@ class _QuestionState extends State<Question> {
               icon: const Icon(Icons.navigate_next),
               iconFirst: false,
               onPressed: () {
-                Navigator.popAndPushNamed(context, '/question', arguments: {
+                Navigator.pushReplacementNamed(context, '/question', arguments: {
                   'chapterName': widget.chapterName,
                   'questions': widget.questions,
                   'currentQuestion': widget.questions[getNextQuestionIndex()],

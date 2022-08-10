@@ -68,7 +68,6 @@ class AppDrawer extends StatelessWidget {
                 ),
               ],
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.secondary,
                 image: DecorationImage(
                   image: AssetImage(backgroundImage),
                   colorFilter: ColorFilter.mode(

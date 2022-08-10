@@ -20,6 +20,7 @@ dependencies:
   confetti: ^0.7.0
   google_maps_flutter: ^2.1.10
   animated_background: ^2.0.0
+  image: ^3.2.0
 
 dev_dependencies:
   flutter_test:
@@ -79,6 +80,8 @@ flutter:
     - assets/images/badges/
     - assets/images/drawer_background/
     - assets/images/drawer_circular/
+    - assets/images/markdown/
+    - assets/images/markers/
 
     - assets/maps/
 
