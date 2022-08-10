@@ -9,7 +9,7 @@ import 'chapters_provider.dart';
 
 class CoveredMaterialProvider with ChangeNotifier {
   ChaptersProvider? _chaptersProvider;
-  Map<String, List<String>> _finishedLessons = {};
+  Map<String, Set<String>> _finishedLessons = {};
   Map<String, double> _finishedQuizzes = {};
 
   CoveredMaterialProvider() {
@@ -39,9 +39,9 @@ class CoveredMaterialProvider with ChangeNotifier {
     }
   }
 
-  Map<String, List<String>> get finishedMaterial => _finishedLessons;
+  Map<String, Set<String>> get finishedMaterial => _finishedLessons;
 
-  set finishedMaterial(Map<String, List<String>> value) {
+  set finishedMaterial(Map<String, Set<String>> value) {
     _finishedLessons = value;
     savePersistentSate();
   }
@@ -58,11 +58,11 @@ class CoveredMaterialProvider with ChangeNotifier {
     _finishedQuizzes = getInitializedQuizzesStatus();
   }
 
-  Map<String, List<String>> getInitializedMaterialStatus() {
-    Map<String, List<String>> initializedMaterialStatus = {};
+  Map<String, Set<String>> getInitializedMaterialStatus() {
+    Map<String, Set<String>> initializedMaterialStatus = {};
 
     for (ChapterModel chapterModel in _chaptersProvider!.chapters) {
-      initializedMaterialStatus[chapterModel.chapterName] = [];
+      initializedMaterialStatus[chapterModel.chapterName] = {};
     }
 
     return initializedMaterialStatus;
@@ -150,14 +150,29 @@ class CoveredMaterialProvider with ChangeNotifier {
     return !getEligibleBadges().values.contains(false);
   }
 
+  double getChapterProgress(String chapterName) {
+    int numberOfLessons = _chaptersProvider!.chapters
+        .firstWhere((chapter) => chapter.chapterName == chapterName)
+        .lessons
+        .length;
+    int coveredLessons = _finishedLessons[chapterName]!.length;
+    int coveredQuiz = (_finishedQuizzes.containsKey(chapterName) &&
+            _finishedQuizzes[chapterName]! >= QuizMetadata.passingMark)
+        ? 1
+        : 0;
+
+    return (coveredLessons + coveredQuiz) / (numberOfLessons + 1);
+  }
+
   void fromJson(Map<String, dynamic> parsedJson) {
     _finishedLessons = Map<String, dynamic>.from(parsedJson['finishedLessons'])
-        .map((String a, dynamic b) => MapEntry(a, List<String>.from(b)));
+        .map((String a, dynamic b) => MapEntry(a, Set<String>.from(b)));
     _finishedQuizzes = Map<String, double>.from(parsedJson['finishedQuizzes']);
   }
 
   Map<String, dynamic> toJson() => {
-        'finishedLessons': _finishedLessons,
+        'finishedLessons': _finishedLessons
+            .map((String a, Set<String> b) => MapEntry(a, b.toList())),
         'finishedQuizzes': _finishedQuizzes,
       };
 }
