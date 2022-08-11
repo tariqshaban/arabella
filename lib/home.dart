@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:animated_background/animated_background.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -157,7 +159,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                         MediaQuery.of(context).size.width, 40),
                   ),
                   child: Container(
-                    height: MediaQuery.of(context).size.height * 0.2,
+                    height: max(MediaQuery.of(context).size.height * 0.2, 100),
                     decoration: BoxDecoration(
                       boxShadow: const [BoxShadow(blurRadius: 40)],
                       gradient: LinearGradient(
