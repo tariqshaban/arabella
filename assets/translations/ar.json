@@ -20,6 +20,13 @@
     "progress": "التقدم",
     "history": {
       "name": "التاريخ",
+      "description": "تفصيل التاريخ",
+      "outcome": [
+        "هدف 1",
+        "هدف 2",
+        "هدف 3",
+        "هدف 4"
+      ],
       "lessons": {
         "bronze_age": {
           "name": "العصر البرونزي",
@@ -46,18 +53,46 @@
     },
     "geography": {
       "name": "الجغرافية",
+      "description": "تفصيل الجغرافية",
+      "outcome": [
+        "هدف 1",
+        "هدف 2",
+        "هدف 3",
+        "هدف 4"
+      ],
       "lessons": {}
     },
     "culture": {
       "name": "الثقافة",
+      "description": "تفصيل الثقافة",
+      "outcome": [
+        "هدف 1",
+        "هدف 2",
+        "هدف 3",
+        "هدف 4"
+      ],
       "lessons": {}
     },
     "tourism_and_archaeological_sites": {
       "name": "السياحة والمواقع الأثرية",
+      "description": "تفصيل السياحة والمواقع الأثرية",
+      "outcome": [
+        "هدف 1",
+        "هدف 2",
+        "هدف 3",
+        "هدف 4"
+      ],
       "lessons": {}
     },
     "education": {
       "name": "التعليم",
+      "description": "تفصيل التعليم",
+      "outcome": [
+        "هدف 1",
+        "هدف 2",
+        "هدف 3",
+        "هدف 4"
+      ],
       "lessons": {}
     }
   },

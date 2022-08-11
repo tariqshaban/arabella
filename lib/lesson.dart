@@ -163,7 +163,7 @@ class _LessonState extends State<Lesson> {
               icon: const Icon(Icons.navigate_next),
               iconFirst: false,
               onPressed: () {
-                Navigator.pushReplacementNamed(context, '/lessons', arguments: {
+                Navigator.pushReplacementNamed(context, '/lesson', arguments: {
                   'chapter': widget.chapter,
                   'lesson': widget.chapter.lessons[getNextLessonIndex()]
                 });

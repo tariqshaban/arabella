@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'Assets/Components/app_drawer.dart';
-import 'assets/components/chapter_list.dart';
+import 'assets/components/lesson_list.dart';
 import 'assets/models/providers/chapters_provider.dart';
 import 'assets/models/providers/covered_material_provider.dart';
 import 'assets/models/quiz_metadata.dart';
@@ -51,104 +51,118 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(
-                                12, 0, 12, 0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  ChaptersProvider.getChapterTranslatableName(
-                                      chapters.chapters[i].chapterName),
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(15),
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            '/chapter',
+                            arguments: {
+                              'chapter': chapters.chapters[i],
+                            },
+                          );
+                        },
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  12, 0, 12, 0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    ChaptersProvider.getChapterTranslatableName(
+                                        chapters.chapters[i].chapterName),
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                    ),
+                                  ).tr(),
+                                  Consumer<CoveredMaterialProvider>(
+                                    builder: (context, coveredMaterial, child) {
+                                      return IconButton(
+                                        tooltip: 'chapters.attempt_quiz'.tr(),
+                                        iconSize: 20,
+                                        icon: const Icon(
+                                          Icons.note_alt,
+                                        ),
+                                        onPressed: () {
+                                          Navigator.pushNamed(context, '/quiz',
+                                              arguments: {
+                                                'chapterName': chapters
+                                                    .chapters[i].chapterName,
+                                                'questions': chapters
+                                                    .chapters[i].questions
+                                              });
+                                        },
+                                        color: (coveredMaterial.getQuizMark(
+                                                    chapters.chapters[i]
+                                                        .chapterName) >=
+                                                QuizMetadata.passingMark)
+                                            ? Colors.green
+                                            : Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                        splashRadius: 20,
+                                      );
+                                    },
                                   ),
-                                ).tr(),
-                                Consumer<CoveredMaterialProvider>(
-                                  builder: (context, coveredMaterial, child) {
-                                    return IconButton(
-                                      tooltip: 'chapters.attempt_quiz'.tr(),
-                                      iconSize: 20,
-                                      icon: const Icon(
-                                        Icons.note_alt,
-                                      ),
-                                      onPressed: () {
-                                        Navigator.pushNamed(context, '/quiz',
-                                            arguments: {
-                                              'chapterName': chapters
-                                                  .chapters[i].chapterName,
-                                              'questions':
-                                                  chapters.chapters[i].questions
-                                            });
-                                      },
-                                      color: (coveredMaterial.getQuizMark(
-                                                  chapters.chapters[i]
-                                                      .chapterName) >=
-                                              QuizMetadata.passingMark)
-                                          ? Colors.green
-                                          : Theme.of(context)
+                                ],
+                              ),
+                            ),
+                            LessonList(chapter: chapters.chapters[i]),
+                            Padding(
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  12, 10, 12, 10),
+                              child: Consumer<CoveredMaterialProvider>(
+                                builder: (context, coveredMaterial, child) {
+                                  return Row(
+                                    children: [
+                                      Text(
+                                        'chapters.progress',
+                                        style: TextStyle(
+                                          color: Theme.of(context)
                                               .colorScheme
                                               .primary,
-                                      splashRadius: 20,
-                                    );
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                          ChapterList(chapters: chapters, which: 0),
-                          Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(
-                                12, 10, 12, 10),
-                            child: Consumer<CoveredMaterialProvider>(
-                              builder: (context, coveredMaterial, child) {
-                                return Row(
-                                  children: [
-                                    Text(
-                                      'chapters.progress',
-                                      style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
-                                      ),
-                                    ).tr(),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8),
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(15),
-                                          child: LinearProgressIndicator(
-                                            minHeight: 5,
-                                            value: coveredMaterial
-                                                .getChapterProgress(chapters
-                                                    .chapters[i].chapterName),
-                                            backgroundColor: Theme.of(context)
-                                                .colorScheme
-                                                .primary
-                                                .withOpacity(0.2),
+                                        ),
+                                      ).tr(),
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
+                                            child: LinearProgressIndicator(
+                                              minHeight: 5,
+                                              value: coveredMaterial
+                                                  .getChapterProgress(chapters
+                                                      .chapters[i].chapterName),
+                                              backgroundColor: Theme.of(context)
+                                                  .colorScheme
+                                                  .primary
+                                                  .withOpacity(0.2),
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                    Text(
-                                      '${(coveredMaterial.getChapterProgress(chapters.chapters[i].chapterName) * 100).round()}%',
-                                      style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
+                                      Text(
+                                        '${(coveredMaterial.getChapterProgress(chapters.chapters[i].chapterName) * 100).round()}%',
+                                        style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                );
-                              },
+                                    ],
+                                  );
+                                },
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     );
                   },

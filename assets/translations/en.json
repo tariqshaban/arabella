@@ -20,6 +20,13 @@
     "progress": "Progress",
     "history": {
       "name": "History",
+      "description": "History description",
+      "outcome": [
+        "outcome 1",
+        "outcome 2",
+        "outcome 3",
+        "outcome 4"
+      ],
       "lessons": {
         "bronze_age": {
           "name": "Bronze Age",
@@ -46,18 +53,46 @@
     },
     "geography": {
       "name": "Geography",
+      "description": "Geography description",
+      "outcome": [
+        "outcome 1",
+        "outcome 2",
+        "outcome 3",
+        "outcome 4"
+      ],
       "lessons": {}
     },
     "culture": {
       "name": "Culture",
+      "description": "Culture description",
+      "outcome": [
+        "outcome 1",
+        "outcome 2",
+        "outcome 3",
+        "outcome 4"
+      ],
       "lessons": {}
     },
     "tourism_and_archaeological_sites": {
       "name": "Tourism & Archaeological Sites",
+      "description": "Tourism & Archaeological Sites description",
+      "outcome": [
+        "outcome 1",
+        "outcome 2",
+        "outcome 3",
+        "outcome 4"
+      ],
       "lessons": {}
     },
     "education": {
       "name": "Education",
+      "description": "Education description",
+      "outcome": [
+        "outcome 1",
+        "outcome 2",
+        "outcome 3",
+        "outcome 4"
+      ],
       "lessons": {}
     }
   },

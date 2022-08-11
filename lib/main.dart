@@ -19,6 +19,7 @@ import 'package:provider/provider.dart';
 import 'assets/models/providers/chapters_provider.dart';
 import 'assets/models/providers/confettiProvider.dart';
 import 'assets/models/providers/scroll_offset_provider.dart';
+import 'chapter.dart';
 import 'home.dart';
 
 Future<void> main() async {
@@ -204,7 +205,13 @@ class _MainState extends State<Main> {
               switch (settings.name) {
                 case '/':
                   return MaterialPageRoute(builder: (_) => const Home());
-                case '/lessons':
+                case '/chapter':
+                  return MaterialPageRoute(
+                    builder: (_) => Stack(
+                      children: [Chapter(chapter: arguments['chapter'])],
+                    ),
+                  );
+                case '/lesson':
                   return MaterialPageRoute(
                     builder: (_) => Stack(
                       children: [

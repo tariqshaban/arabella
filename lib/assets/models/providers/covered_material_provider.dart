@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:arabella/assets/models/chapter_model.dart';
 import 'package:arabella/assets/models/quiz_metadata.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'chapters_provider.dart';
