@@ -1,6 +1,6 @@
-import 'package:arabella/assets/models/providers/celebrateProvider.dart';
+import 'package:arabella/assets/models/providers/celebrate_provider.dart';
 import 'package:arabella/assets/models/providers/chapters_provider.dart';
-import 'package:arabella/assets/models/providers/confettiProvider.dart';
+import 'package:arabella/assets/models/providers/confetti_provider.dart';
 import 'package:arabella/assets/models/providers/covered_material_provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';

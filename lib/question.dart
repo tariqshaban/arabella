@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 import 'assets/components/extended_floating_action_button.dart';
 import 'assets/components/snack_bar.dart';
-import 'assets/models/providers/confettiProvider.dart';
+import 'assets/models/providers/confetti_provider.dart';
 import 'assets/models/providers/scroll_direction_provider.dart';
 import 'assets/models/question_model.dart';
 import 'assets/models/quiz_metadata.dart';

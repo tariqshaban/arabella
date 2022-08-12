@@ -189,13 +189,13 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                     child: AnimatedBackground(
                       behaviour: RandomParticleBehaviour(
                         options: ParticleOptions(
-                            particleCount: 50,
-                            minOpacity: 0.1,
-                            maxOpacity: 0.2,
-                            spawnMinSpeed: 5,
-                            spawnMaxSpeed: 10,
-                            baseColor:
-                                Theme.of(context).scaffoldBackgroundColor),
+                          particleCount: 50,
+                          minOpacity: 0.1,
+                          maxOpacity: 0.2,
+                          spawnMinSpeed: 5,
+                          spawnMaxSpeed: 10,
+                          baseColor: Theme.of(context).scaffoldBackgroundColor,
+                        ),
                       ),
                       vsync: this,
                       child: const SizedBox(),

@@ -1,5 +1,5 @@
 import 'package:arabella/assets/models/providers/chapters_provider.dart';
-import 'package:arabella/assets/models/providers/confettiProvider.dart';
+import 'package:arabella/assets/models/providers/confetti_provider.dart';
 import 'package:arabella/assets/models/question_model.dart';
 import 'package:arabella/assets/models/quiz_metadata.dart';
 import 'package:easy_localization/easy_localization.dart';

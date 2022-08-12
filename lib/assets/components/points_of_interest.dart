@@ -1,15 +1,14 @@
 import 'dart:convert';
-import 'dart:math';
-import 'dart:typed_data';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:arabella/assets/components/point_of_interest_info.dart';
+import 'package:arabella/assets/models/providers/maps_icon_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:image/image.dart' as img;
+import 'package:provider/provider.dart';
 
 import '../enums/map_annotation_type.dart';
 
@@ -67,6 +66,7 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
                     markers: markers,
                     polylines: polylines,
                     polygons: polygons,
+                    buildingsEnabled: false,
                     zoomControlsEnabled: false,
                     onMapCreated: (GoogleMapController controller) async {
                       this.controller = controller;
@@ -89,36 +89,6 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
     );
   }
 
-  static Future<Uint8List> _getBytesFromAsset(
-      String path, int width, Color color) async {
-    ByteData byteData = await rootBundle.load(path);
-    Uint8List int8List = byteData.buffer
-        .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes);
-    List<int> doneListInt = int8List.cast<int>();
-
-    img.Image outputImage = img.decodePng(doneListInt)!;
-
-    img.colorOffset(
-      outputImage,
-      red: color.red,
-      green: color.green,
-      blue: color.blue,
-    );
-
-    outputImage = img.copyResize(outputImage, width: width);
-
-    return Uint8List.fromList(img.encodePng(outputImage));
-
-    // ByteData data = await rootBundle.load(path);
-    // ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
-    //     targetWidth: width);
-    // ui.FrameInfo fi = await codec.getNextFrame();
-    //
-    // return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
-    //     .buffer
-    //     .asUint8List();
-  }
-
   dynamic decodeMapsManifest() async {
     String chapterName =
         widget.chapterName.substring(widget.chapterName.indexOf('-') + 1);
@@ -132,27 +102,20 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
     assignPolylines();
     assignPolygons();
 
+    // Delay google maps widget build, since it slows the device, and causes to crash if rebuilt too often
+    await Future.delayed(const Duration(seconds: 1));
+
     return;
   }
 
   void assignMarkers() async {
-    Color primaryColor = Theme.of(context).colorScheme.primary;
     int counter = 0;
     for (dynamic pointOfInterest in manifest['points_of_interest']) {
       if (pointOfInterest['type'] != 'point') {
         continue;
       }
 
-      BitmapDescriptor icon = BitmapDescriptor.fromBytes(
-        await _getBytesFromAsset(
-          'assets/images/markers/marker.png',
-          (min(MediaQuery.of(context).size.height,
-                      MediaQuery.of(context).size.width) /
-                  6)
-              .round(),
-          primaryColor,
-        ),
-      );
+      BitmapDescriptor icon = context.read<MapsIconProvider>().icon;
 
       markers.add(
         Marker(

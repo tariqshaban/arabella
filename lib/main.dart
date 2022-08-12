@@ -1,26 +1,28 @@
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:arabella/assets/models/providers/answered_questions_provider.dart';
-import 'package:arabella/assets/models/providers/celebrateProvider.dart';
 import 'package:arabella/assets/models/providers/covered_material_provider.dart';
+import 'package:arabella/assets/models/providers/maps_icon_provider.dart';
 import 'package:arabella/assets/models/providers/scroll_direction_provider.dart';
 import 'package:arabella/badge.dart';
+import 'package:arabella/home.dart';
 import 'package:arabella/lesson.dart';
 import 'package:arabella/question.dart';
 import 'package:arabella/quiz.dart';
+import 'package:arabella/splash.dart';
 import 'package:confetti/confetti.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import 'assets/models/providers/background_animation_provider.dart';
+import 'assets/models/providers/celebrate_provider.dart';
 import 'assets/models/providers/chapters_provider.dart';
-import 'assets/models/providers/confettiProvider.dart';
+import 'assets/models/providers/confetti_provider.dart';
 import 'assets/models/providers/scroll_offset_provider.dart';
 import 'chapter.dart';
-import 'home.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,8 +48,6 @@ class Main extends StatefulWidget {
 class _MainState extends State<Main> {
   @override
   Widget build(BuildContext context) {
-    preCacheImages(context);
-
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<ChaptersProvider>(
@@ -71,6 +71,10 @@ class _MainState extends State<Main> {
             create: (context) => CelebrateProvider()),
         ChangeNotifierProvider<ScrollOffsetProvider>(
             create: (context) => ScrollOffsetProvider()),
+        ChangeNotifierProvider<MapsIconProvider>(
+            create: (context) => MapsIconProvider()),
+        ChangeNotifierProvider<BackgroundAnimationProvider>(
+            create: (context) => BackgroundAnimationProvider()),
       ],
       child: AdaptiveTheme(
         light: ThemeData(
@@ -119,7 +123,7 @@ class _MainState extends State<Main> {
             locale: context.locale,
             theme: theme,
             darkTheme: darkTheme,
-            initialRoute: '/',
+            initialRoute: '/splash',
             builder: (context, child) {
               return Stack(
                 children: [
@@ -205,6 +209,8 @@ class _MainState extends State<Main> {
               switch (settings.name) {
                 case '/':
                   return MaterialPageRoute(builder: (_) => const Home());
+                case '/splash':
+                  return MaterialPageRoute(builder: (_) => const Splash());
                 case '/chapter':
                   return MaterialPageRoute(
                     builder: (_) => Stack(
@@ -248,16 +254,5 @@ class _MainState extends State<Main> {
         },
       ),
     );
-  }
-
-  preCacheImages(BuildContext context) async {
-    final manifestJson = await rootBundle.loadString('AssetManifest.json');
-    final images = json
-        .decode(manifestJson)
-        .keys
-        .where((String key) => key.startsWith('assets/images/'))
-        .toList();
-
-    images.forEach((image) => precacheImage(AssetImage(image), context));
   }
 }
