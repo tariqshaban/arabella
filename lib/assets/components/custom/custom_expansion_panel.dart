@@ -362,12 +362,14 @@ class _CustomExpansionPanelListState extends State<CustomExpansionPanelList> {
         _isChildExpanded(index),
       );
 
-      Widget expandIconContainer = ExpandIcon(
-        isExpanded: _isChildExpanded(index),
-        color: widget.iconColor,
-        onPressed: !child.canTapOnHeader
-            ? (bool isExpanded) => _handlePressed(isExpanded, index)
-            : null,
+      Widget expandIconContainer = IgnorePointer(
+        child: ExpandIcon(
+          isExpanded: _isChildExpanded(index),
+          color: widget.iconColor,
+          onPressed: !child.canTapOnHeader
+              ? (bool isExpanded) => _handlePressed(isExpanded, index)
+              : null,
+        ),
       );
       if (!child.canTapOnHeader) {
         final MaterialLocalizations localizations =

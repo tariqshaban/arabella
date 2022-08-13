@@ -40,29 +40,27 @@ class _ExpandableWidgetState extends State<ExpandableWidget> {
                   widget.expandedStateKey,
                   !(panelExpansion.isExpanded[widget.expandedStateKey] ??
                       false)),
-              child: IgnorePointer(
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: CustomExpansionPanelList(
-                    elevation: 0,
-                    expandedHeaderPadding: EdgeInsets.zero,
-                    animationDuration: const Duration(milliseconds: 300),
-                    iconColor: Theme.of(context).colorScheme.primary,
-                    children: [
-                      CustomExpansionPanel(
-                        backgroundColor: Colors.transparent,
-                        isExpanded: panelExpansion
-                                .isExpanded[widget.expandedStateKey] ??
-                            false,
-                        headerBuilder: (context, isExpanded) => Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [widget.header],
-                        ),
-                        body: widget.body,
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: CustomExpansionPanelList(
+                  elevation: 0,
+                  expandedHeaderPadding: EdgeInsets.zero,
+                  animationDuration: const Duration(milliseconds: 300),
+                  iconColor: Theme.of(context).colorScheme.primary,
+                  children: [
+                    CustomExpansionPanel(
+                      backgroundColor: Colors.transparent,
+                      isExpanded: panelExpansion
+                              .isExpanded[widget.expandedStateKey] ??
+                          false,
+                      headerBuilder: (context, isExpanded) => Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [widget.header],
                       ),
-                    ],
-                  ),
+                      body: widget.body,
+                    ),
+                  ],
                 ),
               ),
             );
