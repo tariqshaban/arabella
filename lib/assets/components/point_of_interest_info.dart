@@ -36,22 +36,17 @@ class _PointsOfInterestInfoState extends State<PointsOfInterestInfo> {
                   .tr(),
             ),
             Flexible(
-              child: NotificationListener<OverscrollIndicatorNotification>(
-                onNotification: (notification) {
-                  notification.disallowIndicator();
-                  return true;
-                },
-                child: SingleChildScrollView(
-                  controller: scrollController,
-                  child: Padding(
-                    padding:
-                        const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 10),
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: Text(
-                        'chapters.${widget.chapterName}.lessons.${widget.lessonName}.points_of_interest.${widget.pointOfInterestName}.content',
-                      ).tr(),
-                    ),
+              child: SingleChildScrollView(
+                controller: scrollController,
+                physics: const BouncingScrollPhysics(),
+                child: Padding(
+                  padding:
+                      const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 10),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Text(
+                      'chapters.${widget.chapterName}.lessons.${widget.lessonName}.points_of_interest.${widget.pointOfInterestName}.content',
+                    ).tr(),
                   ),
                 ),
               ),

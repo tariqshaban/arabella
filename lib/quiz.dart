@@ -86,45 +86,40 @@ class _QuizState extends State<Quiz> {
                     notification.direction;
                 return true;
               },
-              child: NotificationListener<OverscrollIndicatorNotification>(
-                onNotification: (notification) {
-                  notification.disallowIndicator();
-                  return true;
-                },
-                child: Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: widget.questions.length,
-                    itemBuilder: (context, i) {
-                      return Card(
-                        elevation: 5,
-                        shadowColor: Theme.of(context).colorScheme.primary,
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.pushNamed(context, '/question',
-                                arguments: {
-                                  'chapterName': widget.chapterName,
-                                  'questions': widget.questions,
-                                  'currentQuestion': widget.questions[i],
-                                });
-                          },
-                          child: ListTile(
-                              leading: QuestionState(
-                                chapterName: widget.chapterName,
-                                questionIndex: i,
-                              ),
-                              title: Text(
-                                  '${'quiz.question_number'.tr()} ${i + 1}'),
-                              trailing:
-                                  (ChaptersProvider.isMultipleChoiceQuestion(
-                                          widget.questions[i]))
-                                      ? const Icon(Icons.radio_button_checked)
-                                      : const Icon(Icons.check_box)),
-                        ),
-                      );
-                    },
-                  ),
+              child: Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: widget.questions.length,
+                  itemBuilder: (context, i) {
+                    return Card(
+                      elevation: 5,
+                      shadowColor: Theme.of(context).colorScheme.primary,
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(context, '/question',
+                              arguments: {
+                                'chapterName': widget.chapterName,
+                                'questions': widget.questions,
+                                'currentQuestion': widget.questions[i],
+                              });
+                        },
+                        child: ListTile(
+                            leading: QuestionState(
+                              chapterName: widget.chapterName,
+                              questionIndex: i,
+                            ),
+                            title: Text(
+                                '${'quiz.question_number'.tr()} ${i + 1}'),
+                            trailing:
+                                (ChaptersProvider.isMultipleChoiceQuestion(
+                                        widget.questions[i]))
+                                    ? const Icon(Icons.radio_button_checked)
+                                    : const Icon(Icons.check_box)),
+                      ),
+                    );
+                  },
                 ),
               ),
             ),

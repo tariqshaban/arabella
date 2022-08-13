@@ -92,58 +92,52 @@ class _LessonState extends State<Lesson> {
                               notification.direction;
                           return true;
                         },
-                        child: NotificationListener<
-                            OverscrollIndicatorNotification>(
-                          onNotification: (notification) {
-                            notification.disallowIndicator();
-                            return true;
-                          },
-                          child: ListView(
-                            children: [
-                              MarkdownBody(data: snapshot.data as String),
-                              FutureBuilder(
-                                builder: (ctx, snapshot) {
-                                  if (snapshot.connectionState ==
-                                          ConnectionState.done &&
-                                      snapshot.data as bool) {
-                                    return Card(
-                                      margin: const EdgeInsetsDirectional
-                                          .fromSTEB(5, 15, 5, 5),
-                                      elevation: 5,
-                                      shadowColor:
-                                          Theme.of(context).colorScheme.primary,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
-                                      child: ListView(
-                                        padding: const EdgeInsetsDirectional
-                                            .fromSTEB(5, 5, 5, 5),
-                                        shrinkWrap: true,
-                                        children: [
-                                          const Text(
-                                            'lessons.points_of_interest',
-                                            style: TextStyle(fontSize: 20),
-                                          ).tr(),
-                                          PointsOfInterest(
-                                            chapterName:
-                                                widget.chapter.chapterName,
-                                            lessonName: widget.lesson,
-                                            padding: const EdgeInsetsDirectional
-                                                .fromSTEB(0, 10, 0, 0),
-                                            borderRadius:
-                                                BorderRadius.circular(15),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  }
-                                  return const SizedBox();
-                                },
-                                future: containsPointsOfInterest(),
-                              ),
-                              const SizedBox(height: 75),
-                            ],
-                          ),
+                        child: ListView(
+                          physics: const BouncingScrollPhysics(),
+                          children: [
+                            MarkdownBody(data: snapshot.data as String),
+                            FutureBuilder(
+                              builder: (ctx, snapshot) {
+                                if (snapshot.connectionState ==
+                                        ConnectionState.done &&
+                                    snapshot.data as bool) {
+                                  return Card(
+                                    margin: const EdgeInsetsDirectional
+                                        .fromSTEB(5, 15, 5, 5),
+                                    elevation: 5,
+                                    shadowColor:
+                                        Theme.of(context).colorScheme.primary,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    child: ListView(
+                                      padding: const EdgeInsetsDirectional
+                                          .fromSTEB(5, 5, 5, 5),
+                                      shrinkWrap: true,
+                                      children: [
+                                        const Text(
+                                          'lessons.points_of_interest',
+                                          style: TextStyle(fontSize: 20),
+                                        ).tr(),
+                                        PointsOfInterest(
+                                          chapterName:
+                                              widget.chapter.chapterName,
+                                          lessonName: widget.lesson,
+                                          padding: const EdgeInsetsDirectional
+                                              .fromSTEB(0, 10, 0, 0),
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }
+                                return const SizedBox();
+                              },
+                              future: containsPointsOfInterest(),
+                            ),
+                            const SizedBox(height: 75),
+                          ],
                         ),
                       ),
                     ),

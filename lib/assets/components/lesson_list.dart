@@ -47,9 +47,9 @@ class _LessonListState extends State<LessonList> with WidgetsBindingObserver {
           height: 200,
           child: ListView.builder(
             controller: pageController,
+            scrollDirection: Axis.horizontal,
             physics: const PagingScrollPhysics(itemDimension: 250),
             itemCount: widget.chapter.lessons.length,
-            scrollDirection: Axis.horizontal,
             itemBuilder: (context, i) {
               String lesson = widget.chapter.lessons[i];
               return Builder(

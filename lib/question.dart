@@ -72,51 +72,46 @@ class _QuestionState extends State<Question> {
                         return true;
                       },
                       child:
-                          NotificationListener<OverscrollIndicatorNotification>(
-                        onNotification: (notification) {
-                          notification.disallowIndicator();
-                          return true;
-                        },
-                        child: Consumer<AnsweredQuestionsProvider>(
-                          builder: (context, answeredQuestions, child) {
-                            return ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: widget.currentQuestion.options.length,
-                              itemBuilder: (context, i) {
-                                return (answeredQuestions
-                                        .containsMultipleAnswers(
-                                            widget.chapterName,
-                                            widget.currentQuestion.question))
-                                    ? CheckboxListTile(
-                                        contentPadding: EdgeInsets.zero,
-                                        controlAffinity:
-                                            ListTileControlAffinity.leading,
-                                        value: getCheckboxState(context, i),
-                                        onChanged: (value) {
-                                          checkboxEventHandler(
-                                              context, i, value!);
-                                        },
-                                        title: MarkdownBody(
-                                            data: (snapshot.data
-                                                as List<String>)[i]),
-                                      )
-                                    : RadioListTile(
-                                        contentPadding: EdgeInsets.zero,
-                                        value: i,
-                                        groupValue: getRadioState(context),
-                                        onChanged: (value) {
-                                          radioEventHandler(
-                                              context, i, value as int);
-                                        },
-                                        title: MarkdownBody(
-                                            data: (snapshot.data
-                                                as List<String>)[i]),
-                                      );
-                              },
-                            );
-                          },
-                        ),
-                      ),
+                          Consumer<AnsweredQuestionsProvider>(
+                            builder: (context, answeredQuestions, child) {
+                              return ListView.builder(
+                                shrinkWrap: true,
+                                physics: const BouncingScrollPhysics(),
+                                itemCount: widget.currentQuestion.options.length,
+                                itemBuilder: (context, i) {
+                                  return (answeredQuestions
+                                          .containsMultipleAnswers(
+                                              widget.chapterName,
+                                              widget.currentQuestion.question))
+                                      ? CheckboxListTile(
+                                          contentPadding: EdgeInsets.zero,
+                                          controlAffinity:
+                                              ListTileControlAffinity.leading,
+                                          value: getCheckboxState(context, i),
+                                          onChanged: (value) {
+                                            checkboxEventHandler(
+                                                context, i, value!);
+                                          },
+                                          title: MarkdownBody(
+                                              data: (snapshot.data
+                                                  as List<String>)[i]),
+                                        )
+                                      : RadioListTile(
+                                          contentPadding: EdgeInsets.zero,
+                                          value: i,
+                                          groupValue: getRadioState(context),
+                                          onChanged: (value) {
+                                            radioEventHandler(
+                                                context, i, value as int);
+                                          },
+                                          title: MarkdownBody(
+                                              data: (snapshot.data
+                                                  as List<String>)[i]),
+                                        );
+                                },
+                              );
+                            },
+                          ),
                     ),
                   );
                 }

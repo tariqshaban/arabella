@@ -19,6 +19,7 @@ class _LessonListVerticalState extends State<LessonListVertical> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      physics: const BouncingScrollPhysics(),
       itemCount: widget.chapter.lessons.length,
       itemBuilder: (context, i) {
         String lesson = widget.chapter.lessons[i];

@@ -78,38 +78,33 @@ class _BadgeState extends State<Badge> {
               coveredMaterial.getEligibleBadges();
           return Column(
             children: [
-              NotificationListener<OverscrollIndicatorNotification>(
-                onNotification: (notification) {
-                  notification.disallowIndicator();
-                  return true;
-                },
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: eligibleBadges.length,
-                  itemBuilder: (context, i) {
-                    String key = eligibleBadges.keys.elementAt(i);
-                    return FullScreenWidget(
-                      opacity: 0.8,
-                      padding: const EdgeInsets.all(20),
-                      enabled: eligibleBadges[key]!,
-                      fullScreenWidget: Hero(
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const BouncingScrollPhysics(),
+                itemCount: eligibleBadges.length,
+                itemBuilder: (context, i) {
+                  String key = eligibleBadges.keys.elementAt(i);
+                  return FullScreenWidget(
+                    opacity: 0.8,
+                    padding: const EdgeInsets.all(20),
+                    enabled: eligibleBadges[key]!,
+                    fullScreenWidget: Hero(
+                      tag: 'badge $i',
+                      child: getBadgeIcon(key, eligibleBadges[key]!),
+                    ),
+                    child: ListTile(
+                      minVerticalPadding: 10,
+                      leading: Hero(
                         tag: 'badge $i',
                         child: getBadgeIcon(key, eligibleBadges[key]!),
                       ),
-                      child: ListTile(
-                        minVerticalPadding: 10,
-                        leading: Hero(
-                          tag: 'badge $i',
-                          child: getBadgeIcon(key, eligibleBadges[key]!),
-                        ),
-                        title: getBadgeTitle(key, eligibleBadges[key]!),
-                        subtitle: (eligibleBadges[key]!)
-                            ? const Text('\n')
-                            : const Text('badges.complete_to_unlock').tr(),
-                      ),
-                    );
-                  },
-                ),
+                      title: getBadgeTitle(key, eligibleBadges[key]!),
+                      subtitle: (eligibleBadges[key]!)
+                          ? const Text('\n')
+                          : const Text('badges.complete_to_unlock').tr(),
+                    ),
+                  );
+                },
               ),
               if (coveredMaterial.isEligibleForCompletionBadge()) ...[
                 const Divider(),
