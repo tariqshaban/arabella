@@ -4,6 +4,7 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:arabella/assets/models/providers/answered_questions_provider.dart';
 import 'package:arabella/assets/models/providers/covered_material_provider.dart';
 import 'package:arabella/assets/models/providers/maps_icon_provider.dart';
+import 'package:arabella/assets/models/providers/panel_expansion_provider.dart';
 import 'package:arabella/assets/models/providers/scroll_direction_provider.dart';
 import 'package:arabella/badge.dart';
 import 'package:arabella/home.dart';
@@ -75,6 +76,8 @@ class _MainState extends State<Main> {
             create: (context) => MapsIconProvider()),
         ChangeNotifierProvider<BackgroundAnimationProvider>(
             create: (context) => BackgroundAnimationProvider()),
+        ChangeNotifierProvider<PanelExpansionProvider>(
+            create: (context) => PanelExpansionProvider()),
       ],
       child: AdaptiveTheme(
         light: ThemeData(

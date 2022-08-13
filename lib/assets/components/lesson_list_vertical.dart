@@ -19,7 +19,8 @@ class _LessonListVerticalState extends State<LessonListVertical> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      physics: const BouncingScrollPhysics(),
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: widget.chapter.lessons.length,
       itemBuilder: (context, i) {
         String lesson = widget.chapter.lessons[i];
@@ -28,7 +29,7 @@ class _LessonListVerticalState extends State<LessonListVertical> {
             return ClipRRect(
               borderRadius: BorderRadius.circular(15),
               child: Card(
-                margin: const EdgeInsets.all(5),
+                margin: const EdgeInsetsDirectional.fromSTEB(0, 5, 0, 5),
                 elevation: 5,
                 shadowColor: Theme.of(context).colorScheme.primary,
                 shape: RoundedRectangleBorder(
@@ -63,9 +64,12 @@ class _LessonListVerticalState extends State<LessonListVertical> {
                           style: const TextStyle(fontSize: 16),
                         ),
                         const Expanded(child: SizedBox()),
-                        Icon(
-                          Icons.navigate_next,
-                          color: Theme.of(context).colorScheme.primary,
+                        Padding(
+                          padding: const EdgeInsetsDirectional.only(end: 15),
+                          child: Icon(
+                            Icons.navigate_next,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
                         )
                       ],
                     ),

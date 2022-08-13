@@ -34,7 +34,7 @@ class PointsOfInterest extends StatefulWidget {
 
 class _PointsOfInterestState extends State<PointsOfInterest> {
   late GoogleMapController controller;
-  late dynamic manifest = decodeMapsManifest();
+  late dynamic manifest;
   Set<Marker> markers = {};
   Set<Polyline> polylines = {};
   Set<Polygon> polygons = {};
@@ -82,7 +82,7 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
               }
               return const SizedBox();
             },
-            future: manifest,
+            future: decodeMapsManifest(),
           ),
         ),
       ),

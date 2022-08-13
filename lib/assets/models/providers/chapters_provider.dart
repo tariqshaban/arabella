@@ -59,6 +59,24 @@ class ChaptersProvider with ChangeNotifier {
     return 'chapters.${chapter.substring(chapter.indexOf('-') + 1)}.lessons.${lesson.substring(lesson.indexOf('-') + 1, lesson.lastIndexOf('.'))}.name';
   }
 
+  static Future<List<String>> getChapterTranslatableLearningOutcomes(
+      String chapter) async {
+    List<String> translatableLearningOutcomes = [];
+
+    dynamic data = await json
+        .decode(await rootBundle.loadString('assets/translations/en.json'));
+
+    dynamic outcomes = data['chapters']
+        [chapter.substring(chapter.indexOf('-') + 1)]['outcomes'];
+
+    outcomes.keys.forEach((key) {
+      translatableLearningOutcomes.add(
+          'chapters.${chapter.substring(chapter.indexOf('-') + 1)}.outcomes.$key');
+    });
+
+    return translatableLearningOutcomes;
+  }
+
   static String getImageFromLesson(String chapter, String lesson) {
     return 'assets/images/chapters/$chapter/cover_images/${lesson.substring(0, lesson.indexOf("."))}.jpg';
   }

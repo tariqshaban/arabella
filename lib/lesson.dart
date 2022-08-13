@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:provider/provider.dart';
 
+import 'assets/components/expandable_widget.dart';
 import 'assets/components/extended_floating_action_button.dart';
 import 'assets/components/points_of_interest.dart';
 import 'assets/models/chapter_model.dart';
@@ -77,7 +78,7 @@ class _LessonState extends State<Lesson> {
           builder: (ctx, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               return Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(8, 10, 8, 0),
+                padding: const EdgeInsetsDirectional.fromSTEB(8, 0, 8, 0),
                 child: Flex(
                   direction: Axis.vertical,
                   children: <Widget>[
@@ -87,48 +88,32 @@ class _LessonState extends State<Lesson> {
                           if (notification.direction == ScrollDirection.idle) {
                             return true;
                           }
-
                           context.read<ScrollDirectionProvider>().direction =
                               notification.direction;
                           return true;
                         },
                         child: ListView(
+                          padding: const EdgeInsets.only(top: 10),
                           physics: const BouncingScrollPhysics(),
                           children: [
-                            MarkdownBody(data: snapshot.data as String),
                             FutureBuilder(
                               builder: (ctx, snapshot) {
                                 if (snapshot.connectionState ==
                                         ConnectionState.done &&
                                     snapshot.data as bool) {
-                                  return Card(
-                                    margin: const EdgeInsetsDirectional
-                                        .fromSTEB(5, 15, 5, 5),
-                                    elevation: 5,
-                                    shadowColor:
-                                        Theme.of(context).colorScheme.primary,
-                                    shape: RoundedRectangleBorder(
+                                  return ExpandableWidget(
+                                    expandedStateKey: 'points_of_interest',
+                                    header: const Text(
+                                      'lessons.points_of_interest',
+                                      style: TextStyle(fontSize: 20),
+                                    ).tr(),
+                                    body: PointsOfInterest(
+                                      chapterName: widget.chapter.chapterName,
+                                      lessonName: widget.lesson,
+                                      padding:
+                                          const EdgeInsetsDirectional.fromSTEB(
+                                              0, 10, 0, 0),
                                       borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    child: ListView(
-                                      padding: const EdgeInsetsDirectional
-                                          .fromSTEB(5, 5, 5, 5),
-                                      shrinkWrap: true,
-                                      children: [
-                                        const Text(
-                                          'lessons.points_of_interest',
-                                          style: TextStyle(fontSize: 20),
-                                        ).tr(),
-                                        PointsOfInterest(
-                                          chapterName:
-                                              widget.chapter.chapterName,
-                                          lessonName: widget.lesson,
-                                          padding: const EdgeInsetsDirectional
-                                              .fromSTEB(0, 10, 0, 0),
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                        ),
-                                      ],
                                     ),
                                   );
                                 }
@@ -136,6 +121,8 @@ class _LessonState extends State<Lesson> {
                               },
                               future: containsPointsOfInterest(),
                             ),
+                            const SizedBox(height: 25),
+                            MarkdownBody(data: snapshot.data as String),
                             const SizedBox(height: 75),
                           ],
                         ),

@@ -81,7 +81,6 @@ class _QuizState extends State<Quiz> {
                 if (notification.direction == ScrollDirection.idle) {
                   return true;
                 }
-
                 context.read<ScrollDirectionProvider>().direction =
                     notification.direction;
                 return true;

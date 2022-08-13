@@ -6,7 +6,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'assets/components/fullscreen_widget.dart';
+import 'assets/components/custom/fullscreen_widget.dart';
 
 class Badge extends StatefulWidget {
   const Badge({Key? key}) : super(key: key);

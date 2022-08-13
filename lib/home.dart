@@ -35,7 +35,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 padding: EdgeInsetsDirectional.fromSTEB(
                     0, MediaQuery.of(context).size.height * 0.2 + 10, 0, 20),
                 separatorBuilder: (BuildContext context, int i) {
-                  return const Divider(height: 10, color: Colors.transparent);
+                  return const SizedBox(height: 10);
                 },
                 physics: const BouncingScrollPhysics(),
                 itemCount: chapters.chapters.length,

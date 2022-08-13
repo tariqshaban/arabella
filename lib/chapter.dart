@@ -1,3 +1,4 @@
+import 'package:arabella/assets/components/learning_outcomes.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -23,7 +24,21 @@ class _ChapterState extends State<Chapter> {
                 widget.chapter.chapterName))
             .tr(),
       ),
-      body: LessonListVertical(chapter: widget.chapter),
+      body: Padding(
+        padding: const EdgeInsets.all(5),
+        child: ListView(
+          physics: const BouncingScrollPhysics(),
+          shrinkWrap: true,
+          children: [
+            LearningOutcomes(chapter: widget.chapter),
+            const Padding(
+              padding: EdgeInsets.only(top: 5),
+              child: Divider(thickness: 2),
+            ),
+            LessonListVertical(chapter: widget.chapter),
+          ],
+        ),
+      ),
     );
   }
 }

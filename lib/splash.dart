@@ -59,6 +59,7 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
                     style: TextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
                   ).tr(),
                 ),
