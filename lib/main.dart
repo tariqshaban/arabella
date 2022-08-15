@@ -49,6 +49,8 @@ class Main extends StatefulWidget {
 class _MainState extends State<Main> {
   @override
   Widget build(BuildContext context) {
+    setNavigationBarColor();
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<ChaptersProvider>(
@@ -87,10 +89,7 @@ class _MainState extends State<Main> {
             elevation: 0,
             systemOverlayStyle: SystemUiOverlayStyle(
               statusBarColor: Colors.transparent,
-              statusBarBrightness: Brightness.dark,
               statusBarIconBrightness: Brightness.dark,
-              systemNavigationBarColor: Color(0xfffafafa),
-              systemNavigationBarIconBrightness: Brightness.dark,
             ),
           ),
           colorScheme: ColorScheme.fromSeed(
@@ -106,10 +105,7 @@ class _MainState extends State<Main> {
             elevation: 0,
             systemOverlayStyle: SystemUiOverlayStyle(
               statusBarColor: Colors.transparent,
-              statusBarBrightness: Brightness.light,
               statusBarIconBrightness: Brightness.light,
-              systemNavigationBarColor: Color(0xff303030),
-              systemNavigationBarIconBrightness: Brightness.light,
             ),
           ),
           colorScheme: ColorScheme.fromSeed(
@@ -255,6 +251,21 @@ class _MainState extends State<Main> {
             },
           );
         },
+      ),
+    );
+  }
+
+  Future<void> setNavigationBarColor() async {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        systemNavigationBarColor:
+            (await AdaptiveTheme.getThemeMode() == AdaptiveThemeMode.dark)
+                ? const Color(0xff303030)
+                : const Color(0xfffafafa),
+        systemNavigationBarIconBrightness:
+            (await AdaptiveTheme.getThemeMode() == AdaptiveThemeMode.dark)
+                ? Brightness.light
+                : Brightness.dark,
       ),
     );
   }

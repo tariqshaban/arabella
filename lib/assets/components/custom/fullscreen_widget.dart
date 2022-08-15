@@ -130,7 +130,6 @@ class FullScreenPageState extends State<FullScreenPage> {
     } else {
       setState(() {
         animationDuration = const Duration(milliseconds: 300);
-        opacity = 1;
         positionYDelta = 0;
       });
 

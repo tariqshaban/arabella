@@ -13,22 +13,21 @@ class AppDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Drawer(
-        child: NotificationListener<OverscrollIndicatorNotification>(
-          onNotification: (notification) {
-            notification.disallowIndicator();
-            return true;
-          },
-          child: ListView(
-            children: <Widget>[
-              _header(this.context),
-              _themeSwitch(this.context),
-              _languageDropdown(this.context),
-              const Divider(),
-              _badge(this.context),
-            ],
-          ),
+    return Drawer(
+      child: NotificationListener<OverscrollIndicatorNotification>(
+        onNotification: (notification) {
+          notification.disallowIndicator();
+          return true;
+        },
+        child: ListView(
+          padding: const EdgeInsets.all(0),
+          children: <Widget>[
+            _header(this.context),
+            _themeSwitch(this.context),
+            _languageDropdown(this.context),
+            const Divider(),
+            _badge(this.context),
+          ],
         ),
       ),
     );
@@ -179,6 +178,22 @@ class AppDrawer extends StatelessWidget {
     } else {
       AdaptiveTheme.of(context).setLight();
     }
+
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        systemNavigationBarColor:
+        (await AdaptiveTheme.getThemeMode() ==
+            AdaptiveThemeMode.dark)
+            ? const Color(0xff303030)
+            : const Color(0xfffafafa),
+        systemNavigationBarIconBrightness:
+        (await AdaptiveTheme.getThemeMode() ==
+            AdaptiveThemeMode.dark)
+            ? Brightness.light
+            : Brightness.dark,
+      ),
+    );
+
     navigator.pop();
   }
 
