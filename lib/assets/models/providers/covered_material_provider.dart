@@ -96,8 +96,16 @@ class CoveredMaterialProvider with ChangeNotifier {
     return _finishedLessons[chapterName]!.contains(lessonName);
   }
 
+  double getPassingGrade() {
+    return QuizMetadata.passingMark;
+  }
+
   double getQuizMark(String chapterName) {
     return _finishedQuizzes[chapterName]!;
+  }
+
+  bool didPassQuiz(String chapterName) {
+    return getQuizMark(chapterName) >= QuizMetadata.passingMark;
   }
 
   String serializeFinishedLessons() {
@@ -150,18 +158,26 @@ class CoveredMaterialProvider with ChangeNotifier {
     return !getEligibleBadges().values.contains(false);
   }
 
-  double getChapterProgress(String chapterName) {
-    int numberOfLessons = _chaptersProvider!.chapters
+  int getNumberOfLessons(String chapterName) {
+    return _chaptersProvider!.chapters
         .firstWhere((chapter) => chapter.chapterName == chapterName)
         .lessons
         .length;
-    int coveredLessons = _finishedLessons[chapterName]!.length;
-    int coveredQuiz = (_finishedQuizzes.containsKey(chapterName) &&
-            _finishedQuizzes[chapterName]! >= QuizMetadata.passingMark)
-        ? 1
-        : 0;
+  }
 
-    return (coveredLessons + coveredQuiz) / (numberOfLessons + 1);
+  int getNumberOfFinishedLessons(String chapterName) {
+    return _finishedLessons[chapterName]!.length;
+  }
+
+  double getChapterProgress(String chapterName) {
+    int numberOfLessons = getNumberOfLessons(chapterName);
+    int numberOfFinishedLessons = getNumberOfFinishedLessons(chapterName);
+    int coveredQuiz =
+        (_finishedQuizzes.containsKey(chapterName) && didPassQuiz(chapterName))
+            ? 1
+            : 0;
+
+    return (numberOfFinishedLessons + coveredQuiz) / (numberOfLessons + 1);
   }
 
   void fromJson(Map<String, dynamic> parsedJson) {

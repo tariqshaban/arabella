@@ -18,6 +18,9 @@
   "chapters": {
     "attempt_quiz": "Attempt quiz",
     "progress": "Progress",
+    "lessons_finished": "Lessons finished",
+    "grade": "Grade",
+    "passing_grade": "Passing Grade",
     "learning_outcomes": "Learning Outcomes",
     "history": {
       "name": "History",

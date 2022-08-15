@@ -1,4 +1,5 @@
 import 'package:arabella/assets/components/learning_outcomes.dart';
+import 'package:arabella/assets/components/learning_progress.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -30,6 +31,7 @@ class _ChapterState extends State<Chapter> {
           physics: const BouncingScrollPhysics(),
           shrinkWrap: true,
           children: [
+            LearningProgress(chapter: widget.chapter),
             LearningOutcomes(chapter: widget.chapter),
             const Padding(
               padding: EdgeInsets.only(top: 5),

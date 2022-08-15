@@ -51,13 +51,12 @@ class _QuizState extends State<Quiz> {
                                 style: const TextStyle(fontSize: 16),
                               )
                             : Text(
-                                '${'quiz.passing_grade'.tr()}:  ${(QuizMetadata.passingMark * 100).round()}%',
+                                '${'quiz.passing_grade'.tr()}:  ${(coveredMaterial.getPassingGrade() * 100).round()}%',
                                 style: const TextStyle(fontSize: 16),
                               );
                       },
                     ),
-                    (coveredMaterial.getQuizMark(widget.chapterName) >=
-                            QuizMetadata.passingMark)
+                    (coveredMaterial.didPassQuiz(widget.chapterName))
                         ? Container(
                             padding: const EdgeInsets.all(2),
                             decoration: BoxDecoration(
@@ -97,20 +96,19 @@ class _QuizState extends State<Quiz> {
                       shadowColor: Theme.of(context).colorScheme.primary,
                       child: InkWell(
                         onTap: () {
-                          Navigator.pushNamed(context, '/question',
-                              arguments: {
-                                'chapterName': widget.chapterName,
-                                'questions': widget.questions,
-                                'currentQuestion': widget.questions[i],
-                              });
+                          Navigator.pushNamed(context, '/question', arguments: {
+                            'chapterName': widget.chapterName,
+                            'questions': widget.questions,
+                            'currentQuestion': widget.questions[i],
+                          });
                         },
                         child: ListTile(
                             leading: QuestionState(
                               chapterName: widget.chapterName,
                               questionIndex: i,
                             ),
-                            title: Text(
-                                '${'quiz.question_number'.tr()} ${i + 1}'),
+                            title:
+                                Text('${'quiz.question_number'.tr()} ${i + 1}'),
                             trailing:
                                 (ChaptersProvider.isMultipleChoiceQuestion(
                                         widget.questions[i]))

@@ -18,6 +18,9 @@
   "chapters": {
     "attempt_quiz": "تقديم الاختبار",
     "progress": "التقدم",
+    "lessons_progress": "الدروس المنتهية",
+    "grade": "العلامة",
+    "passing_grade": "علامة النجاح",
     "learning_outcomes": "نتائج التعلم",
     "history": {
       "name": "التاريخ",
