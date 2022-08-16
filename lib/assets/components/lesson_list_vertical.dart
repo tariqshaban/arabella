@@ -65,7 +65,7 @@ class _LessonListVerticalState extends State<LessonListVertical> {
                         ),
                         const Expanded(child: SizedBox()),
                         Padding(
-                          padding: const EdgeInsetsDirectional.only(end: 15),
+                          padding: const EdgeInsetsDirectional.only(end: 20),
                           child: Icon(
                             Icons.navigate_next,
                             color: Theme.of(context).colorScheme.primary,

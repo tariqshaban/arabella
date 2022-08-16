@@ -137,7 +137,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                     ).tr(),
                                     Expanded(
                                       child: Padding(
-                                        padding: const EdgeInsets.all(8),
+                                        padding: const EdgeInsetsDirectional.fromSTEB(8, 2, 8, 0),
                                         child: ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(15),

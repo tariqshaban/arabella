@@ -25,9 +25,9 @@ class _QuestionStateState extends State<QuestionState> {
           case 1:
             return const Icon(Icons.save_as);
           case 2:
-            return const Icon(Icons.check);
+            return const Icon(Icons.check, color: Colors.green);
           case 3:
-            return const Icon(Icons.close);
+            return const Icon(Icons.close, color: Colors.red);
           default:
             return const Icon(Icons.access_time);
         }

@@ -95,16 +95,10 @@ class _LearningProgressState extends State<LearningProgress> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              '${'chapters.lessons_finished'.tr()}: ${coveredMaterial.getNumberOfFinishedLessons(widget.chapter.chapterName)}/${coveredMaterial.getNumberOfLessons(widget.chapter.chapterName)}',
-                              style: const TextStyle(fontSize: 16),
-                            ),
+                            getLessonsWidget(
+                                widget.chapter.chapterName, coveredMaterial),
                             getMarkWidget(
                                 widget.chapter.chapterName, coveredMaterial),
-                            Text(
-                              '${'chapters.passing_grade'.tr()}: ${(coveredMaterial.getPassingGrade() * 100).round()}%',
-                              style: const TextStyle(fontSize: 16),
-                            ),
                           ],
                         ),
                       ],
@@ -117,6 +111,25 @@ class _LearningProgressState extends State<LearningProgress> {
         );
       },
     );
+  }
+
+  Widget getLessonsWidget(
+      String chapterName, CoveredMaterialProvider coveredMaterial) {
+    bool didComplete = coveredMaterial
+            .getNumberOfFinishedLessons(widget.chapter.chapterName) ==
+        coveredMaterial.getNumberOfLessons(widget.chapter.chapterName);
+
+    if (didComplete) {
+      return Text(
+        '${'chapters.lessons_finished'.tr()}: ${coveredMaterial.getNumberOfFinishedLessons(widget.chapter.chapterName)}/${coveredMaterial.getNumberOfLessons(widget.chapter.chapterName)}',
+        style: const TextStyle(fontSize: 16, color: Colors.green),
+      );
+    } else {
+      return Text(
+        '${'chapters.lessons_finished'.tr()}: ${coveredMaterial.getNumberOfFinishedLessons(widget.chapter.chapterName)}/${coveredMaterial.getNumberOfLessons(widget.chapter.chapterName)}',
+        style: const TextStyle(fontSize: 16),
+      );
+    }
   }
 
   Widget getMarkWidget(

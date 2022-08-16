@@ -184,8 +184,8 @@ class AppDrawer extends StatelessWidget {
         systemNavigationBarColor:
         (await AdaptiveTheme.getThemeMode() ==
             AdaptiveThemeMode.dark)
-            ? const Color(0xff303030)
-            : const Color(0xfffafafa),
+            ? const Color(0xFF303030)
+            : const Color(0xFFFAFAFA),
         systemNavigationBarIconBrightness:
         (await AdaptiveTheme.getThemeMode() ==
             AdaptiveThemeMode.dark)

@@ -90,13 +90,16 @@ class _MainState extends State<Main> {
             systemOverlayStyle: SystemUiOverlayStyle(
               statusBarColor: Colors.transparent,
               statusBarIconBrightness: Brightness.dark,
+              statusBarBrightness: Brightness.dark,
+              systemNavigationBarColor: Color(0xFFFAFAFA),
+              systemNavigationBarIconBrightness: Brightness.light,
             ),
           ),
           colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color(0xFF29b6f6),
+            seedColor: const Color(0xFF29B6F6),
             brightness: Brightness.light,
           ),
-          listTileTheme: const ListTileThemeData(iconColor: Color(0xFF29b6f6)),
+          listTileTheme: const ListTileThemeData(iconColor: Color(0xFF29B6F6)),
         ),
         dark: ThemeData(
           appBarTheme: const AppBarTheme(
@@ -106,13 +109,16 @@ class _MainState extends State<Main> {
             systemOverlayStyle: SystemUiOverlayStyle(
               statusBarColor: Colors.transparent,
               statusBarIconBrightness: Brightness.light,
+              statusBarBrightness: Brightness.light,
+              systemNavigationBarColor: Color(0xFF303030),
+              systemNavigationBarIconBrightness: Brightness.dark,
             ),
           ),
           colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color(0xFF29b6f6),
+            seedColor: const Color(0xFF29B6F6),
             brightness: Brightness.dark,
           ),
-          listTileTheme: const ListTileThemeData(iconColor: Color(0xFF29b6f6)),
+          listTileTheme: const ListTileThemeData(iconColor: Color(0xFF29B6F6)),
         ),
         initial: AdaptiveThemeMode.light,
         builder: (theme, darkTheme) {
@@ -260,8 +266,8 @@ class _MainState extends State<Main> {
       SystemUiOverlayStyle(
         systemNavigationBarColor:
             (await AdaptiveTheme.getThemeMode() == AdaptiveThemeMode.dark)
-                ? const Color(0xff303030)
-                : const Color(0xfffafafa),
+                ? const Color(0xFF303030)
+                : const Color(0xFFFAFAFA),
         systemNavigationBarIconBrightness:
             (await AdaptiveTheme.getThemeMode() == AdaptiveThemeMode.dark)
                 ? Brightness.light

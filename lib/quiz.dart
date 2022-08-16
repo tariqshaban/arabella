@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'assets/components/extended_floating_action_button.dart';
 import 'assets/components/question_state.dart';
 import 'assets/components/snack_bar.dart';
+import 'assets/models/chapter_model.dart';
 import 'assets/models/providers/answered_questions_provider.dart';
 import 'assets/models/providers/covered_material_provider.dart';
 import 'assets/models/providers/scroll_direction_provider.dart';
@@ -91,30 +92,45 @@ class _QuizState extends State<Quiz> {
                   physics: const BouncingScrollPhysics(),
                   itemCount: widget.questions.length,
                   itemBuilder: (context, i) {
-                    return Card(
-                      elevation: 5,
-                      shadowColor: Theme.of(context).colorScheme.primary,
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.pushNamed(context, '/question', arguments: {
-                            'chapterName': widget.chapterName,
-                            'questions': widget.questions,
-                            'currentQuestion': widget.questions[i],
-                          });
-                        },
-                        child: ListTile(
-                            leading: QuestionState(
-                              chapterName: widget.chapterName,
-                              questionIndex: i,
+                    return Consumer<AnsweredQuestionsProvider>(
+                      builder: (context, answeredQuestions, child) {
+                        return Card(
+                          margin:
+                              const EdgeInsetsDirectional.fromSTEB(0, 5, 0, 5),
+                          elevation: 5,
+                          shadowColor: Theme.of(context).colorScheme.primary,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            side: BorderSide(
+                              color: getBorderColor(answeredQuestions, i),
+                              width: 2,
                             ),
-                            title:
-                                Text('${'quiz.question_number'.tr()} ${i + 1}'),
-                            trailing:
-                                (ChaptersProvider.isMultipleChoiceQuestion(
-                                        widget.questions[i]))
-                                    ? const Icon(Icons.radio_button_checked)
-                                    : const Icon(Icons.check_box)),
-                      ),
+                          ),
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(15),
+                            onTap: () {
+                              Navigator.pushNamed(context, '/question',
+                                  arguments: {
+                                    'chapterName': widget.chapterName,
+                                    'questions': widget.questions,
+                                    'currentQuestion': widget.questions[i],
+                                  });
+                            },
+                            child: ListTile(
+                                leading: QuestionState(
+                                  chapterName: widget.chapterName,
+                                  questionIndex: i,
+                                ),
+                                title: Text(
+                                    '${'quiz.question_number'.tr()} ${i + 1}'),
+                                trailing:
+                                    (ChaptersProvider.isMultipleChoiceQuestion(
+                                            widget.questions[i]))
+                                        ? const Icon(Icons.radio_button_checked)
+                                        : const Icon(Icons.check_box)),
+                          ),
+                        );
+                      },
                     );
                   },
                 ),
@@ -154,5 +170,28 @@ class _QuizState extends State<Quiz> {
         },
       ),
     );
+  }
+
+  Color getBorderColor(
+      AnsweredQuestionsProvider answeredQuestions, int questionIndex) {
+    switch (getQuestionState(answeredQuestions, questionIndex)) {
+      case 2:
+        return Colors.green;
+      case 3:
+        return Colors.red;
+      default:
+        return Colors.transparent;
+    }
+  }
+
+  int getQuestionState(
+      AnsweredQuestionsProvider answeredQuestions, int questionIndex) {
+    ChapterModel chapter = context
+        .read<ChaptersProvider>()
+        .chapters
+        .firstWhere((chapter) => chapter.chapterName == widget.chapterName);
+
+    return answeredQuestions.getQuestionStatus(
+        widget.chapterName, chapter.questions[questionIndex].question);
   }
 }
