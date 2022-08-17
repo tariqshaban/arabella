@@ -110,9 +110,6 @@ class _LessonState extends State<Lesson> {
                                     body: PointsOfInterest(
                                       chapterName: widget.chapter.chapterName,
                                       lessonName: widget.lesson,
-                                      padding:
-                                          const EdgeInsetsDirectional.fromSTEB(
-                                              0, 10, 0, 0),
                                       borderRadius: BorderRadius.circular(15),
                                     ),
                                   );

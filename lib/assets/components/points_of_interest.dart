@@ -55,12 +55,9 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
                       Factory<EagerGestureRecognizer>(
                           () => EagerGestureRecognizer())
                     },
-                    initialCameraPosition: CameraPosition(
-                      target: LatLng(
-                        manifest['initial_position']['lat'],
-                        manifest['initial_position']['lng'],
-                      ),
-                      zoom: manifest['initial_position']['zoom'],
+                    initialCameraPosition: const CameraPosition(
+                      target: LatLng(31.4645395, 37.022226),
+                      zoom: 6.8,
                     ),
                     mapToolbarEnabled: false,
                     markers: markers,
@@ -78,6 +75,11 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
                       } else {
                         controller.setMapStyle(null);
                       }
+
+                      controller.animateCamera(
+                        CameraUpdate.newLatLngBounds(
+                            getInitialCameraPosition(), 50),
+                      );
                     });
               }
               return const SizedBox();
@@ -108,6 +110,23 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
     return;
   }
 
+  LatLngBounds getInitialCameraPosition() {
+    List<LatLng> points = [];
+
+    for (dynamic pointOfInterest in manifest['points_of_interest']) {
+      for (dynamic latLng in pointOfInterest['points']) {
+        points.add(
+          LatLng(
+            latLng['lat'],
+            latLng['lng'],
+          ),
+        );
+      }
+    }
+
+    return _getPointsCenter(points);
+  }
+
   void assignMarkers() async {
     int counter = 0;
     for (dynamic pointOfInterest in manifest['points_of_interest']) {
@@ -121,8 +140,8 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
         Marker(
           markerId: MarkerId('point ${counter++}'),
           position: LatLng(
-            pointOfInterest['lat'],
-            pointOfInterest['lng'],
+            pointOfInterest['points'][0]['lat'],
+            pointOfInterest['points'][0]['lng'],
           ),
           icon: icon,
           onTap: () {
@@ -167,7 +186,8 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
           width: 3,
           onTap: () {
             controller.animateCamera(
-                CameraUpdate.newLatLngBounds(_getPointsCenter(points), 50));
+              CameraUpdate.newLatLngBounds(_getPointsCenter(points), 50),
+            );
             showSheet(pointOfInterest['name'], MapAnnotationType.polyline);
           },
         ),
@@ -201,7 +221,8 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
           strokeWidth: 1,
           onTap: () {
             controller.animateCamera(
-                CameraUpdate.newLatLngBounds(_getPointsCenter(points), 50));
+              CameraUpdate.newLatLngBounds(_getPointsCenter(points), 50),
+            );
             showSheet(pointOfInterest['name'], MapAnnotationType.polygon);
           },
         ),
