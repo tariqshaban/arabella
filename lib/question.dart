@@ -40,15 +40,25 @@ class _QuestionState extends State<Question> {
       ),
       body: Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
-        child: Column(
+        child: ListView(
+          physics: const BouncingScrollPhysics(),
           children: [
             FutureBuilder(
               builder: (ctx, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
-                  return Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(8, 0, 8, 20),
-                    child: SizedBox(
-                      width: double.infinity,
+                  return Card(
+                    margin: const EdgeInsets.all(5),
+                    elevation: 5,
+                    shadowColor: Theme.of(context).colorScheme.primary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      side: BorderSide(
+                        color: Theme.of(context).colorScheme.primary,
+                        width: 2,
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
                       child: MarkdownBody(
                         fitContent: false,
                         data: snapshot.data as String,
@@ -67,76 +77,75 @@ class _QuestionState extends State<Question> {
               future: ChaptersProvider.getQuizQuestionContents(
                   context, widget.chapterName, widget.currentQuestion.question),
             ),
+            const SizedBox(height: 15),
             FutureBuilder(
               builder: (ctx, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
-                  return Expanded(
-                    child: NotificationListener<UserScrollNotification>(
-                      onNotification: (notification) {
-                        if (notification.direction == ScrollDirection.idle) {
-                          return true;
-                        }
-                        context.read<ScrollDirectionProvider>().direction =
-                            notification.direction;
+                  return NotificationListener<UserScrollNotification>(
+                    onNotification: (notification) {
+                      if (notification.direction == ScrollDirection.idle) {
                         return true;
+                      }
+                      context.read<ScrollDirectionProvider>().direction =
+                          notification.direction;
+                      return true;
+                    },
+                    child: Consumer<AnsweredQuestionsProvider>(
+                      builder: (context, answeredQuestions, child) {
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: widget.currentQuestion.options.length,
+                          itemBuilder: (context, i) {
+                            return (answeredQuestions.containsMultipleAnswers(
+                                    widget.chapterName,
+                                    widget.currentQuestion.question))
+                                ? CheckboxListTile(
+                                    contentPadding: EdgeInsets.zero,
+                                    controlAffinity:
+                                        ListTileControlAffinity.leading,
+                                    value: getCheckboxState(context, i),
+                                    onChanged: (value) {
+                                      checkboxEventHandler(
+                                          context, i, value!);
+                                    },
+                                    title: MarkdownBody(
+                                      fitContent: false,
+                                      data:
+                                          (snapshot.data as List<String>)[i],
+                                      onTapLink: (text, url, title) async {
+                                        await launchUrl(
+                                          Uri.parse(url!),
+                                          mode:
+                                              LaunchMode.externalApplication,
+                                        );
+                                      },
+                                    ),
+                                  )
+                                : RadioListTile(
+                                    contentPadding: EdgeInsets.zero,
+                                    value: i,
+                                    groupValue: getRadioState(context),
+                                    onChanged: (value) {
+                                      radioEventHandler(
+                                          context, i, value as int);
+                                    },
+                                    title: MarkdownBody(
+                                      fitContent: false,
+                                      data:
+                                          (snapshot.data as List<String>)[i],
+                                      onTapLink: (text, url, title) async {
+                                        await launchUrl(
+                                          Uri.parse(url!),
+                                          mode:
+                                              LaunchMode.externalApplication,
+                                        );
+                                      },
+                                    ),
+                                  );
+                          },
+                        );
                       },
-                      child: Consumer<AnsweredQuestionsProvider>(
-                        builder: (context, answeredQuestions, child) {
-                          return ListView.builder(
-                            shrinkWrap: true,
-                            physics: const BouncingScrollPhysics(),
-                            itemCount: widget.currentQuestion.options.length,
-                            itemBuilder: (context, i) {
-                              return (answeredQuestions.containsMultipleAnswers(
-                                      widget.chapterName,
-                                      widget.currentQuestion.question))
-                                  ? CheckboxListTile(
-                                      contentPadding: EdgeInsets.zero,
-                                      controlAffinity:
-                                          ListTileControlAffinity.leading,
-                                      value: getCheckboxState(context, i),
-                                      onChanged: (value) {
-                                        checkboxEventHandler(
-                                            context, i, value!);
-                                      },
-                                      title: MarkdownBody(
-                                        fitContent: false,
-                                        data:
-                                            (snapshot.data as List<String>)[i],
-                                        onTapLink: (text, url, title) async {
-                                          await launchUrl(
-                                            Uri.parse(url!),
-                                            mode:
-                                                LaunchMode.externalApplication,
-                                          );
-                                        },
-                                      ),
-                                    )
-                                  : RadioListTile(
-                                      contentPadding: EdgeInsets.zero,
-                                      value: i,
-                                      groupValue: getRadioState(context),
-                                      onChanged: (value) {
-                                        radioEventHandler(
-                                            context, i, value as int);
-                                      },
-                                      title: MarkdownBody(
-                                        fitContent: false,
-                                        data:
-                                            (snapshot.data as List<String>)[i],
-                                        onTapLink: (text, url, title) async {
-                                          await launchUrl(
-                                            Uri.parse(url!),
-                                            mode:
-                                                LaunchMode.externalApplication,
-                                          );
-                                        },
-                                      ),
-                                    );
-                            },
-                          );
-                        },
-                      ),
                     ),
                   );
                 }
@@ -150,7 +159,7 @@ class _QuestionState extends State<Question> {
       ),
       floatingActionButton: (getNextQuestionIndex() != -1)
           ? ExtendedFloatingActionButton(
-              text: const Text('question.next').tr(),
+              text: 'question.next'.tr(),
               icon: const Icon(Icons.navigate_next),
               iconFirst: false,
               onPressed: () {
@@ -167,7 +176,7 @@ class _QuestionState extends State<Question> {
               builder: (context, answeredQuestions, child) {
                 if (!answeredQuestions.isSubmitted[widget.chapterName]!) {
                   return ExtendedFloatingActionButton(
-                    text: const Text('quiz.submit').tr(),
+                    text: 'quiz.submit'.tr(),
                     icon: const Icon(Icons.upload_file),
                     onPressed: () {
                       if (context

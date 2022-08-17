@@ -94,40 +94,43 @@ class _QuizState extends State<Quiz> {
                   itemBuilder: (context, i) {
                     return Consumer<AnsweredQuestionsProvider>(
                       builder: (context, answeredQuestions, child) {
-                        return Card(
-                          margin:
-                              const EdgeInsetsDirectional.fromSTEB(0, 5, 0, 5),
-                          elevation: 5,
-                          shadowColor: Theme.of(context).colorScheme.primary,
-                          shape: RoundedRectangleBorder(
+                        return ClipRRect(
                             borderRadius: BorderRadius.circular(15),
-                            side: BorderSide(
-                              color: getBorderColor(answeredQuestions, i),
-                              width: 2,
+                          child: Card(
+                            margin:
+                                const EdgeInsetsDirectional.fromSTEB(0, 5, 0, 5),
+                            elevation: 5,
+                            shadowColor: Theme.of(context).colorScheme.primary,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              side: BorderSide(
+                                color: getBorderColor(answeredQuestions, i),
+                                width: 2,
+                              ),
                             ),
-                          ),
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(15),
-                            onTap: () {
-                              Navigator.pushNamed(context, '/question',
-                                  arguments: {
-                                    'chapterName': widget.chapterName,
-                                    'questions': widget.questions,
-                                    'currentQuestion': widget.questions[i],
-                                  });
-                            },
-                            child: ListTile(
-                                leading: QuestionState(
-                                  chapterName: widget.chapterName,
-                                  questionIndex: i,
-                                ),
-                                title: Text(
-                                    '${'quiz.question_number'.tr()} ${i + 1}'),
-                                trailing:
-                                    (ChaptersProvider.isMultipleChoiceQuestion(
-                                            widget.questions[i]))
-                                        ? const Icon(Icons.radio_button_checked)
-                                        : const Icon(Icons.check_box)),
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(15),
+                              onTap: () {
+                                Navigator.pushNamed(context, '/question',
+                                    arguments: {
+                                      'chapterName': widget.chapterName,
+                                      'questions': widget.questions,
+                                      'currentQuestion': widget.questions[i],
+                                    });
+                              },
+                              child: ListTile(
+                                  leading: QuestionState(
+                                    chapterName: widget.chapterName,
+                                    questionIndex: i,
+                                  ),
+                                  title: Text(
+                                      '${'quiz.question_number'.tr()} ${i + 1}'),
+                                  trailing:
+                                      (ChaptersProvider.isMultipleChoiceQuestion(
+                                              widget.questions[i]))
+                                          ? const Icon(Icons.radio_button_checked)
+                                          : const Icon(Icons.check_box)),
+                            ),
                           ),
                         );
                       },
@@ -143,7 +146,7 @@ class _QuizState extends State<Quiz> {
         builder: (context, answeredQuestions, child) {
           if (!answeredQuestions.isSubmitted[widget.chapterName]!) {
             return ExtendedFloatingActionButton(
-              text: const Text('quiz.submit').tr(),
+              text: 'quiz.submit'.tr(),
               icon: const Icon(Icons.upload_file),
               onPressed: () {
                 if (context

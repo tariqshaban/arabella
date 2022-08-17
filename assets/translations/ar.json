@@ -34,17 +34,29 @@
         "bronze_age": {
           "name": "العصر البرونزي",
           "points_of_interest": {
-            "test": {
-              "title": "موقع",
-              "content": "محتوى معين"
+            "irbid_archaeological_museum": {
+              "title": "متحف دار السرايا",
+              "content": "المعروف ايضا باسم \"متحف اربد الأثري\"."
             }
           }
         },
         "hellenistic_era": {
-          "name": "العصر الهيليني"
+          "name": "العصر الهيليني",
+          "points_of_interest": {
+            "irbid_archaeological_museum": {
+              "title": "متحف دار السرايا",
+              "content": "المعروف ايضا باسم \"متحف اربد الأثري\"."
+            }
+          }
         },
         "roman_era": {
-          "name": "العصر الروماني"
+          "name": "العصر الروماني",
+          "points_of_interest": {
+            "irbid_archaeological_museum": {
+              "title": "متحف دار السرايا",
+              "content": "المعروف ايضا باسم \"متحف اربد الأثري\"."
+            }
+          }
         },
         "islam_era": {
           "name": "العصر الإسلامي"

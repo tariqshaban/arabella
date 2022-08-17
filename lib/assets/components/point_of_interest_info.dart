@@ -30,6 +30,7 @@ class _PointsOfInterestInfoState extends State<PointsOfInterestInfo> {
         return Column(
           children: <Widget>[
             ListTile(
+              horizontalTitleGap: 0,
               leading: Icon(getMapAnnotationIcon()),
               title: Text(
                       'chapters.${widget.chapterName}.lessons.${widget.lessonName}.points_of_interest.${widget.pointOfInterestName}.title')

@@ -59,6 +59,7 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
                       target: LatLng(31.4645395, 37.022226),
                       zoom: 6.8,
                     ),
+                    minMaxZoomPreference: const MinMaxZoomPreference(null, 18),
                     mapToolbarEnabled: false,
                     markers: markers,
                     polylines: polylines,

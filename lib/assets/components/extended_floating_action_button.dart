@@ -14,7 +14,7 @@ class ExtendedFloatingActionButton extends StatefulWidget {
       this.onPressed})
       : super(key: key);
 
-  final Widget text;
+  final String text;
   final Widget icon;
   final double elementSpacing;
   final bool iconFirst;
@@ -53,12 +53,18 @@ class _ExtendedFloatingActionButtonState
                         ? [
                             widget.icon,
                             SizedBox(width: widget.elementSpacing),
-                            widget.text
+                            Text(
+                              widget.text,
+                              style: const TextStyle(letterSpacing: 0),
+                            ),
                           ]
                         : [
-                            widget.text,
+                            Text(
+                              widget.text,
+                              style: const TextStyle(letterSpacing: 0),
+                            ),
                             SizedBox(width: widget.elementSpacing),
-                            widget.icon
+                            widget.icon,
                           ],
                   ),
           ),

@@ -147,7 +147,7 @@ class _LessonState extends State<Lesson> {
       ),
       floatingActionButton: (getNextLessonIndex() != -1)
           ? ExtendedFloatingActionButton(
-              text: const Text('lessons.next_lesson').tr(),
+              text: 'lessons.next_lesson'.tr(),
               icon: const Icon(Icons.navigate_next),
               iconFirst: false,
               onPressed: () {
@@ -158,7 +158,7 @@ class _LessonState extends State<Lesson> {
               },
             )
           : ExtendedFloatingActionButton(
-              text: const Text('lessons.finish_chapter').tr(),
+              text: 'lessons.finish_chapter'.tr(),
               icon: const Icon(Icons.exit_to_app),
               iconFirst: false,
               onPressed: () {

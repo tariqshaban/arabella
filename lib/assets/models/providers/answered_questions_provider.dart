@@ -88,6 +88,10 @@ class AnsweredQuestionsProvider with ChangeNotifier {
   }
 
   List<String> getQuestionAnswer(String chapterName, String questionName) {
+    if(_answers[chapterName]![questionName] == null){
+      _answers[chapterName]![questionName] = [];
+    }
+
     return _answers[chapterName]![questionName]!;
   }
 
@@ -103,9 +107,9 @@ class AnsweredQuestionsProvider with ChangeNotifier {
       String optionName, bool isChecked) {
     _isSubmitted[chapterName] = false;
     if (isChecked) {
-      _answers[chapterName]![questionName]!.add(optionName);
+      getQuestionAnswer(chapterName, questionName).add(optionName);
     } else {
-      _answers[chapterName]![questionName]!.remove(optionName);
+      getQuestionAnswer(chapterName, questionName).remove(optionName);
     }
 
     savePersistentSate();
@@ -113,7 +117,7 @@ class AnsweredQuestionsProvider with ChangeNotifier {
 
   bool shouldCheckBoxBeChecked(
       String chapterName, String questionName, String optionName) {
-    return _answers[chapterName]![questionName]!.contains(optionName);
+    return getQuestionAnswer(chapterName, questionName).contains(optionName);
   }
 
   bool containsMultipleAnswers(String chapterName, String questionName) {
@@ -130,7 +134,7 @@ class AnsweredQuestionsProvider with ChangeNotifier {
   }
 
   int getQuestionStatus(String chapterName, String questionName) {
-    List<String> answer = _answers[chapterName]![questionName]!;
+    List<String> answer = getQuestionAnswer(chapterName, questionName);
 
     if (_isSubmitted[chapterName]!) {
       if (isAnswerCorrect(chapterName, questionName)) {
@@ -197,15 +201,20 @@ class AnsweredQuestionsProvider with ChangeNotifier {
         .questions
         .firstWhere((question) => question.question == questionName);
 
+    List<String> options = [];
     List<String> correctOptions = [];
     for (int i = 0; i < question.options.length; i++) {
+      options.add(question.options[i]);
       if (question.correctOptionsIndex[i] == 1) {
         correctOptions.add(question.options[i]);
       }
     }
 
+    getQuestionAnswer(chapterName, questionName)
+        .removeWhere((selectedOption) => !options.contains(selectedOption));
+
     return setEquals(
-        _answers[chapterName]![questionName]!.toSet(), correctOptions.toSet());
+        getQuestionAnswer(chapterName, questionName).toSet(), correctOptions.toSet());
   }
 
   void fromJson(Map<String, dynamic> parsedJson) {

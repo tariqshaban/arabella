@@ -34,17 +34,29 @@
         "bronze_age": {
           "name": "Bronze Age",
           "points_of_interest": {
-            "test": {
-              "title": "Location",
-              "content": "Some content"
+            "irbid_archaeological_museum": {
+              "title": "Dar As Saraya Museum",
+              "content": "Also known as \"Irbid Archaeological Museum\"."
             }
           }
         },
         "hellenistic_era": {
-          "name": "Hellenistic Era"
+          "name": "Hellenistic Era",
+          "points_of_interest": {
+            "irbid_archaeological_museum": {
+              "title": "Dar As Saraya Museum",
+              "content": "Also known as \"Irbid Archaeological Museum\"."
+            }
+          }
         },
         "roman_era": {
-          "name": "Roman Era"
+          "name": "Roman Era",
+          "points_of_interest": {
+            "irbid_archaeological_museum": {
+              "title": "Dar As Saraya Museum",
+              "content": "Also known as \"Irbid Archaeological Museum\"."
+            }
+          }
         },
         "islam_era": {
           "name": "Islam Era"

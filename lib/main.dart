@@ -22,7 +22,6 @@ import 'assets/models/providers/background_animation_provider.dart';
 import 'assets/models/providers/celebrate_provider.dart';
 import 'assets/models/providers/chapters_provider.dart';
 import 'assets/models/providers/confetti_provider.dart';
-import 'assets/models/providers/scroll_offset_provider.dart';
 import 'chapter.dart';
 
 Future<void> main() async {
@@ -72,8 +71,6 @@ class _MainState extends State<Main> {
             create: (context) => ConfettiProvider()),
         ChangeNotifierProvider<CelebrateProvider>(
             create: (context) => CelebrateProvider()),
-        ChangeNotifierProvider<ScrollOffsetProvider>(
-            create: (context) => ScrollOffsetProvider()),
         ChangeNotifierProvider<MapsIconProvider>(
             create: (context) => MapsIconProvider()),
         ChangeNotifierProvider<BackgroundAnimationProvider>(

@@ -45,7 +45,7 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
               child: AnimatedBackground(
                 behaviour: RandomParticleBehaviour(
                   options: const ParticleOptions(
-                    particleCount: 50,
+                    particleCount: 100,
                     minOpacity: 0.1,
                     maxOpacity: 0.2,
                     spawnMinSpeed: 5,
