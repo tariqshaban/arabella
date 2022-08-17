@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'assets/components/expandable_widget.dart';
 import 'assets/components/extended_floating_action_button.dart';
@@ -119,7 +120,15 @@ class _LessonState extends State<Lesson> {
                               future: containsPointsOfInterest(),
                             ),
                             const SizedBox(height: 25),
-                            MarkdownBody(data: snapshot.data as String),
+                            MarkdownBody(
+                              data: snapshot.data as String,
+                              onTapLink: (text, url, title) async {
+                                await launchUrl(
+                                  Uri.parse(url!),
+                                  mode: LaunchMode.externalApplication,
+                                );
+                              },
+                            ),
                             const SizedBox(height: 75),
                           ],
                         ),

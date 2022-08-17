@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'assets/components/extended_floating_action_button.dart';
 import 'assets/components/snack_bar.dart';
@@ -48,7 +49,15 @@ class _QuestionState extends State<Question> {
                     padding: const EdgeInsetsDirectional.fromSTEB(8, 0, 8, 20),
                     child: SizedBox(
                       width: double.infinity,
-                      child: MarkdownBody(data: snapshot.data as String),
+                      child: MarkdownBody(
+                        data: snapshot.data as String,
+                        onTapLink: (text, url, title) async {
+                          await launchUrl(
+                            Uri.parse(url!),
+                            mode: LaunchMode.externalApplication,
+                          );
+                        },
+                      ),
                     ),
                   );
                 }
@@ -70,47 +79,61 @@ class _QuestionState extends State<Question> {
                             notification.direction;
                         return true;
                       },
-                      child:
-                          Consumer<AnsweredQuestionsProvider>(
-                            builder: (context, answeredQuestions, child) {
-                              return ListView.builder(
-                                shrinkWrap: true,
-                                physics: const BouncingScrollPhysics(),
-                                itemCount: widget.currentQuestion.options.length,
-                                itemBuilder: (context, i) {
-                                  return (answeredQuestions
-                                          .containsMultipleAnswers(
-                                              widget.chapterName,
-                                              widget.currentQuestion.question))
-                                      ? CheckboxListTile(
-                                          contentPadding: EdgeInsets.zero,
-                                          controlAffinity:
-                                              ListTileControlAffinity.leading,
-                                          value: getCheckboxState(context, i),
-                                          onChanged: (value) {
-                                            checkboxEventHandler(
-                                                context, i, value!);
-                                          },
-                                          title: MarkdownBody(
-                                              data: (snapshot.data
-                                                  as List<String>)[i]),
-                                        )
-                                      : RadioListTile(
-                                          contentPadding: EdgeInsets.zero,
-                                          value: i,
-                                          groupValue: getRadioState(context),
-                                          onChanged: (value) {
-                                            radioEventHandler(
-                                                context, i, value as int);
-                                          },
-                                          title: MarkdownBody(
-                                              data: (snapshot.data
-                                                  as List<String>)[i]),
-                                        );
-                                },
-                              );
+                      child: Consumer<AnsweredQuestionsProvider>(
+                        builder: (context, answeredQuestions, child) {
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            physics: const BouncingScrollPhysics(),
+                            itemCount: widget.currentQuestion.options.length,
+                            itemBuilder: (context, i) {
+                              return (answeredQuestions.containsMultipleAnswers(
+                                      widget.chapterName,
+                                      widget.currentQuestion.question))
+                                  ? CheckboxListTile(
+                                      contentPadding: EdgeInsets.zero,
+                                      controlAffinity:
+                                          ListTileControlAffinity.leading,
+                                      value: getCheckboxState(context, i),
+                                      onChanged: (value) {
+                                        checkboxEventHandler(
+                                            context, i, value!);
+                                      },
+                                      title: MarkdownBody(
+                                        data:
+                                            (snapshot.data as List<String>)[i],
+                                        onTapLink: (text, url, title) async {
+                                          await launchUrl(
+                                            Uri.parse(url!),
+                                            mode:
+                                                LaunchMode.externalApplication,
+                                          );
+                                        },
+                                      ),
+                                    )
+                                  : RadioListTile(
+                                      contentPadding: EdgeInsets.zero,
+                                      value: i,
+                                      groupValue: getRadioState(context),
+                                      onChanged: (value) {
+                                        radioEventHandler(
+                                            context, i, value as int);
+                                      },
+                                      title: MarkdownBody(
+                                        data:
+                                            (snapshot.data as List<String>)[i],
+                                        onTapLink: (text, url, title) async {
+                                          await launchUrl(
+                                            Uri.parse(url!),
+                                            mode:
+                                                LaunchMode.externalApplication,
+                                          );
+                                        },
+                                      ),
+                                    );
                             },
-                          ),
+                          );
+                        },
+                      ),
                     ),
                   );
                 }
@@ -128,44 +151,49 @@ class _QuestionState extends State<Question> {
               icon: const Icon(Icons.navigate_next),
               iconFirst: false,
               onPressed: () {
-                Navigator.pushReplacementNamed(context, '/question', arguments: {
-                  'chapterName': widget.chapterName,
-                  'questions': widget.questions,
-                  'currentQuestion': widget.questions[getNextQuestionIndex()],
-                });
+                Navigator.pushReplacementNamed(context, '/question',
+                    arguments: {
+                      'chapterName': widget.chapterName,
+                      'questions': widget.questions,
+                      'currentQuestion':
+                          widget.questions[getNextQuestionIndex()],
+                    });
               },
             )
           : Consumer<AnsweredQuestionsProvider>(
-        builder: (context, answeredQuestions, child) {
-          if (!answeredQuestions.isSubmitted[widget.chapterName]!) {
-            return ExtendedFloatingActionButton(
-              text: const Text('quiz.submit').tr(),
-              icon: const Icon(Icons.upload_file),
-              onPressed: () {
-                if (context
-                    .read<AnsweredQuestionsProvider>()
-                    .areAnswersEligibleForSubmission(widget.chapterName)) {
-                  QuizMetadata results = context
-                      .read<AnsweredQuestionsProvider>()
-                      .getQuizResults(widget.chapterName);
+              builder: (context, answeredQuestions, child) {
+                if (!answeredQuestions.isSubmitted[widget.chapterName]!) {
+                  return ExtendedFloatingActionButton(
+                    text: const Text('quiz.submit').tr(),
+                    icon: const Icon(Icons.upload_file),
+                    onPressed: () {
+                      if (context
+                          .read<AnsweredQuestionsProvider>()
+                          .areAnswersEligibleForSubmission(
+                              widget.chapterName)) {
+                        QuizMetadata results = context
+                            .read<AnsweredQuestionsProvider>()
+                            .getQuizResults(widget.chapterName);
 
-                  if (results.isPassed) {
-                    SnackBars.showTextSnackBar(context, 'quiz.passed'.tr());
-                    context.read<ConfettiProvider>().play();
-                  } else {
-                    SnackBars.showTextSnackBar(context, 'quiz.failed'.tr());
-                  }
-                  Navigator.of(context).pop();
-                } else {
-                  SnackBars.showTextSnackBar(
-                      context, 'quiz.not_all_answered'.tr());
+                        if (results.isPassed) {
+                          SnackBars.showTextSnackBar(
+                              context, 'quiz.passed'.tr());
+                          context.read<ConfettiProvider>().play();
+                        } else {
+                          SnackBars.showTextSnackBar(
+                              context, 'quiz.failed'.tr());
+                        }
+                        Navigator.of(context).pop();
+                      } else {
+                        SnackBars.showTextSnackBar(
+                            context, 'quiz.not_all_answered'.tr());
+                      }
+                    },
+                  );
                 }
+                return const SizedBox();
               },
-            );
-          }
-          return const SizedBox();
-        },
-      ),
+            ),
     );
   }
 
