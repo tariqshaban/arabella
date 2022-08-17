@@ -50,6 +50,7 @@ class _QuestionState extends State<Question> {
                     child: SizedBox(
                       width: double.infinity,
                       child: MarkdownBody(
+                        fitContent: false,
                         data: snapshot.data as String,
                         onTapLink: (text, url, title) async {
                           await launchUrl(
@@ -99,6 +100,7 @@ class _QuestionState extends State<Question> {
                                             context, i, value!);
                                       },
                                       title: MarkdownBody(
+                                        fitContent: false,
                                         data:
                                             (snapshot.data as List<String>)[i],
                                         onTapLink: (text, url, title) async {
@@ -119,6 +121,7 @@ class _QuestionState extends State<Question> {
                                             context, i, value as int);
                                       },
                                       title: MarkdownBody(
+                                        fitContent: false,
                                         data:
                                             (snapshot.data as List<String>)[i],
                                         onTapLink: (text, url, title) async {

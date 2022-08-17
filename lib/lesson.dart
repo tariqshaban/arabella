@@ -121,6 +121,7 @@ class _LessonState extends State<Lesson> {
                             ),
                             const SizedBox(height: 25),
                             MarkdownBody(
+                              fitContent: false,
                               data: snapshot.data as String,
                               onTapLink: (text, url, title) async {
                                 await launchUrl(
