@@ -1,9 +1,9 @@
-import 'package:arabella/assets/components/expandable_widget.dart';
-import 'package:arabella/assets/models/chapter_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
+import '../models/chapter_model.dart';
 import '../models/providers/chapters_provider.dart';
+import 'expandable_widget.dart';
 
 class LearningOutcomes extends StatefulWidget {
   const LearningOutcomes({Key? key, required this.chapter}) : super(key: key);
@@ -29,6 +29,7 @@ class _LearningOutcomesState extends State<LearningOutcomes> {
               style: TextStyle(fontSize: 20),
             ).tr(),
             body: ListView.builder(
+              padding: const EdgeInsets.only(top: 10),
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: chapterTranslatableLearningOutcomes.length,
@@ -38,11 +39,12 @@ class _LearningOutcomesState extends State<LearningOutcomes> {
                     return ListTile(
                       dense: true,
                       contentPadding: EdgeInsets.zero,
-                      horizontalTitleGap: 0,
-                      leading: const Icon(Icons.circle, size: 20),
+                      visualDensity:
+                          const VisualDensity(horizontal: 0, vertical: -2),
+                      horizontalTitleGap: -10,
+                      leading: const Icon(Icons.circle, size: 15),
                       title: Text(
                         chapterTranslatableLearningOutcomes[i],
-                        style: const TextStyle(fontSize: 16),
                       ).tr(),
                     );
                   },

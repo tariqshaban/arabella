@@ -1,1 +1,1 @@
-# There was an abundant amount of gold found during that time
+### There was an abundant amount of gold found during that time

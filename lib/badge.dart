@@ -1,12 +1,13 @@
-import 'package:arabella/assets/models/providers/celebrate_provider.dart';
-import 'package:arabella/assets/models/providers/chapters_provider.dart';
-import 'package:arabella/assets/models/providers/confetti_provider.dart';
-import 'package:arabella/assets/models/providers/covered_material_provider.dart';
+import 'package:animated_background/animated_background.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'assets/components/custom/fullscreen_widget.dart';
+import 'assets/models/providers/celebrate_provider.dart';
+import 'assets/models/providers/chapters_provider.dart';
+import 'assets/models/providers/confetti_provider.dart';
+import 'assets/models/providers/covered_material_provider.dart';
 
 class Badge extends StatefulWidget {
   const Badge({Key? key}) : super(key: key);
@@ -15,7 +16,7 @@ class Badge extends StatefulWidget {
   State<Badge> createState() => _BadgeState();
 }
 
-class _BadgeState extends State<Badge> {
+class _BadgeState extends State<Badge> with TickerProviderStateMixin {
   late CoveredMaterialProvider coveredMaterialProvider;
   late ConfettiProvider confettiProvider;
 
@@ -76,11 +77,14 @@ class _BadgeState extends State<Badge> {
         builder: (context, coveredMaterial, child) {
           Map<String, bool> eligibleBadges =
               coveredMaterial.getEligibleBadges();
-          return Column(
+          return ListView(
+            physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
+            ),
             children: [
               ListView.builder(
                 shrinkWrap: true,
-                physics: const BouncingScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: eligibleBadges.length,
                 itemBuilder: (context, i) {
                   String key = eligibleBadges.keys.elementAt(i);
@@ -92,16 +96,20 @@ class _BadgeState extends State<Badge> {
                       tag: 'badge $i',
                       child: getBadgeIcon(key, eligibleBadges[key]!),
                     ),
-                    child: ListTile(
-                      minVerticalPadding: 10,
-                      leading: Hero(
-                        tag: 'badge $i',
-                        child: getBadgeIcon(key, eligibleBadges[key]!),
+                    child: SizedBox(
+                      height: 75,
+                      child: Center(
+                        child: ListTile(
+                          leading: Hero(
+                            tag: 'badge $i',
+                            child: getBadgeIcon(key, eligibleBadges[key]!),
+                          ),
+                          title: getBadgeTitle(key, eligibleBadges[key]!),
+                          subtitle: (eligibleBadges[key]!)
+                              ? null
+                              : const Text('badges.complete_to_unlock').tr(),
+                        ),
                       ),
-                      title: getBadgeTitle(key, eligibleBadges[key]!),
-                      subtitle: (eligibleBadges[key]!)
-                          ? const Text('\n')
-                          : const Text('badges.complete_to_unlock').tr(),
                     ),
                   );
                 },
@@ -146,14 +154,24 @@ class _BadgeState extends State<Badge> {
         tag: 'completion badge',
         child: Image.asset('assets/images/badges/completion.png'),
       ),
-      child: ListTile(
-        minVerticalPadding: 10,
-        leading: Hero(
-          tag: 'completion badge',
-          child: Image.asset('assets/images/badges/completion.png'),
+      child: Container(
+        color: Colors.yellow.withOpacity(0.1),
+        height: 75,
+        child: AnimatedBackground(
+          behaviour: RacingLinesBehaviour(
+            numLines: 5,
+          ),
+          vsync: this,
+          child: Center(
+            child: ListTile(
+              leading: Hero(
+                tag: 'completion badge',
+                child: Image.asset('assets/images/badges/completion.png'),
+              ),
+              title: const Text('badges.completion').tr(),
+            ),
+          ),
         ),
-        title: const Text('badges.completion').tr(),
-        subtitle: const Text('\n'),
       ),
     );
   }

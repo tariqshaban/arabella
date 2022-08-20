@@ -1,8 +1,9 @@
-import 'package:arabella/assets/components/learning_outcomes.dart';
-import 'package:arabella/assets/components/learning_progress.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
+import 'assets/components/learning_progress.dart';
+import 'assets/components/learning_outcomes.dart';
+import 'assets/components/learning_description.dart';
 import 'assets/components/lesson_list_vertical.dart';
 import 'assets/models/chapter_model.dart';
 import 'assets/models/providers/chapters_provider.dart';
@@ -28,10 +29,13 @@ class _ChapterState extends State<Chapter> {
       body: Padding(
         padding: const EdgeInsets.all(5),
         child: ListView(
-          physics: const BouncingScrollPhysics(),
+          physics: const BouncingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics(),
+          ),
           shrinkWrap: true,
           children: [
             LearningProgress(chapter: widget.chapter),
+            LearningDescription(chapter: widget.chapter),
             LearningOutcomes(chapter: widget.chapter),
             const Padding(
               padding: EdgeInsets.only(top: 5),

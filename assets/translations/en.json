@@ -20,15 +20,14 @@
     "progress": "Progress",
     "lessons_finished": "Lessons finished",
     "grade": "Grade",
+    "description": "Description",
     "learning_outcomes": "Learning Outcomes",
     "history": {
       "name": "History",
       "description": "History description",
       "outcomes": {
-        "1": "outcome 1",
-        "2": "outcome 2",
-        "3": "outcome 3",
-        "4": "outcome 4"
+        "1": "Learn the main events that have transpired during each era.",
+        "2": "Learn the effect that history made in the present day."
       },
       "lessons": {
         "bronze_age": {
@@ -55,6 +54,10 @@
             "irbid_archaeological_museum": {
               "title": "Dar As Saraya Museum",
               "content": "Also known as \"Irbid Archaeological Museum\"."
+            },
+            "umm_qais": {
+              "title": "Umm Qais",
+              "content": "Located at Gadara"
             }
           }
         },
@@ -75,7 +78,17 @@
         "3": "outcome 3",
         "4": "outcome 4"
       },
-      "lessons": {}
+      "lessons": {
+        "geography": {
+          "name": "Geography"
+        },
+        "administrative_divisions": {
+          "name": "Administrative Divisions"
+        },
+        "demography": {
+          "name": "Demography"
+        }
+      }
     },
     "culture": {
       "name": "Culture",
@@ -113,6 +126,7 @@
   },
   "lessons": {
     "next_lesson": "Next Lesson",
+    "previous_lesson": "Previous Lesson",
     "finish_chapter": "Finish Chapter",
     "points_of_interest": "Points of Interest"
   },
@@ -127,7 +141,10 @@
     "failed": "You haven't passed yet. But you can try multiple times, and the highest score will be saved."
   },
   "question": {
-    "next": "Next Question"
+    "question": "Question",
+    "next_question": "Next Question",
+    "previous_question": "Previous Question",
+    "save": "Save"
   },
   "badges": {
     "badges": "Badges",

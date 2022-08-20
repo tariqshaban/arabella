@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:arabella/assets/models/chapter_model.dart';
-import 'package:arabella/assets/models/quiz_metadata.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../chapter_model.dart';
+import '../quiz_metadata.dart';
 import 'chapters_provider.dart';
 
 class CoveredMaterialProvider with ChangeNotifier {
@@ -78,14 +78,26 @@ class CoveredMaterialProvider with ChangeNotifier {
     return initializedQuizzesStatus;
   }
 
+  Set<String> getLesson(String chapterName) {
+    _finishedLessons[chapterName] ??= {};
+
+    return _finishedLessons[chapterName]!;
+  }
+
   void setLessonAsFinished(String chapterName, String lessonName) {
-    _finishedLessons[chapterName]!.add(lessonName);
+    getLesson(chapterName).add(lessonName);
 
     savePersistentSate();
   }
 
+  double getQuizMark(String chapterName) {
+    _finishedQuizzes[chapterName] ??= -1;
+
+    return _finishedQuizzes[chapterName]!;
+  }
+
   void setQuizMark(String chapterName, double mark) {
-    if (_finishedQuizzes[chapterName]! < mark) {
+    if (getQuizMark(chapterName) < mark) {
       _finishedQuizzes[chapterName] = mark;
     }
 
@@ -93,15 +105,11 @@ class CoveredMaterialProvider with ChangeNotifier {
   }
 
   bool isLessonFinished(String chapterName, String lessonName) {
-    return _finishedLessons[chapterName]!.contains(lessonName);
+    return getLesson(chapterName).contains(lessonName);
   }
 
   double getPassingGrade() {
     return QuizMetadata.passingMark;
-  }
-
-  double getQuizMark(String chapterName) {
-    return _finishedQuizzes[chapterName]!;
   }
 
   bool didPassQuiz(String chapterName) {
@@ -132,7 +140,7 @@ class CoveredMaterialProvider with ChangeNotifier {
         .lessons;
 
     for (String lesson in lessons) {
-      if (!_finishedLessons[chapterName]!.contains(lesson)) {
+      if (!getLesson(chapterName).contains(lesson)) {
         return false;
       }
     }
@@ -166,7 +174,7 @@ class CoveredMaterialProvider with ChangeNotifier {
   }
 
   int getNumberOfFinishedLessons(String chapterName) {
-    return _finishedLessons[chapterName]!.length;
+    return getLesson(chapterName).length;
   }
 
   double getChapterProgress(String chapterName) {

@@ -1,28 +1,28 @@
 import 'dart:math';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
-import 'package:arabella/assets/models/providers/answered_questions_provider.dart';
-import 'package:arabella/assets/models/providers/covered_material_provider.dart';
-import 'package:arabella/assets/models/providers/maps_icon_provider.dart';
-import 'package:arabella/assets/models/providers/panel_expansion_provider.dart';
-import 'package:arabella/assets/models/providers/scroll_direction_provider.dart';
-import 'package:arabella/badge.dart';
-import 'package:arabella/home.dart';
-import 'package:arabella/lesson.dart';
-import 'package:arabella/question.dart';
-import 'package:arabella/quiz.dart';
-import 'package:arabella/splash.dart';
 import 'package:confetti/confetti.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import 'assets/models/providers/answered_questions_provider.dart';
 import 'assets/models/providers/background_animation_provider.dart';
 import 'assets/models/providers/celebrate_provider.dart';
 import 'assets/models/providers/chapters_provider.dart';
 import 'assets/models/providers/confetti_provider.dart';
+import 'assets/models/providers/covered_material_provider.dart';
+import 'assets/models/providers/maps_icon_provider.dart';
+import 'assets/models/providers/panel_expansion_provider.dart';
+import 'assets/models/providers/scroll_direction_provider.dart';
+import 'badge.dart';
 import 'chapter.dart';
+import 'home.dart';
+import 'lesson.dart';
+import 'question.dart';
+import 'quiz.dart';
+import 'splash.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

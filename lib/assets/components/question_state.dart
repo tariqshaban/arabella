@@ -1,8 +1,9 @@
-import 'package:arabella/assets/models/chapter_model.dart';
-import 'package:arabella/assets/models/providers/answered_questions_provider.dart';
-import 'package:arabella/assets/models/providers/chapters_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../models/chapter_model.dart';
+import '../models/providers/answered_questions_provider.dart';
+import '../models/providers/chapters_provider.dart';
 
 class QuestionState extends StatefulWidget {
   const QuestionState(

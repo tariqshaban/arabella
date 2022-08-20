@@ -17,6 +17,10 @@ Antonius.
 |-------------------------------------------------------------------------------------------------------------|
 | *Another mosaic from Irbid Museum of Jordanian Heritage*                                                    |
 
+| ![Umm Qais](resource:assets/images/chapters/1-history/lessons_images/byzantine_church.jpg) |
+|--------------------------------------------------------------------------------------------|
+| *Byzantine Church terrace at Umm Qais*                                                     |
+
 --------
 
 ## References

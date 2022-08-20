@@ -1,10 +1,10 @@
-import 'package:arabella/assets/models/chapter_model.dart';
-import 'package:arabella/assets/models/providers/covered_material_provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../models/chapter_model.dart';
 import '../models/providers/chapters_provider.dart';
+import '../models/providers/covered_material_provider.dart';
 
 class LessonListVertical extends StatefulWidget {
   const LessonListVertical({Key? key, required this.chapter}) : super(key: key);
@@ -57,13 +57,14 @@ class _LessonListVerticalState extends State<LessonListVertical> {
                           ),
                         ),
                         const SizedBox(width: 25),
-                        Text(
-                          ChaptersProvider.getLessonTranslatableName(
-                                  widget.chapter.chapterName, lesson)
-                              .tr(),
-                          style: const TextStyle(fontSize: 16),
+                        Expanded(
+                          child: Text(
+                            ChaptersProvider.getLessonTranslatableName(
+                                    widget.chapter.chapterName, lesson)
+                                .tr(),
+                            style: const TextStyle(fontSize: 16),
+                          ),
                         ),
-                        const Expanded(child: SizedBox()),
                         Padding(
                           padding: const EdgeInsetsDirectional.only(end: 20),
                           child: Icon(

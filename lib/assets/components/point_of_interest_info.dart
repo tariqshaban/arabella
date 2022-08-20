@@ -39,10 +39,11 @@ class _PointsOfInterestInfoState extends State<PointsOfInterestInfo> {
             Flexible(
               child: SingleChildScrollView(
                 controller: scrollController,
-                physics: const BouncingScrollPhysics(),
+                physics: const BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics(),
+                ),
                 child: Padding(
-                  padding:
-                      const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 10),
+                  padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 10),
                   child: SizedBox(
                     width: double.infinity,
                     child: Text(

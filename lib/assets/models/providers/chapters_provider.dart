@@ -1,11 +1,11 @@
 import 'dart:convert';
 
-import 'package:arabella/assets/models/question_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../chapter_model.dart';
+import '../question_model.dart';
 
 class ChaptersProvider with ChangeNotifier {
   List<ChapterModel> _chapters = [];
@@ -25,6 +25,28 @@ class ChaptersProvider with ChangeNotifier {
 
   static String getChapterTranslatableName(String chapter) {
     return 'chapters.${chapter.substring(chapter.indexOf('-') + 1)}.name';
+  }
+
+  static String getChapterTranslatableDescription(String chapter) {
+    return 'chapters.${chapter.substring(chapter.indexOf('-') + 1)}.description';
+  }
+
+  static Future<List<String>> getChapterTranslatableLearningOutcomes(
+      String chapter) async {
+    List<String> translatableLearningOutcomes = [];
+
+    dynamic data = await json
+        .decode(await rootBundle.loadString('assets/translations/en.json'));
+
+    dynamic outcomes = data['chapters']
+    [chapter.substring(chapter.indexOf('-') + 1)]['outcomes'];
+
+    outcomes.keys.forEach((key) {
+      translatableLearningOutcomes.add(
+          'chapters.${chapter.substring(chapter.indexOf('-') + 1)}.outcomes.$key');
+    });
+
+    return translatableLearningOutcomes;
   }
 
   static Future<String> getLessonContents(
@@ -57,24 +79,6 @@ class ChaptersProvider with ChangeNotifier {
 
   static String getLessonTranslatableName(String chapter, String lesson) {
     return 'chapters.${chapter.substring(chapter.indexOf('-') + 1)}.lessons.${lesson.substring(lesson.indexOf('-') + 1, lesson.lastIndexOf('.'))}.name';
-  }
-
-  static Future<List<String>> getChapterTranslatableLearningOutcomes(
-      String chapter) async {
-    List<String> translatableLearningOutcomes = [];
-
-    dynamic data = await json
-        .decode(await rootBundle.loadString('assets/translations/en.json'));
-
-    dynamic outcomes = data['chapters']
-        [chapter.substring(chapter.indexOf('-') + 1)]['outcomes'];
-
-    outcomes.keys.forEach((key) {
-      translatableLearningOutcomes.add(
-          'chapters.${chapter.substring(chapter.indexOf('-') + 1)}.outcomes.$key');
-    });
-
-    return translatableLearningOutcomes;
   }
 
   static String getImageFromLesson(String chapter, String lesson) {

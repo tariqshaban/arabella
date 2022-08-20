@@ -1,12 +1,12 @@
-import 'package:arabella/assets/components/paging_scroll_physics.dart';
-import 'package:arabella/assets/components/parallax.dart';
-import 'package:arabella/assets/models/chapter_model.dart';
-import 'package:arabella/assets/models/providers/covered_material_provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../models/chapter_model.dart';
 import '../models/providers/chapters_provider.dart';
+import '../models/providers/covered_material_provider.dart';
+import 'paging_scroll_physics.dart';
+import 'parallax.dart';
 
 class LessonList extends StatefulWidget {
   const LessonList({Key? key, required this.chapter}) : super(key: key);

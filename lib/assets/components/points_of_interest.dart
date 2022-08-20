@@ -1,8 +1,6 @@
 import 'dart:convert';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
-import 'package:arabella/assets/components/point_of_interest_info.dart';
-import 'package:arabella/assets/models/providers/maps_icon_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +9,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../enums/map_annotation_type.dart';
+import '../models/providers/maps_icon_provider.dart';
+import 'point_of_interest_info.dart';
 
 class PointsOfInterest extends StatefulWidget {
   const PointsOfInterest({

@@ -20,15 +20,14 @@
     "progress": "التقدم",
     "lessons_finished": "الدروس المنتهية",
     "grade": "العلامة",
+    "description": "الوصف",
     "learning_outcomes": "نتائج التعلم",
     "history": {
       "name": "التاريخ",
       "description": "تفصيل التاريخ",
       "outcomes": {
-        "1": "هدف 1",
-        "2": "هدف 2",
-        "3": "هدف 3",
-        "4": "هدف 3"
+        "1": "التعرف على أهم الأحداث التي حدثت في كل عصر.",
+        "2": "التعرف على التأثير الذي صنعه التاريخ في يومنا هذا."
       },
       "lessons": {
         "bronze_age": {
@@ -36,7 +35,11 @@
           "points_of_interest": {
             "irbid_archaeological_museum": {
               "title": "متحف دار السرايا",
-              "content": "المعروف ايضا باسم \"متحف اربد الأثري\"."
+              "content": "المعروف ايضا باسم \"متحف إربد الأثري\"."
+            },
+            "umm_qais": {
+              "title": "أم قيس",
+              "content": "تقع في جدارا"
             }
           }
         },
@@ -45,7 +48,7 @@
           "points_of_interest": {
             "irbid_archaeological_museum": {
               "title": "متحف دار السرايا",
-              "content": "المعروف ايضا باسم \"متحف اربد الأثري\"."
+              "content": "المعروف ايضا باسم \"متحف إربد الأثري\"."
             }
           }
         },
@@ -54,7 +57,7 @@
           "points_of_interest": {
             "irbid_archaeological_museum": {
               "title": "متحف دار السرايا",
-              "content": "المعروف ايضا باسم \"متحف اربد الأثري\"."
+              "content": "المعروف ايضا باسم \"متحف إربد الأثري\"."
             }
           }
         },
@@ -67,15 +70,25 @@
       }
     },
     "geography": {
-      "name": "الجغرافية",
-      "description": "تفصيل الجغرافية",
+      "name": "الجغرافيا",
+      "description": "تفصيل الجغرافيا",
       "outcomes": {
         "1": "هدف 1",
         "2": "هدف 2",
         "3": "هدف 3",
         "4": "هدف 3"
       },
-      "lessons": {}
+      "lessons": {
+        "geography": {
+          "name": "الجغرافيا"
+        },
+        "administrative_divisions": {
+          "name": "التقسيمات الإدارية"
+        },
+        "demography": {
+          "name": "الديموغرافية"
+        }
+      }
     },
     "culture": {
       "name": "الثقافة",
@@ -113,6 +126,7 @@
   },
   "lessons": {
     "next_lesson": "الدرس القادم",
+    "previous_lesson": "الدرس السابق",
     "finish_chapter": "انهاء الفصل",
     "points_of_interest": "نقاط الاهتمام"
   },
@@ -127,7 +141,10 @@
     "failed": "لم تنجح بعد. ولكن يمكنك المحاولة العديد من المرات, وسيتم تسجيل اعلى علامة."
   },
   "question": {
-    "next": "السؤال التالي"
+    "question": "سؤال",
+    "next_question": "السؤال القادم",
+    "previous_question": "السؤال السابق",
+    "save": "حفظ"
   },
   "badges": {
     "badges": "الشارات",

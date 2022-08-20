@@ -1,7 +1,3 @@
-import 'package:arabella/assets/models/providers/chapters_provider.dart';
-import 'package:arabella/assets/models/providers/confetti_provider.dart';
-import 'package:arabella/assets/models/question_model.dart';
-import 'package:arabella/assets/models/quiz_metadata.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -12,8 +8,12 @@ import 'assets/components/question_state.dart';
 import 'assets/components/snack_bar.dart';
 import 'assets/models/chapter_model.dart';
 import 'assets/models/providers/answered_questions_provider.dart';
+import 'assets/models/providers/chapters_provider.dart';
+import 'assets/models/providers/confetti_provider.dart';
 import 'assets/models/providers/covered_material_provider.dart';
 import 'assets/models/providers/scroll_direction_provider.dart';
+import 'assets/models/question_model.dart';
+import 'assets/models/quiz_metadata.dart';
 
 class Quiz extends StatefulWidget {
   const Quiz({Key? key, required this.chapterName, required this.questions})
@@ -46,7 +46,7 @@ class _QuizState extends State<Quiz> {
                     Consumer<AnsweredQuestionsProvider>(
                       builder: (context, answeredQuestions, child) {
                         return (answeredQuestions
-                                .isSubmitted[widget.chapterName]!)
+                                .isQuizSubmitted(widget.chapterName))
                             ? Text(
                                 '${'quiz.your_grade'.tr()}:  ${(coveredMaterial.getQuizMark(widget.chapterName) * 100).round()}%',
                                 style: const TextStyle(fontSize: 16),
@@ -89,16 +89,18 @@ class _QuizState extends State<Quiz> {
                 padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
                 child: ListView.builder(
                   shrinkWrap: true,
-                  physics: const BouncingScrollPhysics(),
+                  physics: const BouncingScrollPhysics(
+                    parent: AlwaysScrollableScrollPhysics(),
+                  ),
                   itemCount: widget.questions.length,
                   itemBuilder: (context, i) {
                     return Consumer<AnsweredQuestionsProvider>(
                       builder: (context, answeredQuestions, child) {
                         return ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(15),
                           child: Card(
-                            margin:
-                                const EdgeInsetsDirectional.fromSTEB(0, 5, 0, 5),
+                            margin: const EdgeInsetsDirectional.fromSTEB(
+                                0, 5, 0, 5),
                             elevation: 5,
                             shadowColor: Theme.of(context).colorScheme.primary,
                             shape: RoundedRectangleBorder(
@@ -125,11 +127,11 @@ class _QuizState extends State<Quiz> {
                                   ),
                                   title: Text(
                                       '${'quiz.question_number'.tr()} ${i + 1}'),
-                                  trailing:
-                                      (ChaptersProvider.isMultipleChoiceQuestion(
+                                  trailing: (ChaptersProvider
+                                          .isMultipleChoiceQuestion(
                                               widget.questions[i]))
-                                          ? const Icon(Icons.radio_button_checked)
-                                          : const Icon(Icons.check_box)),
+                                      ? const Icon(Icons.radio_button_checked)
+                                      : const Icon(Icons.check_box)),
                             ),
                           ),
                         );
@@ -144,7 +146,7 @@ class _QuizState extends State<Quiz> {
       ),
       floatingActionButton: Consumer<AnsweredQuestionsProvider>(
         builder: (context, answeredQuestions, child) {
-          if (!answeredQuestions.isSubmitted[widget.chapterName]!) {
+          if (!answeredQuestions.isQuizSubmitted(widget.chapterName)) {
             return ExtendedFloatingActionButton(
               text: 'quiz.submit'.tr(),
               icon: const Icon(Icons.upload_file),

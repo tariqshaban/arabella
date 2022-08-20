@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:arabella/assets/models/providers/covered_material_provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -14,6 +13,7 @@ import 'assets/components/extended_floating_action_button.dart';
 import 'assets/components/points_of_interest.dart';
 import 'assets/models/chapter_model.dart';
 import 'assets/models/providers/chapters_provider.dart';
+import 'assets/models/providers/covered_material_provider.dart';
 import 'assets/models/providers/scroll_direction_provider.dart';
 
 class Lesson extends StatefulWidget {
@@ -95,7 +95,9 @@ class _LessonState extends State<Lesson> {
                         },
                         child: ListView(
                           padding: const EdgeInsets.only(top: 10),
-                          physics: const BouncingScrollPhysics(),
+                          physics: const BouncingScrollPhysics(
+                            parent: AlwaysScrollableScrollPhysics(),
+                          ),
                           children: [
                             FutureBuilder(
                               builder: (ctx, snapshot) {
@@ -145,27 +147,66 @@ class _LessonState extends State<Lesson> {
               context, widget.chapter.chapterName, widget.lesson),
         ),
       ),
-      floatingActionButton: (getNextLessonIndex() != -1)
-          ? ExtendedFloatingActionButton(
-              text: 'lessons.next_lesson'.tr(),
-              icon: const Icon(Icons.navigate_next),
-              iconFirst: false,
-              onPressed: () {
-                Navigator.pushReplacementNamed(context, '/lesson', arguments: {
-                  'chapter': widget.chapter,
-                  'lesson': widget.chapter.lessons[getNextLessonIndex()]
-                });
-              },
-            )
-          : ExtendedFloatingActionButton(
-              text: 'lessons.finish_chapter'.tr(),
-              icon: const Icon(Icons.exit_to_app),
-              iconFirst: false,
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        child: Stack(
+          children: <Widget>[
+            Align(
+              alignment: AlignmentDirectional.bottomStart,
+              child: (getPreviousLessonIndex() != -1)
+                  ? ExtendedFloatingActionButton(
+                      text: 'lessons.previous_lesson'.tr(),
+                      heroTag: 'left fab',
+                      icon: const Icon(Icons.navigate_before),
+                      onPressed: () {
+                        Navigator.pushReplacementNamed(context, '/lesson',
+                            arguments: {
+                              'chapter': widget.chapter,
+                              'lesson': widget
+                                  .chapter.lessons[getPreviousLessonIndex()]
+                            });
+                      },
+                    )
+                  : const SizedBox(),
             ),
+            Align(
+              alignment: AlignmentDirectional.bottomEnd,
+              child: (getNextLessonIndex() != -1)
+                  ? ExtendedFloatingActionButton(
+                      text: 'lessons.next_lesson'.tr(),
+                      heroTag: 'right fab',
+                      icon: const Icon(Icons.navigate_next),
+                      iconFirst: false,
+                      onPressed: () {
+                        Navigator.pushReplacementNamed(context, '/lesson',
+                            arguments: {
+                              'chapter': widget.chapter,
+                              'lesson':
+                                  widget.chapter.lessons[getNextLessonIndex()]
+                            });
+                      },
+                    )
+                  : ExtendedFloatingActionButton(
+                      text: 'lessons.finish_chapter'.tr(),
+                      heroTag: 'right fab',
+                      icon: const Icon(Icons.exit_to_app),
+                      iconFirst: false,
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+            ),
+          ],
+        ),
+      ),
     );
+  }
+
+  int getPreviousLessonIndex() {
+    int previousIndex = widget.chapter.lessons.indexOf(widget.lesson) - 1;
+
+    return (previousIndex < 0) ? -1 : previousIndex;
   }
 
   int getNextLessonIndex() {

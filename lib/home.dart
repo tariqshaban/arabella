@@ -39,7 +39,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 separatorBuilder: (BuildContext context, int i) {
                   return const SizedBox(height: 10);
                 },
-                physics: const BouncingScrollPhysics(),
+                physics: const BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics(),
+                ),
                 itemCount: chapters.chapters.length,
                 itemBuilder: (context, i) {
                   return Card(
@@ -79,7 +81,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                   ),
                                 ).tr(),
                                 Hero(
-                                  tag: 'attempt_exam',
+                                  tag:
+                                      'attempt_exam ${chapters.chapters[i].chapterName}',
                                   child: Consumer<CoveredMaterialProvider>(
                                     builder: (context, coveredMaterial, child) {
                                       return Material(

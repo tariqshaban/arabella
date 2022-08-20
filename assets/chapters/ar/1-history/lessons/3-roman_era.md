@@ -9,11 +9,15 @@
 
 | ![Irbid Archaeological Museum Mosaic](resource:assets/images/chapters/1-history/lessons_images/mosaic1.jpg) |
 |-------------------------------------------------------------------------------------------------------------|
-| *فسيفساء من متحف اربد للتراث الأردني*                                                                       |
+| *فسيفساء من متحف إربد للتراث الأردني*                                                                       |
 
 | ![Irbid Archaeological Museum Mosaic](resource:assets/images/chapters/1-history/lessons_images/mosaic2.jpg) |
 |-------------------------------------------------------------------------------------------------------------|
 | *فسيفساء أخرى من متحف إربد للتراث الأردني*                                                                  |
+
+| ![Umm Qais](resource:assets/images/chapters/1-history/lessons_images/byzantine_church.jpg) |
+|--------------------------------------------------------------------------------------------|
+| *شرفة الكنيسة البيزنطية في أم قيس*                                                         |
 
 --------
 

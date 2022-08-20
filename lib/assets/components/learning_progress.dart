@@ -1,9 +1,9 @@
-import 'package:arabella/assets/models/chapter_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 import 'package:provider/provider.dart';
 
+import '../models/chapter_model.dart';
 import '../models/providers/covered_material_provider.dart';
 
 class LearningProgress extends StatefulWidget {
@@ -39,7 +39,7 @@ class _LearningProgressState extends State<LearningProgress> {
                     top: 0,
                     end: 0,
                     child: Hero(
-                      tag: 'attempt_exam',
+                      tag: 'attempt_exam ${widget.chapter.chapterName}',
                       child: Consumer<CoveredMaterialProvider>(
                         builder: (context, coveredMaterial, child) {
                           return Material(

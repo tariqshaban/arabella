@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 class ScrollDirectionProvider with ChangeNotifier {
-  ScrollDirection _direction = ScrollDirection.idle;
+  ScrollDirection _direction = ScrollDirection.reverse;
 
   ScrollDirection get direction => _direction;
 

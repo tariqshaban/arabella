@@ -1,13 +1,13 @@
 import 'dart:convert';
 
-import 'package:arabella/assets/models/chapter_model.dart';
-import 'package:arabella/assets/models/providers/covered_material_provider.dart';
-import 'package:arabella/assets/models/question_model.dart';
-import 'package:arabella/assets/models/quiz_metadata.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../chapter_model.dart';
+import '../question_model.dart';
+import '../quiz_metadata.dart';
 import 'chapters_provider.dart';
+import 'covered_material_provider.dart';
 
 class AnsweredQuestionsProvider with ChangeNotifier {
   ChaptersProvider? _chaptersProvider;
@@ -51,7 +51,11 @@ class AnsweredQuestionsProvider with ChangeNotifier {
     savePersistentSate();
   }
 
-  Map<String, bool> get isSubmitted => _isSubmitted;
+  bool isQuizSubmitted(String chapterName) {
+    _isSubmitted[chapterName] ??= false;
+
+    return _isSubmitted[chapterName]!;
+  }
 
   set isSubmitted(Map<String, bool> value) {
     _isSubmitted = value;
@@ -88,9 +92,8 @@ class AnsweredQuestionsProvider with ChangeNotifier {
   }
 
   List<String> getQuestionAnswer(String chapterName, String questionName) {
-    if(_answers[chapterName]![questionName] == null){
-      _answers[chapterName]![questionName] = [];
-    }
+    _answers[chapterName] ??= {};
+    _answers[chapterName]![questionName] ??= [];
 
     return _answers[chapterName]![questionName]!;
   }
@@ -213,8 +216,8 @@ class AnsweredQuestionsProvider with ChangeNotifier {
     getQuestionAnswer(chapterName, questionName)
         .removeWhere((selectedOption) => !options.contains(selectedOption));
 
-    return setEquals(
-        getQuestionAnswer(chapterName, questionName).toSet(), correctOptions.toSet());
+    return setEquals(getQuestionAnswer(chapterName, questionName).toSet(),
+        correctOptions.toSet());
   }
 
   void fromJson(Map<String, dynamic> parsedJson) {

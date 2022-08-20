@@ -43,7 +43,7 @@ class FullScreenWidget extends StatelessWidget {
                 opacity: opacity,
                 padding: padding,
                 disposeLevel: disposeLevel,
-                child: (fullScreenWidget == null) ? child : fullScreenWidget!,
+                child: fullScreenWidget?? child,
               );
             },
           ),

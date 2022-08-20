@@ -11,6 +11,7 @@ class ExtendedFloatingActionButton extends StatefulWidget {
       required this.icon,
       this.elementSpacing = 5,
       this.iconFirst = true,
+      this.heroTag,
       this.onPressed})
       : super(key: key);
 
@@ -18,6 +19,7 @@ class ExtendedFloatingActionButton extends StatefulWidget {
   final Widget icon;
   final double elementSpacing;
   final bool iconFirst;
+  final Object? heroTag;
   final VoidCallback? onPressed;
 
   @override
@@ -32,6 +34,7 @@ class _ExtendedFloatingActionButtonState
     return Consumer<ScrollDirectionProvider>(
       builder: (context, scrollDirection, child) {
         return FloatingActionButton.extended(
+          heroTag: widget.heroTag,
           extendedPadding: const EdgeInsetsDirectional.fromSTEB(12, 0, 12, 0),
           backgroundColor: Theme.of(context).colorScheme.primary,
           label: AnimatedSwitcher(
