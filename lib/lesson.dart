@@ -106,6 +106,7 @@ class _LessonState extends State<Lesson> {
                                     snapshot.data as bool) {
                                   return ExpandableWidget(
                                     expandedStateKey: 'points_of_interest',
+                                    icon: const Icon(Icons.map),
                                     header: const Text(
                                       'lessons.points_of_interest',
                                       style: TextStyle(fontSize: 20),

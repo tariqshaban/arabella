@@ -15,6 +15,15 @@ class LearningOutcomes extends StatefulWidget {
 }
 
 class _LearningOutcomesState extends State<LearningOutcomes> {
+  late Future<List<String>> learningOutcomes;
+
+  @override
+  void initState() {
+    super.initState();
+    learningOutcomes = ChaptersProvider.getChapterTranslatableLearningOutcomes(
+        widget.chapter.chapterName);
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -24,12 +33,12 @@ class _LearningOutcomesState extends State<LearningOutcomes> {
               snapshot.data as List<String>;
           return ExpandableWidget(
             expandedStateKey: 'learning_outcomes',
+            icon: const Icon(Icons.school_outlined),
             header: const Text(
               'chapters.learning_outcomes',
               style: TextStyle(fontSize: 20),
             ).tr(),
             body: ListView.builder(
-              padding: const EdgeInsets.only(top: 10),
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: chapterTranslatableLearningOutcomes.length,
@@ -55,8 +64,7 @@ class _LearningOutcomesState extends State<LearningOutcomes> {
         }
         return const SizedBox();
       },
-      future: ChaptersProvider.getChapterTranslatableLearningOutcomes(
-          widget.chapter.chapterName),
+      future: learningOutcomes,
     );
   }
 }

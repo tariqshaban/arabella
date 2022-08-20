@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:confetti/confetti.dart';
@@ -14,7 +15,6 @@ import 'assets/models/providers/chapters_provider.dart';
 import 'assets/models/providers/confetti_provider.dart';
 import 'assets/models/providers/covered_material_provider.dart';
 import 'assets/models/providers/maps_icon_provider.dart';
-import 'assets/models/providers/panel_expansion_provider.dart';
 import 'assets/models/providers/scroll_direction_provider.dart';
 import 'badge.dart';
 import 'chapter.dart';
@@ -75,8 +75,6 @@ class _MainState extends State<Main> {
             create: (context) => MapsIconProvider()),
         ChangeNotifierProvider<BackgroundAnimationProvider>(
             create: (context) => BackgroundAnimationProvider()),
-        ChangeNotifierProvider<PanelExpansionProvider>(
-            create: (context) => PanelExpansionProvider()),
       ],
       child: AdaptiveTheme(
         light: ThemeData(
@@ -125,6 +123,12 @@ class _MainState extends State<Main> {
             locale: context.locale,
             theme: theme,
             darkTheme: darkTheme,
+            scrollBehavior: const MaterialScrollBehavior().copyWith(
+              dragDevices: {
+                PointerDeviceKind.mouse,
+                PointerDeviceKind.touch,
+              },
+            ),
             initialRoute: '/splash',
             builder: (context, child) {
               return Stack(

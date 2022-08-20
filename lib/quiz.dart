@@ -87,58 +87,80 @@ class _QuizState extends State<Quiz> {
               },
               child: Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  physics: const BouncingScrollPhysics(
-                    parent: AlwaysScrollableScrollPhysics(),
-                  ),
-                  itemCount: widget.questions.length,
-                  itemBuilder: (context, i) {
-                    return Consumer<AnsweredQuestionsProvider>(
-                      builder: (context, answeredQuestions, child) {
-                        return ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
-                          child: Card(
-                            margin: const EdgeInsetsDirectional.fromSTEB(
-                                0, 5, 0, 5),
-                            elevation: 5,
-                            shadowColor: Theme.of(context).colorScheme.primary,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              side: BorderSide(
-                                color: getBorderColor(answeredQuestions, i),
-                                width: 2,
+                child: LayoutBuilder(builder: (context, constraints) {
+                  return GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: constraints.maxWidth > 900
+                          ? constraints.maxWidth > 1200
+                              ? 4
+                              : 3
+                          : constraints.maxWidth > 600
+                          ? 2
+                          : 1,
+                      mainAxisExtent: 70,
+                      mainAxisSpacing: 10,
+                      crossAxisSpacing: 15,
+                    ),
+                    shrinkWrap: true,
+                    physics: const BouncingScrollPhysics(
+                      parent: AlwaysScrollableScrollPhysics(),
+                    ),
+                    itemCount: widget.questions.length,
+                    itemBuilder: (context, i) {
+                      return Consumer<AnsweredQuestionsProvider>(
+                        builder: (context, answeredQuestions, child) {
+                          return ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: Card(
+                              margin: const EdgeInsetsDirectional.fromSTEB(
+                                  0, 5, 0, 5),
+                              elevation: 5,
+                              shadowColor:
+                                  Theme.of(context).colorScheme.primary,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                side: BorderSide(
+                                  color: getBorderColor(answeredQuestions, i),
+                                  width: 2,
+                                ),
+                              ),
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(15),
+                                onTap: () {
+                                  Navigator.pushNamed(context, '/question',
+                                      arguments: {
+                                        'chapterName': widget.chapterName,
+                                        'questions': widget.questions,
+                                        'currentQuestion': widget.questions[i],
+                                      });
+                                },
+                                child: AbsorbPointer(
+                                  child: SizedBox(
+                                    height: 70,
+                                    child: Center(
+                                      child: ListTile(
+                                          leading: QuestionState(
+                                            chapterName: widget.chapterName,
+                                            questionIndex: i,
+                                          ),
+                                          title: Text(
+                                              '${'quiz.question_number'.tr()} ${i + 1}'),
+                                          trailing: (ChaptersProvider
+                                                  .isMultipleChoiceQuestion(
+                                                      widget.questions[i]))
+                                              ? const Icon(Icons.radio_button_checked)
+                                              : const Icon(Icons.check_box)),
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(15),
-                              onTap: () {
-                                Navigator.pushNamed(context, '/question',
-                                    arguments: {
-                                      'chapterName': widget.chapterName,
-                                      'questions': widget.questions,
-                                      'currentQuestion': widget.questions[i],
-                                    });
-                              },
-                              child: ListTile(
-                                  leading: QuestionState(
-                                    chapterName: widget.chapterName,
-                                    questionIndex: i,
-                                  ),
-                                  title: Text(
-                                      '${'quiz.question_number'.tr()} ${i + 1}'),
-                                  trailing: (ChaptersProvider
-                                          .isMultipleChoiceQuestion(
-                                              widget.questions[i]))
-                                      ? const Icon(Icons.radio_button_checked)
-                                      : const Icon(Icons.check_box)),
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ),
+                          );
+                        },
+                      );
+                    },
+                  );
+                }),
               ),
             ),
           ),

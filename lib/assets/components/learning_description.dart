@@ -20,6 +20,7 @@ class _LearningDescriptionState extends State<LearningDescription> {
   Widget build(BuildContext context) {
     return ExpandableWidget(
       expandedStateKey: 'description',
+      icon: const Icon(Icons.description_outlined),
       header: const Text(
         'chapters.description',
         style: TextStyle(fontSize: 20),

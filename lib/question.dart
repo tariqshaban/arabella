@@ -87,78 +87,120 @@ class _QuestionState extends State<Question> {
                   if (snapshot.connectionState == ConnectionState.done) {
                     return Consumer<AnsweredQuestionsProvider>(
                       builder: (context, answeredQuestions, child) {
-                        return ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: widget.currentQuestion.options.length,
-                          itemBuilder: (context, i) {
-                            return Card(
-                              margin: const EdgeInsets.all(5),
-                              elevation: 5,
-                              shadowColor:
-                                  Theme.of(context).colorScheme.primary,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                side: BorderSide(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  width: 2,
+                        return LayoutBuilder(builder: (context, constraints) {
+                          return GridView.builder(
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: constraints.maxWidth > 900
+                                  ? constraints.maxWidth > 1200
+                                      ? 4
+                                      : 3
+                                  : constraints.maxWidth > 600
+                                      ? 2
+                                      : 1,
+                              mainAxisExtent: 70,
+                              mainAxisSpacing: 10,
+                              crossAxisSpacing: 15,
+                            ),
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: widget.currentQuestion.options.length,
+                            itemBuilder: (context, i) {
+                              return Card(
+                                margin: const EdgeInsetsDirectional.fromSTEB(
+                                    0, 5, 0, 5),
+                                elevation: 5,
+                                shadowColor:
+                                    Theme.of(context).colorScheme.primary,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  side: BorderSide(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    width: 2,
+                                  ),
                                 ),
-                              ),
-                              child: (answeredQuestions.containsMultipleAnswers(
-                                      widget.chapterName,
-                                      widget.currentQuestion.question))
-                                  ? CheckboxListTile(
-                                      contentPadding: EdgeInsets.zero,
-                                      controlAffinity:
-                                          ListTileControlAffinity.leading,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
-                                      value: getCheckboxState(context, i),
-                                      onChanged: (value) {
-                                        checkboxEventHandler(
-                                            context, i, value!);
-                                      },
-                                      title: MarkdownBody(
-                                        fitContent: false,
-                                        data:
-                                            (snapshot.data as List<String>)[i],
-                                        onTapLink: (text, url, title) async {
-                                          await launchUrl(
-                                            Uri.parse(url!),
-                                            mode:
-                                                LaunchMode.externalApplication,
-                                          );
-                                        },
-                                      ),
-                                    )
-                                  : RadioListTile(
-                                      contentPadding: EdgeInsets.zero,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
-                                      value: i,
-                                      groupValue: getRadioState(context),
-                                      onChanged: (value) {
-                                        radioEventHandler(
-                                            context, i, value as int);
-                                      },
-                                      title: MarkdownBody(
-                                        fitContent: false,
-                                        data:
-                                            (snapshot.data as List<String>)[i],
-                                        onTapLink: (text, url, title) async {
-                                          await launchUrl(
-                                            Uri.parse(url!),
-                                            mode:
-                                                LaunchMode.externalApplication,
-                                          );
-                                        },
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(15),
+                                  onTap: () {
+                                    answeredQuestions.containsMultipleAnswers(
+                                            widget.chapterName,
+                                            widget.currentQuestion.question)
+                                        ? checkboxEventHandler(context, i,
+                                            !getCheckboxState(context, i))
+                                        : radioEventHandler(context, i, i);
+                                  },
+                                  child: AbsorbPointer(
+                                    child: SizedBox(
+                                      height: 70,
+                                      child: Center(
+                                        child: (answeredQuestions
+                                                .containsMultipleAnswers(
+                                                    widget.chapterName,
+                                                    widget.currentQuestion
+                                                        .question))
+                                            ? CheckboxListTile(
+                                                controlAffinity:
+                                                    ListTileControlAffinity
+                                                        .leading,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                ),
+                                                value: getCheckboxState(
+                                                    context, i),
+                                                onChanged: (value) {
+                                                  checkboxEventHandler(
+                                                      context, i, value!);
+                                                },
+                                                title: MarkdownBody(
+                                                  fitContent: false,
+                                                  data: (snapshot.data
+                                                      as List<String>)[i],
+                                                  onTapLink:
+                                                      (text, url, title) async {
+                                                    await launchUrl(
+                                                      Uri.parse(url!),
+                                                      mode: LaunchMode
+                                                          .externalApplication,
+                                                    );
+                                                  },
+                                                ),
+                                              )
+                                            : RadioListTile(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                ),
+                                                value: i,
+                                                groupValue:
+                                                    getRadioState(context),
+                                                onChanged: (value) {
+                                                  radioEventHandler(
+                                                      context, i, value as int);
+                                                },
+                                                title: MarkdownBody(
+                                                  fitContent: false,
+                                                  data: (snapshot.data
+                                                      as List<String>)[i],
+                                                  onTapLink:
+                                                      (text, url, title) async {
+                                                    await launchUrl(
+                                                      Uri.parse(url!),
+                                                      mode: LaunchMode
+                                                          .externalApplication,
+                                                    );
+                                                  },
+                                                ),
+                                              ),
                                       ),
                                     ),
-                            );
-                          },
-                        );
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        });
                       },
                     );
                   }
