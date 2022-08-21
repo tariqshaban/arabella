@@ -21,8 +21,6 @@ class ExpandableWidget extends StatefulWidget {
 }
 
 class _ExpandableWidgetState extends State<ExpandableWidget> {
-  ExpansionController expansionController = ExpansionController();
-
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -33,33 +31,16 @@ class _ExpandableWidgetState extends State<ExpandableWidget> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(15),
-          onTap: () => expansionController.switchExpansion(),
-          child: AbsorbPointer(
-            child: Theme(
-              data: Theme.of(context).copyWith(
-                splashColor: Colors.transparent,
-                highlightColor: Colors.transparent,
-                hoverColor: Colors.transparent,
-                splashFactory: NoSplash.splashFactory,
-              ),
-              child: CustomExpansionTile(
-                title: widget.header,
-                leading: widget.icon,
-                tilePadding: const EdgeInsets.all(8),
-                childrenPadding: const EdgeInsets.all(8),
-                collapsedIconColor: Theme.of(context).colorScheme.primary,
-                iconColor: Theme.of(context).colorScheme.primary,
-                maintainState: true,
-                expansionController: expansionController,
-                children: [widget.body],
-              ),
-            ),
-          ),
-        ),
+      child: CustomExpansionTile(
+        key: widget.key,
+        title: widget.header,
+        leading: widget.icon,
+        tilePadding: const EdgeInsets.symmetric(horizontal: 12),
+        childrenPadding: const EdgeInsets.all(8),
+        collapsedIconColor: Theme.of(context).colorScheme.primary,
+        iconColor: Theme.of(context).colorScheme.primary,
+        maintainState: true,
+        children: [widget.body],
       ),
     );
   }

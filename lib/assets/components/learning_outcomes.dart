@@ -15,14 +15,9 @@ class LearningOutcomes extends StatefulWidget {
 }
 
 class _LearningOutcomesState extends State<LearningOutcomes> {
-  late Future<List<String>> learningOutcomes;
-
-  @override
-  void initState() {
-    super.initState();
-    learningOutcomes = ChaptersProvider.getChapterTranslatableLearningOutcomes(
-        widget.chapter.chapterName);
-  }
+  late Future<List<String>> learningOutcomes =
+      ChaptersProvider.getChapterTranslatableLearningOutcomes(
+          widget.chapter.chapterName);
 
   @override
   Widget build(BuildContext context) {

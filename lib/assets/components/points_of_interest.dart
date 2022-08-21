@@ -34,10 +34,22 @@ class PointsOfInterest extends StatefulWidget {
 
 class _PointsOfInterestState extends State<PointsOfInterest> {
   late GoogleMapController controller;
-  late dynamic manifest;
+  late Future<dynamic> manifest = decodeMapsManifest();
   Set<Marker> markers = {};
   Set<Polyline> polylines = {};
   Set<Polygon> polygons = {};
+
+  @override
+  void initState() {
+    super.initState();
+    manifest.then(
+      (_) {
+        assignMarkers();
+        assignPolylines();
+        assignPolygons();
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,70 +63,68 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
             builder: (ctx, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 return GoogleMap(
-                    gestureRecognizers: {
-                      Factory<EagerGestureRecognizer>(
-                          () => EagerGestureRecognizer())
-                    },
-                    initialCameraPosition: const CameraPosition(
-                      target: LatLng(31.4645395, 37.022226),
-                      zoom: 6.8,
-                    ),
-                    minMaxZoomPreference: const MinMaxZoomPreference(null, 18),
-                    mapToolbarEnabled: false,
-                    markers: markers,
-                    polylines: polylines,
-                    polygons: polygons,
-                    buildingsEnabled: false,
-                    zoomControlsEnabled: false,
-                    onMapCreated: (GoogleMapController controller) async {
-                      this.controller = controller;
+                  gestureRecognizers: {
+                    Factory<EagerGestureRecognizer>(
+                        () => EagerGestureRecognizer())
+                  },
+                  initialCameraPosition: const CameraPosition(
+                    target: LatLng(31.4645395, 37.022226),
+                    zoom: 6.8,
+                  ),
+                  minMaxZoomPreference: const MinMaxZoomPreference(null, 18),
+                  mapToolbarEnabled: false,
+                  markers: markers,
+                  polylines: polylines,
+                  polygons: polygons,
+                  buildingsEnabled: false,
+                  zoomControlsEnabled:
+                      !(defaultTargetPlatform == TargetPlatform.iOS ||
+                          defaultTargetPlatform == TargetPlatform.android),
+                  onMapCreated: (GoogleMapController controller) async {
+                    this.controller = controller;
 
-                      if (await AdaptiveTheme.getThemeMode() ==
-                          AdaptiveThemeMode.dark) {
-                        controller.setMapStyle(await rootBundle
-                            .loadString('assets/maps/dark_theme.json'));
-                      } else {
-                        controller.setMapStyle(null);
-                      }
+                    if (await AdaptiveTheme.getThemeMode() ==
+                        AdaptiveThemeMode.dark) {
+                      controller.setMapStyle(await rootBundle
+                          .loadString('assets/maps/dark_theme.json'));
+                    } else {
+                      controller.setMapStyle(null);
+                    }
 
-                      controller.animateCamera(
-                        CameraUpdate.newLatLngBounds(
-                            getInitialCameraPosition(), 50),
-                      );
-                    });
+                    controller.animateCamera(
+                      CameraUpdate.newLatLngBounds(
+                          await getInitialCameraPosition(), 50),
+                    );
+                  },
+                );
               }
               return const SizedBox();
             },
-            future: decodeMapsManifest(),
+            future: manifest,
           ),
         ),
       ),
     );
   }
 
-  dynamic decodeMapsManifest() async {
+  Future<dynamic> decodeMapsManifest() async {
     String chapterName =
         widget.chapterName.substring(widget.chapterName.indexOf('-') + 1);
     String lessonName = widget.lessonName.substring(
         widget.lessonName.indexOf('-') + 1, widget.lessonName.indexOf('.'));
 
     String file = await rootBundle.loadString('assets/maps/maps_manifest.json');
-    manifest = json.decode(file)[chapterName][lessonName];
-
-    assignMarkers();
-    assignPolylines();
-    assignPolygons();
 
     // Delay google maps widget build, since it slows the device, and causes to crash if rebuilt too often
     await Future.delayed(const Duration(seconds: 1));
 
-    return;
+    return json.decode(file)[chapterName][lessonName];
   }
 
-  LatLngBounds getInitialCameraPosition() {
+  Future<LatLngBounds> getInitialCameraPosition() async {
     List<LatLng> points = [];
 
-    for (dynamic pointOfInterest in manifest['points_of_interest']) {
+    for (dynamic pointOfInterest in (await manifest)['points_of_interest']) {
       for (dynamic latLng in pointOfInterest['points']) {
         points.add(
           LatLng(
@@ -130,7 +140,7 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
 
   void assignMarkers() async {
     int counter = 0;
-    for (dynamic pointOfInterest in manifest['points_of_interest']) {
+    for (dynamic pointOfInterest in (await manifest)['points_of_interest']) {
       if (pointOfInterest['type'] != 'point') {
         continue;
       }
@@ -156,7 +166,7 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
   Future<void> assignPolylines() async {
     int counter = 0;
     Color primaryColor = Theme.of(context).colorScheme.primary;
-    for (dynamic pointOfInterest in manifest['points_of_interest']) {
+    for (dynamic pointOfInterest in (await manifest)['points_of_interest']) {
       if (pointOfInterest['type'] != 'polyline') {
         continue;
       }
@@ -199,7 +209,7 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
   Future<void> assignPolygons() async {
     int counter = 0;
     Color primaryColor = Theme.of(context).colorScheme.primary;
-    for (dynamic pointOfInterest in manifest['points_of_interest']) {
+    for (dynamic pointOfInterest in (await manifest)['points_of_interest']) {
       if (pointOfInterest['type'] != 'polygon') {
         continue;
       }

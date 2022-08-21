@@ -32,7 +32,6 @@ class _ChapterState extends State<Chapter> {
           physics: const BouncingScrollPhysics(
             parent: AlwaysScrollableScrollPhysics(),
           ),
-          shrinkWrap: true,
           children: [
             LearningProgress(chapter: widget.chapter),
             LayoutBuilder(

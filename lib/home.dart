@@ -35,21 +35,22 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                   return GridView.builder(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: constraints.maxWidth > 1200 ? 2 : 1,
-                      mainAxisExtent: 340,
+                      mainAxisExtent: 345,
                       mainAxisSpacing: 10,
                       crossAxisSpacing: 15,
                     ),
                     padding: EdgeInsetsDirectional.fromSTEB(
-                        0,
+                        5,
                         max(MediaQuery.of(context).size.height * 0.2, 100) + 10,
-                        0,
-                        20),
+                        5,
+                        0),
                     physics: const BouncingScrollPhysics(
                       parent: AlwaysScrollableScrollPhysics(),
                     ),
                     itemCount: chapters.chapters.length,
                     itemBuilder: (context, i) {
                       return Card(
+                        margin: const EdgeInsetsDirectional.fromSTEB(0, 5, 0, 5),
                         elevation: 5,
                         shadowColor: Theme.of(context).colorScheme.primary,
                         shape: RoundedRectangleBorder(

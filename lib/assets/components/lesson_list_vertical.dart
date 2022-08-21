@@ -18,24 +18,23 @@ class LessonListVertical extends StatefulWidget {
 class _LessonListVerticalState extends State<LessonListVertical> {
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      return GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: constraints.maxWidth > 600 ? 2 : 1,
-          mainAxisExtent: 100,
-          mainAxisSpacing: 10,
-          crossAxisSpacing: 15,
-        ),
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: widget.chapter.lessons.length,
-        itemBuilder: (context, i) {
-          String lesson = widget.chapter.lessons[i];
-          return Builder(
-            builder: (BuildContext context) {
-              return ClipRRect(
-                borderRadius: BorderRadius.circular(15),
-                child: Card(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return GridView.builder(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: constraints.maxWidth > 600 ? 2 : 1,
+            mainAxisExtent: 100,
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 15,
+          ),
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: widget.chapter.lessons.length,
+          itemBuilder: (context, i) {
+            String lesson = widget.chapter.lessons[i];
+            return Builder(
+              builder: (BuildContext context) {
+                return Card(
                   margin: const EdgeInsetsDirectional.fromSTEB(0, 5, 0, 5),
                   elevation: 5,
                   shadowColor: Theme.of(context).colorScheme.primary,
@@ -67,13 +66,13 @@ class _LessonListVerticalState extends State<LessonListVertical> {
                           Expanded(
                             child: Text(
                               ChaptersProvider.getLessonTranslatableName(
-                                  widget.chapter.chapterName, lesson)
+                                      widget.chapter.chapterName, lesson)
                                   .tr(),
                               style: const TextStyle(fontSize: 16),
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsetsDirectional.only(end: 10),
+                            padding: const EdgeInsetsDirectional.only(end: 12),
                             child: Icon(
                               Icons.navigate_next,
                               color: Theme.of(context).colorScheme.primary,
@@ -85,25 +84,25 @@ class _LessonListVerticalState extends State<LessonListVertical> {
                         builder: (context, coveredMaterial, child) {
                           return (isLessonFinished(coveredMaterial, lesson))
                               ? Positioned.directional(
-                            textDirection: Directionality.of(context),
-                            top: 5,
-                            start: 5,
-                            child: Hero(
-                              tag: 'lesson_complete $lesson',
-                              child: Container(
-                                padding: const EdgeInsets.all(2),
-                                decoration: BoxDecoration(
-                                  borderRadius:
-                                  BorderRadius.circular(100),
-                                  color: Colors.green,
-                                ),
-                                child: const Icon(
-                                  Icons.check,
-                                  size: 15,
-                                ),
-                              ),
-                            ),
-                          )
+                                  textDirection: Directionality.of(context),
+                                  top: 5,
+                                  start: 5,
+                                  child: Hero(
+                                    tag: 'lesson_complete $lesson',
+                                    child: Container(
+                                      padding: const EdgeInsets.all(2),
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        color: Colors.green,
+                                      ),
+                                      child: const Icon(
+                                        Icons.check,
+                                        size: 15,
+                                      ),
+                                    ),
+                                  ),
+                                )
                               : const SizedBox();
                         },
                       ),
@@ -128,13 +127,13 @@ class _LessonListVerticalState extends State<LessonListVertical> {
                       ),
                     ],
                   ),
-                ),
-              );
-            },
-          );
-        },
-      );
-    });
+                );
+              },
+            );
+          },
+        );
+      },
+    );
   }
 
   bool isLessonFinished(

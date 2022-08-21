@@ -1,9 +1,9 @@
 import 'dart:convert';
-import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:animated_background/animated_background.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -85,23 +85,22 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
     context.read<MapsIconProvider>().icon = BitmapDescriptor.fromBytes(
       await _getBytesFromAsset(
         'assets/images/markers/marker.png',
-        (min(MediaQuery.of(context).size.height,
-                    MediaQuery.of(context).size.width) /
-                6)
-            .round(),
+        (MediaQuery.of(context).devicePixelRatio * 25).round(),
         Theme.of(context).colorScheme.primary,
       ),
     );
   }
 
+  static img.Image decodePng(Uint8List int8List) {
+    return img.decodePng(int8List)!;
+  }
+
   static Future<Uint8List> _getBytesFromAsset(
       String path, int width, Color color) async {
     ByteData byteData = await rootBundle.load(path);
-    Uint8List int8List = byteData.buffer
-        .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes);
-    List<int> doneListInt = int8List.cast<int>();
+    Uint8List int8List = byteData.buffer.asUint8List();
 
-    img.Image outputImage = img.decodePng(doneListInt)!;
+    img.Image outputImage = await compute(decodePng, int8List);
 
     img.colorOffset(
       outputImage,

@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:confetti/confetti.dart';
@@ -123,12 +122,6 @@ class _MainState extends State<Main> {
             locale: context.locale,
             theme: theme,
             darkTheme: darkTheme,
-            scrollBehavior: const MaterialScrollBehavior().copyWith(
-              dragDevices: {
-                PointerDeviceKind.mouse,
-                PointerDeviceKind.touch,
-              },
-            ),
             initialRoute: '/splash',
             builder: (context, child) {
               return Stack(
@@ -214,17 +207,24 @@ class _MainState extends State<Main> {
               }
               switch (settings.name) {
                 case '/':
-                  return MaterialPageRoute(builder: (_) => const Home());
+                  return MaterialPageRoute(
+                    settings: settings,
+                    builder: (_) => const Home(),
+                  );
                 case '/splash':
-                  return MaterialPageRoute(builder: (_) => const Splash());
+                  return MaterialPageRoute(
+                    builder: (_) => const Splash(),
+                  );
                 case '/chapter':
                   return MaterialPageRoute(
+                    settings: settings,
                     builder: (_) => Stack(
                       children: [Chapter(chapter: arguments['chapter'])],
                     ),
                   );
                 case '/lesson':
                   return MaterialPageRoute(
+                    settings: settings,
                     builder: (_) => Stack(
                       children: [
                         Lesson(
@@ -236,6 +236,7 @@ class _MainState extends State<Main> {
                   );
                 case '/quiz':
                   return MaterialPageRoute(
+                    settings: settings,
                     builder: (_) => Quiz(
                       chapterName: arguments['chapterName'],
                       questions: arguments['questions'],
@@ -243,6 +244,7 @@ class _MainState extends State<Main> {
                   );
                 case '/question':
                   return MaterialPageRoute(
+                    settings: settings,
                     builder: (_) => Question(
                       chapterName: arguments['chapterName'],
                       questions: arguments['questions'],
@@ -251,6 +253,7 @@ class _MainState extends State<Main> {
                   );
                 case '/badge':
                   return MaterialPageRoute(
+                    settings: settings,
                     builder: (_) => const Badge(),
                   );
               }

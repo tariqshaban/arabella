@@ -197,7 +197,7 @@ class AppDrawer extends StatelessWidget {
     navigator.pop();
   }
 
-  getRandomBackgroundImage() async {
+  Future<String> getRandomBackgroundImage() async {
     final manifestJson = await rootBundle.loadString('AssetManifest.json');
     final images = json
         .decode(manifestJson)

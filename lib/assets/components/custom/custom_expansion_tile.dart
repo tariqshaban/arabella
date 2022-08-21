@@ -61,7 +61,6 @@ class CustomExpansionTile extends StatefulWidget {
     this.iconColor,
     this.collapsedIconColor,
     this.controlAffinity,
-    required this.expansionController
   })  : assert(
           expandedCrossAxisAlignment != CrossAxisAlignment.baseline,
           'CrossAxisAlignment.baseline is not supported since the expanded children '
@@ -251,9 +250,6 @@ class CustomExpansionTile extends StatefulWidget {
   /// which means that the expansion arrow icon will appear on the tile's trailing edge.
   final ListTileControlAffinity? controlAffinity;
 
-  /// Controls expansion/collapsing
-  final ExpansionController expansionController;
-
   @override
   State<CustomExpansionTile> createState() => _ExpansionTileState();
 }
@@ -297,10 +293,6 @@ class _ExpansionTileState extends State<CustomExpansionTile>
     _isExpanded = PageStorage.of(context)?.readState(context) as bool? ??
         widget.initiallyExpanded;
     if (_isExpanded) _controller.value = 1.0;
-
-    widget.expansionController.addListener(() {
-      _handleTap();
-    });
   }
 
   @override
@@ -380,7 +372,6 @@ class _ExpansionTileState extends State<CustomExpansionTile>
             iconColor: _iconColor.value ?? expansionTileTheme.iconColor,
             textColor: _headerColor.value,
             child: ListTile(
-              onTap: _handleTap,
               contentPadding:
                   widget.tilePadding ?? expansionTileTheme.tilePadding,
               leading: widget.leading ?? _buildLeadingIcon(context),
@@ -455,16 +446,13 @@ class _ExpansionTileState extends State<CustomExpansionTile>
       ),
     );
 
-    return AnimatedBuilder(
-      animation: _controller.view,
-      builder: _buildChildren,
-      child: shouldRemoveChildren ? null : result,
+    return InkWell(
+      onTap: _handleTap,
+      child: AnimatedBuilder(
+        animation: _controller.view,
+        builder: _buildChildren,
+        child: shouldRemoveChildren ? null : result,
+      ),
     );
-  }
-}
-
-class ExpansionController extends ChangeNotifier {
-  void switchExpansion() {
-    notifyListeners();
   }
 }

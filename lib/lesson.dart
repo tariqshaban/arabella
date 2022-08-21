@@ -28,6 +28,10 @@ class Lesson extends StatefulWidget {
 }
 
 class _LessonState extends State<Lesson> {
+  late Future<String> getLessonContents = ChaptersProvider.getLessonContents(
+      context, widget.chapter.chapterName, widget.lesson);
+  late Future<bool> doesContainsPointsOfInterest = containsPointsOfInterest();
+
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -52,15 +56,15 @@ class _LessonState extends State<Lesson> {
                         widget.chapter.chapterName, widget.lesson),
                     style: Theme.of(context).textTheme.headline6,
                   ).tr(),
-                  background: Hero(
-                    tag: 'lesson_image ${widget.lesson}',
-                    child: ColorFiltered(
-                      colorFilter: ColorFilter.mode(
-                          Theme.of(context)
-                              .colorScheme
-                              .primary
-                              .withOpacity(0.6),
-                          BlendMode.dstATop),
+                  background: ColorFiltered(
+                    colorFilter: ColorFilter.mode(
+                        Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withOpacity(0.6),
+                        BlendMode.dstATop),
+                    child: Hero(
+                      tag: 'lesson_image ${widget.lesson}',
                       child: Image.asset(
                         ChaptersProvider.getImageFromLesson(
                           widget.chapter.chapterName,
@@ -93,48 +97,54 @@ class _LessonState extends State<Lesson> {
                               notification.direction;
                           return true;
                         },
-                        child: ListView(
+                        child: SingleChildScrollView(
+                          // Used instead of listview to prevent widget rebuild
                           padding: const EdgeInsets.only(top: 10),
                           physics: const BouncingScrollPhysics(
                             parent: AlwaysScrollableScrollPhysics(),
                           ),
-                          children: [
-                            FutureBuilder(
-                              builder: (ctx, snapshot) {
-                                if (snapshot.connectionState ==
-                                        ConnectionState.done &&
-                                    snapshot.data as bool) {
-                                  return ExpandableWidget(
-                                    expandedStateKey: 'points_of_interest',
-                                    icon: const Icon(Icons.map),
-                                    header: const Text(
-                                      'lessons.points_of_interest',
-                                      style: TextStyle(fontSize: 20),
-                                    ).tr(),
-                                    body: PointsOfInterest(
-                                      chapterName: widget.chapter.chapterName,
-                                      lessonName: widget.lesson,
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
+                          child: Column(
+                            children: [
+                              FutureBuilder(
+                                builder: (ctx, snapshot) {
+                                  if (snapshot.connectionState ==
+                                          ConnectionState.done &&
+                                      snapshot.data as bool) {
+                                    return ExpandableWidget(
+                                      expandedStateKey: 'points_of_interest',
+                                      icon: const Icon(Icons.map),
+                                      header: const Text(
+                                        'lessons.points_of_interest',
+                                        style: TextStyle(fontSize: 20),
+                                      ).tr(),
+                                      body: PointsOfInterest(
+                                        chapterName: widget.chapter.chapterName,
+                                        lessonName: widget.lesson,
+                                        height:
+                                            MediaQuery.of(context).size.height /
+                                                2,
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                    );
+                                  }
+                                  return const SizedBox();
+                                },
+                                future: doesContainsPointsOfInterest,
+                              ),
+                              const SizedBox(height: 25),
+                              MarkdownBody(
+                                fitContent: false,
+                                data: snapshot.data as String,
+                                onTapLink: (text, url, title) async {
+                                  await launchUrl(
+                                    Uri.parse(url!),
+                                    mode: LaunchMode.externalApplication,
                                   );
-                                }
-                                return const SizedBox();
-                              },
-                              future: containsPointsOfInterest(),
-                            ),
-                            const SizedBox(height: 25),
-                            MarkdownBody(
-                              fitContent: false,
-                              data: snapshot.data as String,
-                              onTapLink: (text, url, title) async {
-                                await launchUrl(
-                                  Uri.parse(url!),
-                                  mode: LaunchMode.externalApplication,
-                                );
-                              },
-                            ),
-                            const SizedBox(height: 75),
-                          ],
+                                },
+                              ),
+                              const SizedBox(height: 75),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -144,8 +154,7 @@ class _LessonState extends State<Lesson> {
             }
             return const SizedBox();
           },
-          future: ChaptersProvider.getLessonContents(
-              context, widget.chapter.chapterName, widget.lesson),
+          future: getLessonContents,
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

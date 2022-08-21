@@ -20,92 +20,89 @@ class _LearningProgressState extends State<LearningProgress> {
   Widget build(BuildContext context) {
     return Consumer<CoveredMaterialProvider>(
       builder: (context, coveredMaterial, child) {
-        return ClipRRect(
-          borderRadius: BorderRadius.circular(15),
-          child: Card(
-            margin: const EdgeInsetsDirectional.fromSTEB(0, 5, 0, 5),
-            elevation: 5,
-            shadowColor: Theme.of(context).colorScheme.primary,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: InkWell(
-              borderRadius: BorderRadius.circular(15),
-              onTap: () {},
-              child: Stack(
-                children: [
-                  Positioned.directional(
-                    textDirection: Directionality.of(context),
-                    top: 0,
-                    end: 0,
-                    child: Hero(
-                      tag: 'attempt_exam ${widget.chapter.chapterName}',
-                      child: Consumer<CoveredMaterialProvider>(
-                        builder: (context, coveredMaterial, child) {
-                          return Material(
-                            color: Colors.transparent,
-                            child: IconButton(
-                              tooltip: 'chapters.attempt_quiz'.tr(),
-                              iconSize: 20,
-                              icon: const Icon(
-                                Icons.note_alt,
-                              ),
-                              onPressed: () {
-                                Navigator.pushNamed(context, '/quiz',
-                                    arguments: {
-                                      'chapterName': widget.chapter.chapterName,
-                                      'questions': widget.chapter.questions
-                                    });
-                              },
-                              color: (coveredMaterial
-                                      .didPassQuiz(widget.chapter.chapterName))
-                                  ? Colors.green
-                                  : Theme.of(context).colorScheme.primary,
-                              splashRadius: 20,
+        return Card(
+          margin: const EdgeInsetsDirectional.fromSTEB(0, 5, 0, 5),
+          elevation: 5,
+          shadowColor: Theme.of(context).colorScheme.primary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(15),
+            onTap: () {},
+            child: Stack(
+              children: [
+                Positioned.directional(
+                  textDirection: Directionality.of(context),
+                  top: 0,
+                  end: 0,
+                  child: Hero(
+                    tag: 'attempt_exam ${widget.chapter.chapterName}',
+                    child: Consumer<CoveredMaterialProvider>(
+                      builder: (context, coveredMaterial, child) {
+                        return Material(
+                          color: Colors.transparent,
+                          child: IconButton(
+                            tooltip: 'chapters.attempt_quiz'.tr(),
+                            iconSize: 20,
+                            icon: const Icon(
+                              Icons.note_alt,
                             ),
-                          );
-                        },
-                      ),
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/quiz',
+                                  arguments: {
+                                    'chapterName': widget.chapter.chapterName,
+                                    'questions': widget.chapter.questions
+                                  });
+                            },
+                            color: (coveredMaterial
+                                    .didPassQuiz(widget.chapter.chapterName))
+                                ? Colors.green
+                                : Theme.of(context).colorScheme.primary,
+                            splashRadius: 20,
+                          ),
+                        );
+                      },
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Container(
-                          height: 100,
-                          width: 100,
-                          margin: const EdgeInsetsDirectional.only(end: 30),
-                          child: LiquidCircularProgressIndicator(
-                            value: coveredMaterial
-                                .getChapterProgress(widget.chapter.chapterName),
-                            backgroundColor: Colors.transparent,
-                            valueColor: AlwaysStoppedAnimation(
-                                Theme.of(context).colorScheme.primary),
-                            borderColor: Theme.of(context).colorScheme.primary,
-                            borderWidth: 2,
-                            // The direction the liquid moves (Axis.vertical = bottom to top, Axis.horizontal = left to right). Defaults to Axis.vertical.
-                            center: Text(
-                              '${(coveredMaterial.getChapterProgress(widget.chapter.chapterName) * 100).round()}%',
-                              style: const TextStyle(fontSize: 25),
-                            ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 100,
+                        width: 100,
+                        margin: const EdgeInsetsDirectional.only(end: 30),
+                        child: LiquidCircularProgressIndicator(
+                          value: coveredMaterial
+                              .getChapterProgress(widget.chapter.chapterName),
+                          backgroundColor: Colors.transparent,
+                          valueColor: AlwaysStoppedAnimation(
+                              Theme.of(context).colorScheme.primary),
+                          borderColor: Theme.of(context).colorScheme.primary,
+                          borderWidth: 2,
+                          // The direction the liquid moves (Axis.vertical = bottom to top, Axis.horizontal = left to right). Defaults to Axis.vertical.
+                          center: Text(
+                            '${(coveredMaterial.getChapterProgress(widget.chapter.chapterName) * 100).round()}%',
+                            style: const TextStyle(fontSize: 25),
                           ),
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            getLessonsWidget(
-                                widget.chapter.chapterName, coveredMaterial),
-                            getMarkWidget(
-                                widget.chapter.chapterName, coveredMaterial),
-                          ],
-                        ),
-                      ],
-                    ),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          getLessonsWidget(
+                              widget.chapter.chapterName, coveredMaterial),
+                          getMarkWidget(
+                              widget.chapter.chapterName, coveredMaterial),
+                        ],
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         );
