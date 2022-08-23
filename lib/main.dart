@@ -15,6 +15,8 @@ import 'assets/models/providers/confetti_provider.dart';
 import 'assets/models/providers/covered_material_provider.dart';
 import 'assets/models/providers/maps_icon_provider.dart';
 import 'assets/models/providers/scroll_direction_provider.dart';
+import 'assets/models/providers/selected_color_provider.dart';
+import 'assets/models/providers/theme_provider.dart';
 import 'badge.dart';
 import 'chapter.dart';
 import 'home.dart';
@@ -74,46 +76,14 @@ class _MainState extends State<Main> {
             create: (context) => MapsIconProvider()),
         ChangeNotifierProvider<BackgroundAnimationProvider>(
             create: (context) => BackgroundAnimationProvider()),
+        ChangeNotifierProvider<SelectedColorProvider>(
+            create: (context) => SelectedColorProvider()),
+        ChangeNotifierProvider<ThemeProvider>(
+            create: (context) => ThemeProvider(), lazy: false),
       ],
       child: AdaptiveTheme(
-        light: ThemeData(
-          appBarTheme: const AppBarTheme(
-            backgroundColor: Colors.transparent,
-            foregroundColor: Colors.black,
-            elevation: 0,
-            systemOverlayStyle: SystemUiOverlayStyle(
-              statusBarColor: Colors.transparent,
-              statusBarIconBrightness: Brightness.dark,
-              statusBarBrightness: Brightness.dark,
-              systemNavigationBarColor: Color(0xFFFAFAFA),
-              systemNavigationBarIconBrightness: Brightness.light,
-            ),
-          ),
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color(0xFF29B6F6),
-            brightness: Brightness.light,
-          ),
-          listTileTheme: const ListTileThemeData(iconColor: Color(0xFF29B6F6)),
-        ),
-        dark: ThemeData(
-          appBarTheme: const AppBarTheme(
-            backgroundColor: Colors.transparent,
-            foregroundColor: Colors.white,
-            elevation: 0,
-            systemOverlayStyle: SystemUiOverlayStyle(
-              statusBarColor: Colors.transparent,
-              statusBarIconBrightness: Brightness.light,
-              statusBarBrightness: Brightness.light,
-              systemNavigationBarColor: Color(0xFF303030),
-              systemNavigationBarIconBrightness: Brightness.dark,
-            ),
-          ),
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color(0xFF29B6F6),
-            brightness: Brightness.dark,
-          ),
-          listTileTheme: const ListTileThemeData(iconColor: Color(0xFF29B6F6)),
-        ),
+        light: ThemeData(),
+        dark: ThemeData(),
         initial: AdaptiveThemeMode.light,
         builder: (theme, darkTheme) {
           return MaterialApp(

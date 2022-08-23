@@ -5,8 +5,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'Assets/Components/app_drawer.dart';
 import 'assets/components/lesson_list.dart';
+import 'assets/components/navigation_drawer.dart';
 import 'assets/models/providers/chapters_provider.dart';
 import 'assets/models/providers/covered_material_provider.dart';
 
@@ -25,7 +25,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       appBar: AppBar(
         title: const Text('app_name').tr(),
       ),
-      drawer: AppDrawer(context: context),
+      drawer: NavigationDrawer(context: context),
       body: Consumer<ChaptersProvider>(
         builder: (context, chapters, child) {
           return Stack(
@@ -50,7 +50,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                     itemCount: chapters.chapters.length,
                     itemBuilder: (context, i) {
                       return Card(
-                        margin: const EdgeInsetsDirectional.fromSTEB(0, 5, 0, 5),
+                        margin:
+                            const EdgeInsetsDirectional.fromSTEB(0, 5, 0, 5),
                         elevation: 5,
                         shadowColor: Theme.of(context).colorScheme.primary,
                         shape: RoundedRectangleBorder(
@@ -142,7 +143,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                               ),
                               Padding(
                                 padding: const EdgeInsetsDirectional.fromSTEB(
-                                    12, 10, 12, 10),
+                                    12, 12, 12, 6),
                                 child: Consumer<CoveredMaterialProvider>(
                                   builder: (context, coveredMaterial, child) {
                                     return Row(
@@ -150,6 +151,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                         Text(
                                           'chapters.progress',
                                           style: TextStyle(
+                                            height: 1.2,
                                             color: Theme.of(context)
                                                 .colorScheme
                                                 .primary,
@@ -220,13 +222,18 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                   child: AnimatedBackground(
                     behaviour: RandomParticleBehaviour(
                       options: ParticleOptions(
-                        particleCount: 50,
-                        minOpacity: 0.1,
-                        maxOpacity: 0.2,
-                        spawnMinSpeed: 5,
-                        spawnMaxSpeed: 10,
-                        baseColor: Theme.of(context).scaffoldBackgroundColor,
-                      ),
+                          particleCount: 50,
+                          minOpacity: 0.1,
+                          maxOpacity: 0.2,
+                          spawnMinSpeed: 5,
+                          spawnMaxSpeed: 10,
+                          baseColor: Theme.of(context)
+                                      .colorScheme
+                                      .primary
+                                      .computeLuminance() >
+                                  0.5
+                              ? Colors.black
+                              : Colors.white),
                     ),
                     vsync: this,
                     child: const SizedBox(),

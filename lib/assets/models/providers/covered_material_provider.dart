@@ -13,10 +13,10 @@ class CoveredMaterialProvider with ChangeNotifier {
   Map<String, double> _finishedQuizzes = {};
 
   CoveredMaterialProvider() {
-    loadPersistentSate();
+    _loadPersistentSate();
   }
 
-  Future<void> loadPersistentSate() async {
+  Future<void> _loadPersistentSate() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey('coveredMaterial')) {
       fromJson(json.decode(prefs.getString('coveredMaterial')!));
@@ -24,7 +24,7 @@ class CoveredMaterialProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> savePersistentSate() async {
+  Future<void> _savePersistentSate() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String state = json.encode(toJson());
     prefs.setString('coveredMaterial', state);
@@ -43,14 +43,14 @@ class CoveredMaterialProvider with ChangeNotifier {
 
   set finishedMaterial(Map<String, Set<String>> value) {
     _finishedLessons = value;
-    savePersistentSate();
+    _savePersistentSate();
   }
 
   Map<String, double> get finishedQuizzes => _finishedQuizzes;
 
   set finishedQuizzes(Map<String, double> value) {
     _finishedQuizzes = value;
-    savePersistentSate();
+    _savePersistentSate();
   }
 
   void initializeMaterial() {
@@ -87,7 +87,7 @@ class CoveredMaterialProvider with ChangeNotifier {
   void setLessonAsFinished(String chapterName, String lessonName) {
     getLesson(chapterName).add(lessonName);
 
-    savePersistentSate();
+    _savePersistentSate();
   }
 
   double getQuizMark(String chapterName) {
@@ -101,7 +101,7 @@ class CoveredMaterialProvider with ChangeNotifier {
       _finishedQuizzes[chapterName] = mark;
     }
 
-    savePersistentSate();
+    _savePersistentSate();
   }
 
   bool isLessonFinished(String chapterName, String lessonName) {

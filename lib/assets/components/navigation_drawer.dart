@@ -5,9 +5,14 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:provider/provider.dart';
 
-class AppDrawer extends StatelessWidget {
-  const AppDrawer({Key? key, required this.context}) : super(key: key);
+import '../models/providers/selected_color_provider.dart';
+import '../models/providers/theme_provider.dart';
+
+class NavigationDrawer extends StatelessWidget {
+  const NavigationDrawer({Key? key, required this.context}) : super(key: key);
 
   final BuildContext context;
 
@@ -24,6 +29,7 @@ class AppDrawer extends StatelessWidget {
           children: <Widget>[
             _header(this.context),
             _themeSwitch(this.context),
+            _colorPicker(this.context),
             _languageDropdown(this.context),
             const Divider(),
             _badge(this.context),
@@ -39,12 +45,14 @@ class AppDrawer extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.done) {
           String backgroundImage = snapshot.data as String;
           String imageText = 'nav_drawer.drawer_background.'
-                  '${backgroundImage.substring(backgroundImage.lastIndexOf("/") + 1, backgroundImage.lastIndexOf("."))}'
-                  '.name'
+              '${backgroundImage.substring(backgroundImage.lastIndexOf("/") + 1,
+              backgroundImage.lastIndexOf("."))}'
+              '.name'
               .tr();
           String imageDescription = 'nav_drawer.drawer_background.'
-                  '${backgroundImage.substring(backgroundImage.lastIndexOf("/") + 1, backgroundImage.lastIndexOf("."))}'
-                  '.description'
+              '${backgroundImage.substring(backgroundImage.lastIndexOf("/") + 1,
+              backgroundImage.lastIndexOf("."))}'
+              '.description'
               .tr();
           return UserAccountsDrawerHeader(
               accountName: Text(imageText),
@@ -52,17 +60,17 @@ class AppDrawer extends StatelessWidget {
               otherAccountsPictures: const [
                 CircleAvatar(
                   backgroundImage:
-                      AssetImage('assets/images/drawer_circular/just.png'),
+                  AssetImage('assets/images/drawer_circular/just.png'),
                   backgroundColor: Colors.transparent,
                 ),
                 CircleAvatar(
                   backgroundImage:
-                      AssetImage('assets/images/drawer_circular/ministry.png'),
+                  AssetImage('assets/images/drawer_circular/ministry.png'),
                   backgroundColor: Colors.transparent,
                 ),
                 CircleAvatar(
                   backgroundImage:
-                      AssetImage('assets/images/drawer_circular/irbid.png'),
+                  AssetImage('assets/images/drawer_circular/irbid.png'),
                   backgroundColor: Colors.transparent,
                 ),
               ],
@@ -90,7 +98,10 @@ class AppDrawer extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.done) {
             AdaptiveThemeMode themeMode = snapshot.data as AdaptiveThemeMode;
             return Switch(
-              activeColor: Theme.of(context).colorScheme.primary,
+              activeColor: Theme
+                  .of(context)
+                  .colorScheme
+                  .primary,
               value: themeMode == AdaptiveThemeMode.dark,
               onChanged: (bool value) {
                 _changeTheme(context);
@@ -107,6 +118,16 @@ class AppDrawer extends StatelessWidget {
     );
   }
 
+  Widget _colorPicker(BuildContext context) {
+    return ListTile(
+      leading: const Icon(Icons.color_lens),
+      title: const Text('nav_drawer.color').tr(),
+      onTap: () {
+        _changeColor(context);
+      },
+    );
+  }
+
   Widget _languageDropdown(BuildContext context) {
     final GlobalKey dropdownKey = GlobalKey();
     return ListTile(
@@ -116,7 +137,10 @@ class AppDrawer extends StatelessWidget {
         padding: const EdgeInsetsDirectional.only(end: 5),
         child: DropdownButton<String>(
           key: dropdownKey,
-          iconEnabledColor: Theme.of(context).colorScheme.primary,
+          iconEnabledColor: Theme
+              .of(context)
+              .colorScheme
+              .primary,
           underline: const SizedBox(),
           items: <String>['English', 'العربية'].map((String value) {
             return DropdownMenuItem<String>(
@@ -182,19 +206,94 @@ class AppDrawer extends StatelessWidget {
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
         systemNavigationBarColor:
-        (await AdaptiveTheme.getThemeMode() ==
-            AdaptiveThemeMode.dark)
+        (await AdaptiveTheme.getThemeMode() == AdaptiveThemeMode.dark)
             ? const Color(0xFF303030)
             : const Color(0xFFFAFAFA),
         systemNavigationBarIconBrightness:
-        (await AdaptiveTheme.getThemeMode() ==
-            AdaptiveThemeMode.dark)
+        (await AdaptiveTheme.getThemeMode() == AdaptiveThemeMode.dark)
             ? Brightness.light
             : Brightness.dark,
       ),
     );
 
     navigator.pop();
+  }
+
+  static _changeColor(BuildContext context) async {
+    SelectedColorProvider selectedColorProvider =
+    context.read<SelectedColorProvider>();
+
+    Navigator.of(context).pop();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          titlePadding: const EdgeInsets.all(0),
+          contentPadding: const EdgeInsets.all(0),
+          shape: RoundedRectangleBorder(
+            borderRadius:
+            MediaQuery
+                .of(context)
+                .orientation == Orientation.portrait
+                ? const BorderRadius.vertical(
+              top: Radius.circular(500),
+              bottom: Radius.circular(100),
+            )
+                : const BorderRadiusDirectional.only(
+              bottomStart: Radius.circular(25),
+              topEnd: Radius.circular(125),
+              bottomEnd: Radius.circular(25),
+            ),
+          ),
+          content: SingleChildScrollView(
+            child: HueRingPicker(
+              pickerColor: selectedColorProvider.selectedColor,
+              onColorChanged: (value) =>
+              selectedColorProvider.selectedColor = value,
+            ),
+          ),
+          actions: [
+            SizedBox(
+              height: 30,
+              child: Consumer<SelectedColorProvider>(
+                builder: (context, selectedColor, child) {
+                  return AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 250),
+                    child: (selectedColor.isColorBright() ||
+                        selectedColor.isColorDark())
+                        ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.warning_amber,
+                          color: Theme
+                              .of(context)
+                              .colorScheme
+                              .primary,
+                        ),
+                        const SizedBox(width: 15),
+                        Text(selectedColor.isColorBright()
+                            ? 'nav_drawer.too_light'
+                            : 'nav_drawer.too_dark')
+                            .tr(),
+                      ],
+                    )
+                        : const SizedBox(),
+                  );
+                },
+              ),
+            ),
+          ],
+        );
+      },
+    ).then(
+          (_) =>
+          Future.delayed(const Duration(milliseconds: 150), () {
+            context
+                .read<ThemeProvider>()
+                .setColor(context, selectedColorProvider.selectedColor);
+          }),
+    );
   }
 
   Future<String> getRandomBackgroundImage() async {

@@ -12,6 +12,9 @@
       }
     },
     "dark_theme": "Dark Theme",
+    "color": "Color",
+    "too_light": "Not suitable for the light theme",
+    "too_dark": "Not suitable for the dark theme",
     "language": "Language",
     "badge": "Badges"
   },

@@ -2,12 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapsIconProvider with ChangeNotifier {
-  late BitmapDescriptor _icon;
+  late BitmapDescriptor _iconLight;
+  late BitmapDescriptor _iconDark;
 
-  BitmapDescriptor get icon => _icon;
+  BitmapDescriptor get iconLight => _iconLight;
 
-  set icon(BitmapDescriptor value) {
-    _icon = value;
+  BitmapDescriptor get iconDark => _iconDark;
+
+  set iconLight(BitmapDescriptor value) {
+    _iconLight = value;
+    notifyListeners();
+  }
+
+  set iconDark(BitmapDescriptor value) {
+    _iconDark = value;
     notifyListeners();
   }
 }

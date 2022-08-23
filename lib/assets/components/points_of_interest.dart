@@ -43,8 +43,11 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
   void initState() {
     super.initState();
     manifest.then(
-      (_) {
-        assignMarkers();
+      (_) async {
+        bool isDark =
+            await AdaptiveTheme.getThemeMode() == AdaptiveThemeMode.dark;
+
+        assignMarkers(isDark);
         assignPolylines();
         assignPolygons();
       },
@@ -138,14 +141,16 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
     return _getPointsCenter(points);
   }
 
-  void assignMarkers() async {
+  void assignMarkers(bool isDark) async {
     int counter = 0;
     for (dynamic pointOfInterest in (await manifest)['points_of_interest']) {
       if (pointOfInterest['type'] != 'point') {
         continue;
       }
 
-      BitmapDescriptor icon = context.read<MapsIconProvider>().icon;
+      BitmapDescriptor icon = isDark
+          ? context.read<MapsIconProvider>().iconDark
+          : context.read<MapsIconProvider>().iconLight;
 
       markers.add(
         Marker(

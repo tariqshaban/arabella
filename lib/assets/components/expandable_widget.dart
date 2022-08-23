@@ -36,7 +36,7 @@ class _ExpandableWidgetState extends State<ExpandableWidget> {
         title: widget.header,
         leading: widget.icon,
         tilePadding: const EdgeInsets.symmetric(horizontal: 12),
-        childrenPadding: const EdgeInsets.all(8),
+        childrenPadding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
         collapsedIconColor: Theme.of(context).colorScheme.primary,
         iconColor: Theme.of(context).colorScheme.primary,
         maintainState: true,

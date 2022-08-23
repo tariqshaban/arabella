@@ -1,17 +1,14 @@
 import 'dart:convert';
-import 'dart:typed_data';
+import 'dart:math';
 
 import 'package:animated_background/animated_background.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:image/image.dart' as img;
 import 'package:provider/provider.dart';
 
 import 'assets/models/providers/background_animation_provider.dart';
-import 'assets/models/providers/maps_icon_provider.dart';
+import 'assets/models/providers/theme_provider.dart';
 
 class Splash extends StatefulWidget {
   const Splash({Key? key}) : super(key: key);
@@ -32,7 +29,8 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: AnimatedContainer(
+        duration: const Duration(milliseconds: 500),
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         color: Theme.of(context).colorScheme.primary,
@@ -43,24 +41,50 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
               duration: const Duration(milliseconds: 500),
               child: AnimatedBackground(
                 behaviour: RandomParticleBehaviour(
-                  options: const ParticleOptions(
+                  options: ParticleOptions(
                     particleCount: 100,
                     minOpacity: 0.1,
                     maxOpacity: 0.2,
                     spawnMinSpeed: 5,
                     spawnMaxSpeed: 10,
+                    baseColor: Theme.of(context)
+                                .colorScheme
+                                .primary
+                                .computeLuminance() >
+                            0.5
+                        ? Colors.black
+                        : Colors.white,
                   ),
                 ),
                 vsync: this,
-                child: Center(
-                  child: const Text(
-                    'app_name',
+                child: Padding(
+                  padding: const EdgeInsets.all(50),
+                  child: AnimatedDefaultTextStyle(
+                    duration: const Duration(milliseconds: 750),
                     style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                        color: Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .computeLuminance() >
+                                0.5
+                            ? Colors.black
+                            : Colors.white),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: SizedBox(
+                        width: min(MediaQuery.of(context).size.width / 2, 250),
+                        child: FittedBox(
+                          fit: BoxFit.fitWidth,
+                          child: const Text(
+                            'app_name',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ).tr(),
+                        ),
+                      ),
                     ),
-                  ).tr(),
+                  ),
                 ),
               ),
             );
@@ -81,42 +105,15 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
     images.forEach((image) => precacheImage(AssetImage(image), context));
   }
 
-  Future<void> precacheMapsIcon(BuildContext context) async {
-    context.read<MapsIconProvider>().icon = BitmapDescriptor.fromBytes(
-      await _getBytesFromAsset(
-        'assets/images/markers/marker.png',
-        (MediaQuery.of(context).devicePixelRatio * 25).round(),
-        Theme.of(context).colorScheme.primary,
-      ),
-    );
-  }
-
-  static img.Image decodePng(Uint8List int8List) {
-    return img.decodePng(int8List)!;
-  }
-
-  static Future<Uint8List> _getBytesFromAsset(
-      String path, int width, Color color) async {
-    ByteData byteData = await rootBundle.load(path);
-    Uint8List int8List = byteData.buffer.asUint8List();
-
-    img.Image outputImage = await compute(decodePng, int8List);
-
-    img.colorOffset(
-      outputImage,
-      red: color.red,
-      green: color.green,
-      blue: color.blue,
-    );
-
-    outputImage = img.copyResize(outputImage, width: width);
-
-    return Uint8List.fromList(img.encodePng(outputImage));
+  Future<void> changeTheme(BuildContext context) async {
+    context.read<ThemeProvider>().initialize(context);
   }
 
   void initializeApplication(BuildContext context) async {
     precacheImages(context);
-    precacheMapsIcon(context);
+    Future.delayed(const Duration(milliseconds: 1500), () {
+      changeTheme(context);
+    });
 
     Future.delayed(const Duration(milliseconds: 3000), () {
       context.read<BackgroundAnimationProvider>().isVisible = false;
