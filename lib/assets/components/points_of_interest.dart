@@ -47,9 +47,11 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
         bool isDark =
             await AdaptiveTheme.getThemeMode() == AdaptiveThemeMode.dark;
 
-        assignMarkers(isDark);
-        assignPolylines();
-        assignPolygons();
+        if(mounted) {
+          assignMarkers(isDark);
+          assignPolylines();
+          assignPolygons();
+        }
       },
     );
   }
@@ -74,7 +76,7 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
                     target: LatLng(31.4645395, 37.022226),
                     zoom: 6.8,
                   ),
-                  minMaxZoomPreference: const MinMaxZoomPreference(null, 18),
+                  minMaxZoomPreference: const MinMaxZoomPreference(0, 18),
                   mapToolbarEnabled: false,
                   markers: markers,
                   polylines: polylines,

@@ -45,14 +45,12 @@ class NavigationDrawer extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.done) {
           String backgroundImage = snapshot.data as String;
           String imageText = 'nav_drawer.drawer_background.'
-              '${backgroundImage.substring(backgroundImage.lastIndexOf("/") + 1,
-              backgroundImage.lastIndexOf("."))}'
-              '.name'
+                  '${backgroundImage.substring(backgroundImage.lastIndexOf("/") + 1, backgroundImage.lastIndexOf("."))}'
+                  '.name'
               .tr();
           String imageDescription = 'nav_drawer.drawer_background.'
-              '${backgroundImage.substring(backgroundImage.lastIndexOf("/") + 1,
-              backgroundImage.lastIndexOf("."))}'
-              '.description'
+                  '${backgroundImage.substring(backgroundImage.lastIndexOf("/") + 1, backgroundImage.lastIndexOf("."))}'
+                  '.description'
               .tr();
           return UserAccountsDrawerHeader(
               accountName: Text(imageText),
@@ -60,17 +58,17 @@ class NavigationDrawer extends StatelessWidget {
               otherAccountsPictures: const [
                 CircleAvatar(
                   backgroundImage:
-                  AssetImage('assets/images/drawer_circular/just.png'),
+                      AssetImage('assets/images/drawer_circular/just.png'),
                   backgroundColor: Colors.transparent,
                 ),
                 CircleAvatar(
                   backgroundImage:
-                  AssetImage('assets/images/drawer_circular/ministry.png'),
+                      AssetImage('assets/images/drawer_circular/ministry.png'),
                   backgroundColor: Colors.transparent,
                 ),
                 CircleAvatar(
                   backgroundImage:
-                  AssetImage('assets/images/drawer_circular/irbid.png'),
+                      AssetImage('assets/images/drawer_circular/irbid.png'),
                   backgroundColor: Colors.transparent,
                 ),
               ],
@@ -98,10 +96,7 @@ class NavigationDrawer extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.done) {
             AdaptiveThemeMode themeMode = snapshot.data as AdaptiveThemeMode;
             return Switch(
-              activeColor: Theme
-                  .of(context)
-                  .colorScheme
-                  .primary,
+              activeColor: Theme.of(context).colorScheme.primary,
               value: themeMode == AdaptiveThemeMode.dark,
               onChanged: (bool value) {
                 _changeTheme(context);
@@ -137,10 +132,7 @@ class NavigationDrawer extends StatelessWidget {
         padding: const EdgeInsetsDirectional.only(end: 5),
         child: DropdownButton<String>(
           key: dropdownKey,
-          iconEnabledColor: Theme
-              .of(context)
-              .colorScheme
-              .primary,
+          iconEnabledColor: Theme.of(context).colorScheme.primary,
           underline: const SizedBox(),
           items: <String>['English', 'العربية'].map((String value) {
             return DropdownMenuItem<String>(
@@ -206,13 +198,13 @@ class NavigationDrawer extends StatelessWidget {
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
         systemNavigationBarColor:
-        (await AdaptiveTheme.getThemeMode() == AdaptiveThemeMode.dark)
-            ? const Color(0xFF303030)
-            : const Color(0xFFFAFAFA),
+            (await AdaptiveTheme.getThemeMode() == AdaptiveThemeMode.dark)
+                ? const Color(0xFF303030)
+                : const Color(0xFFFAFAFA),
         systemNavigationBarIconBrightness:
-        (await AdaptiveTheme.getThemeMode() == AdaptiveThemeMode.dark)
-            ? Brightness.light
-            : Brightness.dark,
+            (await AdaptiveTheme.getThemeMode() == AdaptiveThemeMode.dark)
+                ? Brightness.light
+                : Brightness.dark,
       ),
     );
 
@@ -221,7 +213,7 @@ class NavigationDrawer extends StatelessWidget {
 
   static _changeColor(BuildContext context) async {
     SelectedColorProvider selectedColorProvider =
-    context.read<SelectedColorProvider>();
+        context.read<SelectedColorProvider>();
 
     Navigator.of(context).pop();
     showDialog(
@@ -232,24 +224,22 @@ class NavigationDrawer extends StatelessWidget {
           contentPadding: const EdgeInsets.all(0),
           shape: RoundedRectangleBorder(
             borderRadius:
-            MediaQuery
-                .of(context)
-                .orientation == Orientation.portrait
-                ? const BorderRadius.vertical(
-              top: Radius.circular(500),
-              bottom: Radius.circular(100),
-            )
-                : const BorderRadiusDirectional.only(
-              bottomStart: Radius.circular(25),
-              topEnd: Radius.circular(125),
-              bottomEnd: Radius.circular(25),
-            ),
+                MediaQuery.of(context).orientation == Orientation.portrait
+                    ? const BorderRadius.vertical(
+                        top: Radius.circular(500),
+                        bottom: Radius.circular(100),
+                      )
+                    : const BorderRadiusDirectional.only(
+                        bottomStart: Radius.circular(25),
+                        topEnd: Radius.circular(125),
+                        bottomEnd: Radius.circular(25),
+                      ),
           ),
           content: SingleChildScrollView(
             child: HueRingPicker(
               pickerColor: selectedColorProvider.selectedColor,
               onColorChanged: (value) =>
-              selectedColorProvider.selectedColor = value,
+                  selectedColorProvider.selectedColor = value,
             ),
           ),
           actions: [
@@ -260,24 +250,31 @@ class NavigationDrawer extends StatelessWidget {
                   return AnimatedSwitcher(
                     duration: const Duration(milliseconds: 250),
                     child: (selectedColor.isColorBright() ||
-                        selectedColor.isColorDark())
+                            selectedColor.isColorDark())
                         ? Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.warning_amber,
-                          color: Theme
-                              .of(context)
-                              .colorScheme
-                              .primary,
-                        ),
-                        const SizedBox(width: 15),
-                        Text(selectedColor.isColorBright()
-                            ? 'nav_drawer.too_light'
-                            : 'nav_drawer.too_dark')
-                            .tr(),
-                      ],
-                    )
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.warning_amber,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                              const SizedBox(width: 15),
+                              AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 250),
+                                child: selectedColor.isColorBright()
+                                    ? Text(
+                                            key: Key('nav_drawer.too_light'
+                                                .toString()),
+                                            'nav_drawer.too_light')
+                                        .tr()
+                                    : Text(
+                                            key: Key('nav_drawer.too_dark'
+                                                .toString()),
+                                            'nav_drawer.too_dark')
+                                        .tr(),
+                              ),
+                            ],
+                          )
                         : const SizedBox(),
                   );
                 },
@@ -287,12 +284,11 @@ class NavigationDrawer extends StatelessWidget {
         );
       },
     ).then(
-          (_) =>
-          Future.delayed(const Duration(milliseconds: 150), () {
-            context
-                .read<ThemeProvider>()
-                .setColor(context, selectedColorProvider.selectedColor);
-          }),
+      (_) => Future.delayed(const Duration(milliseconds: 150), () {
+        context
+            .read<ThemeProvider>()
+            .setColor(context, selectedColorProvider.selectedColor);
+      }),
     );
   }
 

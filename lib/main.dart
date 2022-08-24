@@ -76,10 +76,13 @@ class _MainState extends State<Main> {
             create: (context) => MapsIconProvider()),
         ChangeNotifierProvider<BackgroundAnimationProvider>(
             create: (context) => BackgroundAnimationProvider()),
-        ChangeNotifierProvider<SelectedColorProvider>(
-            create: (context) => SelectedColorProvider()),
         ChangeNotifierProvider<ThemeProvider>(
             create: (context) => ThemeProvider(), lazy: false),
+        ChangeNotifierProxyProvider<ThemeProvider, SelectedColorProvider>(
+          create: (BuildContext context) => SelectedColorProvider(),
+          update: (context, theme, selectedColor) =>
+          selectedColor!..update(theme),
+        ),
       ],
       child: AdaptiveTheme(
         light: ThemeData(),
