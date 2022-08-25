@@ -1,11 +1,12 @@
-import 'package:arabella/assets/models/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
+
+import 'theme_provider.dart';
 
 class SelectedColorProvider with ChangeNotifier {
   Color? _selectedColor;
 
-  void update(ThemeProvider theme){
-    _selectedColor??=theme.color;
+  void update(ThemeProvider theme) {
+    _selectedColor ??= theme.color;
   }
 
   Color get selectedColor => _selectedColor!;
