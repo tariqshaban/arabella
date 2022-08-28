@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../models/chapter_model.dart';
 import '../models/providers/covered_material_provider.dart';
+import '../models/providers/selected_color_provider.dart';
 
 class LearningProgress extends StatefulWidget {
   const LearningProgress({Key? key, required this.chapter}) : super(key: key);
@@ -79,23 +80,14 @@ class _LearningProgressState extends State<LearningProgress> {
                               .getChapterProgress(widget.chapter.chapterName),
                           backgroundColor: Colors.transparent,
                           valueColor: AlwaysStoppedAnimation(
-                            getProgressColor(
-                              Theme.of(context).colorScheme.primary,
-                            ),
+                            getProgressColor(context),
                           ),
-                          borderColor: getProgressColor(
-                            Theme.of(context).colorScheme.primary,
-                          ),
+                          borderColor: getProgressColor(context),
                           borderWidth: 2,
                           // The direction the liquid moves (Axis.vertical = bottom to top, Axis.horizontal = left to right). Defaults to Axis.vertical.
                           center: Text(
                             '${(coveredMaterial.getChapterProgress(widget.chapter.chapterName) * 100).round()}%',
-                            style: TextStyle(
-                              fontSize: 25,
-                              color: getProgressTextColor(
-                                Theme.of(context).colorScheme.primary,
-                              ),
-                            ),
+                            style: const TextStyle(fontSize: 25),
                           ),
                         ),
                       ),
@@ -162,37 +154,25 @@ class _LearningProgressState extends State<LearningProgress> {
     }
   }
 
-  Color getProgressColor(Color primaryColor) {
-    if (ThemeData.estimateBrightnessForColor(primaryColor) ==
-        Brightness.light) {
+  Color getProgressColor(BuildContext context) {
+    SelectedColorProvider selectedColorProvider =
+        context.read<SelectedColorProvider>();
+    Color primaryColor = Theme.of(context).colorScheme.primary;
+
+    if (selectedColorProvider.isColorBright()) {
       return HSLColor.fromColor(primaryColor)
-          .withLightness(HSLColor.fromColor(primaryColor).lightness - 0.1)
+          .withLightness(HSLColor.fromColor(primaryColor).lightness - 0.2)
           .toColor();
-    } else {
+    } else if (selectedColorProvider.isColorDark()) {
       if (primaryColor == Colors.black) {
         return Colors.black54;
       }
 
       return HSLColor.fromColor(primaryColor)
-          .withLightness(HSLColor.fromColor(primaryColor).lightness + 0.1)
+          .withLightness(HSLColor.fromColor(primaryColor).lightness + 0.2)
           .toColor();
     }
-  }
 
-  Color getProgressTextColor(Color primaryColor) {
-    if (ThemeData.estimateBrightnessForColor(primaryColor) ==
-        Brightness.light) {
-      return HSLColor.fromColor(primaryColor)
-          .withLightness(HSLColor.fromColor(primaryColor).lightness - 0.5)
-          .toColor();
-    } else {
-      if (primaryColor == Colors.black) {
-        return Colors.black87;
-      }
-
-      return HSLColor.fromColor(primaryColor)
-          .withLightness(HSLColor.fromColor(primaryColor).lightness + 0.5)
-          .toColor();
-    }
+    return primaryColor;
   }
 }

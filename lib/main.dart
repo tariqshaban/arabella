@@ -87,7 +87,7 @@ class _MainState extends State<Main> {
       child: AdaptiveTheme(
         light: ThemeData(),
         dark: ThemeData(),
-        initial: AdaptiveThemeMode.light,
+        initial: AdaptiveThemeMode.dark,
         builder: (theme, darkTheme) {
           return MaterialApp(
             localizationsDelegates: context.localizationDelegates,
