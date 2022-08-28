@@ -130,25 +130,27 @@ class NavigationDrawer extends StatelessWidget {
       title: const Text('nav_drawer.language').tr(),
       trailing: Padding(
         padding: const EdgeInsetsDirectional.only(end: 5),
-        child: DropdownButton<String>(
-          key: dropdownKey,
-          iconEnabledColor: Theme.of(context).colorScheme.primary,
-          underline: const SizedBox(),
-          items: <String>['English', 'العربية'].map((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
-          onChanged: (value) {
-            if (value == 'English') {
-              context.setLocale(const Locale('en'));
-              Navigator.pop(context, 'en');
-            } else {
-              context.setLocale(const Locale('ar'));
-              Navigator.pop(context, 'ar');
-            }
-          },
+        child: IgnorePointer(
+          child: DropdownButton<String>(
+            key: dropdownKey,
+            iconEnabledColor: Theme.of(context).colorScheme.primary,
+            underline: const SizedBox(),
+            items: <String>['English', 'العربية'].map((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+            onChanged: (value) {
+              if (value == 'English') {
+                context.setLocale(const Locale('en'));
+                Navigator.pop(context, 'en');
+              } else {
+                context.setLocale(const Locale('ar'));
+                Navigator.pop(context, 'ar');
+              }
+            },
+          ),
         ),
       ),
       onTap: () {

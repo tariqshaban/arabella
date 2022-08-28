@@ -49,11 +49,10 @@ class _LearningProgressState extends State<LearningProgress> {
                               Icons.note_alt,
                             ),
                             onPressed: () {
-                              Navigator.pushNamed(context, '/quiz',
-                                  arguments: {
-                                    'chapterName': widget.chapter.chapterName,
-                                    'questions': widget.chapter.questions
-                                  });
+                              Navigator.pushNamed(context, '/quiz', arguments: {
+                                'chapterName': widget.chapter.chapterName,
+                                'questions': widget.chapter.questions
+                              });
                             },
                             color: (coveredMaterial
                                     .didPassQuiz(widget.chapter.chapterName))
@@ -80,13 +79,23 @@ class _LearningProgressState extends State<LearningProgress> {
                               .getChapterProgress(widget.chapter.chapterName),
                           backgroundColor: Colors.transparent,
                           valueColor: AlwaysStoppedAnimation(
-                              Theme.of(context).colorScheme.primary),
-                          borderColor: Theme.of(context).colorScheme.primary,
+                            getProgressColor(
+                              Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                          borderColor: getProgressColor(
+                            Theme.of(context).colorScheme.primary,
+                          ),
                           borderWidth: 2,
                           // The direction the liquid moves (Axis.vertical = bottom to top, Axis.horizontal = left to right). Defaults to Axis.vertical.
                           center: Text(
                             '${(coveredMaterial.getChapterProgress(widget.chapter.chapterName) * 100).round()}%',
-                            style: const TextStyle(fontSize: 25),
+                            style: TextStyle(
+                              fontSize: 25,
+                              color: getProgressTextColor(
+                                Theme.of(context).colorScheme.primary,
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -150,6 +159,40 @@ class _LearningProgressState extends State<LearningProgress> {
         '$pretext: ${(mark * 100).round()}%',
         style: const TextStyle(fontSize: 16, color: Colors.red),
       );
+    }
+  }
+
+  Color getProgressColor(Color primaryColor) {
+    if (ThemeData.estimateBrightnessForColor(primaryColor) ==
+        Brightness.light) {
+      return HSLColor.fromColor(primaryColor)
+          .withLightness(HSLColor.fromColor(primaryColor).lightness - 0.1)
+          .toColor();
+    } else {
+      if (primaryColor == Colors.black) {
+        return Colors.black54;
+      }
+
+      return HSLColor.fromColor(primaryColor)
+          .withLightness(HSLColor.fromColor(primaryColor).lightness + 0.1)
+          .toColor();
+    }
+  }
+
+  Color getProgressTextColor(Color primaryColor) {
+    if (ThemeData.estimateBrightnessForColor(primaryColor) ==
+        Brightness.light) {
+      return HSLColor.fromColor(primaryColor)
+          .withLightness(HSLColor.fromColor(primaryColor).lightness - 0.5)
+          .toColor();
+    } else {
+      if (primaryColor == Colors.black) {
+        return Colors.black87;
+      }
+
+      return HSLColor.fromColor(primaryColor)
+          .withLightness(HSLColor.fromColor(primaryColor).lightness + 0.5)
+          .toColor();
     }
   }
 }
