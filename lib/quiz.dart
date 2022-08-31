@@ -6,8 +6,10 @@ import 'package:provider/provider.dart';
 import 'assets/components/extended_floating_action_button.dart';
 import 'assets/components/question_state.dart';
 import 'assets/components/snack_bar.dart';
+import 'assets/helpers/shader_callback_helper.dart';
 import 'assets/models/chapter_model.dart';
 import 'assets/models/providers/answered_questions_provider.dart';
+import 'assets/models/providers/background_animation_provider.dart';
 import 'assets/models/providers/chapters_provider.dart';
 import 'assets/models/providers/confetti_provider.dart';
 import 'assets/models/providers/covered_material_provider.dart';
@@ -37,7 +39,7 @@ class _QuizState extends State<Quiz> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(15, 5, 15, 15),
+            padding: const EdgeInsetsDirectional.all(15),
             child: Consumer<CoveredMaterialProvider>(
               builder: (context, coveredMaterial, child) {
                 return Row(
@@ -45,16 +47,14 @@ class _QuizState extends State<Quiz> {
                   children: [
                     Consumer<AnsweredQuestionsProvider>(
                       builder: (context, answeredQuestions, child) {
-                        return (answeredQuestions
-                                .isQuizSubmitted(widget.chapterName))
-                            ? Text(
-                                '${'quiz.your_grade'.tr()}:  ${(coveredMaterial.getQuizMark(widget.chapterName) * 100).round()}%',
-                                style: const TextStyle(fontSize: 16),
-                              )
-                            : Text(
-                                '${'quiz.passing_grade'.tr()}:  ${(coveredMaterial.getPassingGrade() * 100).round()}%',
-                                style: const TextStyle(fontSize: 16),
-                              );
+                        return Text(
+                          (answeredQuestions
+                                  .isQuizSubmitted(widget.chapterName))
+                              ? '${'quiz.your_grade'.tr()}:  ${(coveredMaterial.getQuizMark(widget.chapterName) * 100).round()}%'
+                              : '${'quiz.passing_grade'.tr()}:  ${(coveredMaterial.getPassingGrade() * 100).round()}%',
+                          style: const TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        );
                       },
                     ),
                     (coveredMaterial.didPassQuiz(widget.chapterName))
@@ -85,11 +85,12 @@ class _QuizState extends State<Quiz> {
                     notification.direction;
                 return true;
               },
-              child: Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    return GridView.builder(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return ShaderMask(
+                    shaderCallback: ShaderCallbackHelper.getShaderCallback(),
+                    blendMode: BlendMode.dstOut,
+                    child: GridView.builder(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: constraints.maxWidth > 900
                             ? constraints.maxWidth > 1200
@@ -103,6 +104,13 @@ class _QuizState extends State<Quiz> {
                         crossAxisSpacing: 15,
                       ),
                       shrinkWrap: true,
+                      padding: EdgeInsetsDirectional.fromSTEB(
+                        9,
+                        context.read<BackgroundAnimationProvider>().height / 2 -
+                            53,
+                        9,
+                        0,
+                      ),
                       physics: const BouncingScrollPhysics(
                         parent: AlwaysScrollableScrollPhysics(),
                       ),
@@ -152,9 +160,9 @@ class _QuizState extends State<Quiz> {
                           },
                         );
                       },
-                    );
-                  },
-                ),
+                    ),
+                  );
+                },
               ),
             ),
           ),

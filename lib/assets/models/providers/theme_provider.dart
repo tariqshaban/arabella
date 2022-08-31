@@ -12,7 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'maps_icon_provider.dart';
 
 class ThemeProvider with ChangeNotifier {
-  Color _color = const Color(0xFF448AFF);
+  Color _color = const Color(0xFF43A047);
 
   late ThemeData _lightThemeData;
 

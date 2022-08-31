@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:animated_background/animated_background.dart';
 import 'package:confetti/confetti.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ import 'assets/models/providers/chapters_provider.dart';
 import 'assets/models/providers/confetti_provider.dart';
 import 'assets/models/providers/covered_material_provider.dart';
 import 'assets/models/providers/maps_icon_provider.dart';
+import 'assets/models/providers/post_navigation_animation_provider.dart';
 import 'assets/models/providers/scroll_direction_provider.dart';
 import 'assets/models/providers/selected_color_provider.dart';
 import 'assets/models/providers/theme_provider.dart';
@@ -46,7 +48,7 @@ class Main extends StatefulWidget {
   State<Main> createState() => _MainState();
 }
 
-class _MainState extends State<Main> {
+class _MainState extends State<Main> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     setNavigationBarColor();
@@ -81,8 +83,10 @@ class _MainState extends State<Main> {
         ChangeNotifierProxyProvider<ThemeProvider, SelectedColorProvider>(
           create: (BuildContext context) => SelectedColorProvider(),
           update: (context, theme, selectedColor) =>
-          selectedColor!..update(theme),
+              selectedColor!..update(theme),
         ),
+        ChangeNotifierProvider<PostNavigationAnimationProvider>(
+            create: (context) => PostNavigationAnimationProvider()),
       ],
       child: AdaptiveTheme(
         light: ThemeData(),
@@ -99,7 +103,65 @@ class _MainState extends State<Main> {
             builder: (context, child) {
               return Stack(
                 children: [
-                  child!,
+                  Consumer<BackgroundAnimationProvider>(
+                    builder: (context, backgroundAnimation, child) {
+                      return Container(
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                        height: MediaQuery.of(context).size.height,
+                        width: MediaQuery.of(context).size.width,
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.vertical(
+                              bottom: Radius.elliptical(
+                                  MediaQuery.of(context).size.width,
+                                  backgroundAnimation.bottomRadius),
+                            ),
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 500),
+                              height: backgroundAnimation.height,
+                              decoration: BoxDecoration(
+                                boxShadow: const [BoxShadow(blurRadius: 40)],
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Theme.of(context).colorScheme.primary,
+                                    Theme.of(context).scaffoldBackgroundColor,
+                                  ],
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  stops: const [0, 1],
+                                ),
+                              ),
+                              child: AnimatedBackground(
+                                behaviour: RandomParticleBehaviour(
+                                  options: ParticleOptions(
+                                      particleCount: 50,
+                                      minOpacity: 0.1,
+                                      maxOpacity: 0.2,
+                                      spawnMinSpeed: 5,
+                                      spawnMaxSpeed: 10,
+                                      baseColor: Theme.of(context)
+                                                  .colorScheme
+                                                  .primary
+                                                  .computeLuminance() >
+                                              0.5
+                                          ? Colors.black
+                                          : Colors.white),
+                                ),
+                                vsync: this,
+                                child: const SizedBox(),
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  Theme(
+                    data: Theme.of(context)
+                        .copyWith(scaffoldBackgroundColor: Colors.transparent),
+                    child: child!,
+                  ),
                   Consumer<ConfettiProvider>(
                     builder: (context, confetti, child) {
                       return Stack(
@@ -178,59 +240,59 @@ class _MainState extends State<Main> {
               if (settings.arguments != null) {
                 arguments = settings.arguments as Map;
               }
+
+              Widget selectedPage = const SizedBox();
+
               switch (settings.name) {
                 case '/':
-                  return MaterialPageRoute(
-                    settings: settings,
-                    builder: (_) => const Home(),
-                  );
+                  selectedPage = const Home();
+                  break;
                 case '/splash':
-                  return MaterialPageRoute(
-                    builder: (_) => const Splash(),
-                  );
+                  selectedPage = const Splash();
+                  break;
                 case '/chapter':
-                  return MaterialPageRoute(
-                    settings: settings,
-                    builder: (_) => Stack(
-                      children: [Chapter(chapter: arguments['chapter'])],
-                    ),
-                  );
+                  selectedPage = Chapter(chapter: arguments['chapter']);
+                  break;
                 case '/lesson':
-                  return MaterialPageRoute(
-                    settings: settings,
-                    builder: (_) => Stack(
-                      children: [
-                        Lesson(
-                          chapter: arguments['chapter'],
-                          lesson: arguments['lesson'],
-                        )
-                      ],
-                    ),
+                  selectedPage = Lesson(
+                    chapter: arguments['chapter'],
+                    lesson: arguments['lesson'],
                   );
+                  break;
                 case '/quiz':
-                  return MaterialPageRoute(
-                    settings: settings,
-                    builder: (_) => Quiz(
-                      chapterName: arguments['chapterName'],
-                      questions: arguments['questions'],
-                    ),
+                  selectedPage = Quiz(
+                    chapterName: arguments['chapterName'],
+                    questions: arguments['questions'],
                   );
+                  break;
                 case '/question':
-                  return MaterialPageRoute(
-                    settings: settings,
-                    builder: (_) => Question(
-                      chapterName: arguments['chapterName'],
-                      questions: arguments['questions'],
-                      currentQuestion: arguments['currentQuestion'],
-                    ),
+                  selectedPage = Question(
+                    chapterName: arguments['chapterName'],
+                    questions: arguments['questions'],
+                    currentQuestion: arguments['currentQuestion'],
                   );
+                  break;
                 case '/badge':
-                  return MaterialPageRoute(
-                    settings: settings,
-                    builder: (_) => const Badge(),
-                  );
+                  selectedPage = const Badge();
+                  break;
               }
-              return null;
+
+              return PageRouteBuilder(
+                settings: settings,
+                pageBuilder: (
+                  BuildContext context,
+                  Animation<double> animation,
+                  Animation<double> secondaryAnimation,
+                ) =>
+                    FadeTransition(
+                  opacity: Tween<double>(begin: 0, end: 1).animate(animation),
+                  child: FadeTransition(
+                    opacity: Tween<double>(begin: 1, end: 0)
+                        .animate(secondaryAnimation),
+                    child: selectedPage,
+                  ),
+                ),
+              );
             },
           );
         },
@@ -239,16 +301,15 @@ class _MainState extends State<Main> {
   }
 
   Future<void> setNavigationBarColor() async {
+    AdaptiveThemeMode? adaptiveThemeMode = await AdaptiveTheme.getThemeMode();
+    bool isDark = adaptiveThemeMode == null ||
+        adaptiveThemeMode == AdaptiveThemeMode.dark;
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
         systemNavigationBarColor:
-            (await AdaptiveTheme.getThemeMode() == AdaptiveThemeMode.dark)
-                ? const Color(0xFF303030)
-                : const Color(0xFFFAFAFA),
+            isDark ? const Color(0xFF303030) : const Color(0xFFFAFAFA),
         systemNavigationBarIconBrightness:
-            (await AdaptiveTheme.getThemeMode() == AdaptiveThemeMode.dark)
-                ? Brightness.light
-                : Brightness.dark,
+            isDark ? Brightness.light : Brightness.dark,
       ),
     );
   }

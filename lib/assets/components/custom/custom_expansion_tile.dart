@@ -297,8 +297,8 @@ class _ExpansionTileState extends State<CustomExpansionTile>
 
   @override
   void dispose() {
-    _controller.dispose();
     super.dispose();
+    _controller.dispose();
   }
 
   void _handleTap() {

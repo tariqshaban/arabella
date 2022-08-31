@@ -1,9 +1,13 @@
+import 'dart:math';
+
 import 'package:animated_background/animated_background.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'assets/components/custom/fullscreen_widget.dart';
+import 'assets/helpers/shader_callback_helper.dart';
+import 'assets/models/providers/background_animation_provider.dart';
 import 'assets/models/providers/celebrate_provider.dart';
 import 'assets/models/providers/chapters_provider.dart';
 import 'assets/models/providers/confetti_provider.dart';
@@ -19,6 +23,8 @@ class Badge extends StatefulWidget {
 class _BadgeState extends State<Badge> with TickerProviderStateMixin {
   late CoveredMaterialProvider coveredMaterialProvider;
   late ConfettiProvider confettiProvider;
+  late BackgroundAnimationProvider backgroundAnimationProvider;
+  late MediaQueryData mediaQueryData;
 
   @override
   void initState() {
@@ -30,15 +36,25 @@ class _BadgeState extends State<Badge> with TickerProviderStateMixin {
       if (context.read<CelebrateProvider>().isCelebrating) {
         confettiProvider.play(shouldLoop: true);
       }
+
+      backgroundAnimationProvider = context.read<BackgroundAnimationProvider>();
+      mediaQueryData = MediaQuery.of(context);
+      backgroundAnimationProvider.changeBackgroundAttributes(
+          max(mediaQueryData.size.height * 0.6, 500), 120);
     });
   }
 
   @override
   void dispose() {
+    super.dispose();
     if (coveredMaterialProvider.isEligibleForCompletionBadge()) {
       confettiProvider.stop();
     }
-    super.dispose();
+
+    Future.delayed(const Duration(milliseconds: 0), () {
+      backgroundAnimationProvider.changeBackgroundAttributes(
+          max(mediaQueryData.size.height * 0.2, 150), 40);
+    });
   }
 
   @override
@@ -77,48 +93,58 @@ class _BadgeState extends State<Badge> with TickerProviderStateMixin {
         builder: (context, coveredMaterial, child) {
           Map<String, bool> eligibleBadges =
               coveredMaterial.getEligibleBadges();
-          return ListView(
-            physics: const BouncingScrollPhysics(
-              parent: AlwaysScrollableScrollPhysics(),
-            ),
-            children: [
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: eligibleBadges.length,
-                itemBuilder: (context, i) {
-                  String key = eligibleBadges.keys.elementAt(i);
-                  return FullScreenWidget(
-                    opacity: 0.8,
-                    padding: const EdgeInsets.all(20),
-                    enabled: eligibleBadges[key]!,
-                    fullScreenWidget: Hero(
-                      tag: 'badge $i',
-                      child: getBadgeIcon(key, eligibleBadges[key]!),
-                    ),
-                    child: SizedBox(
-                      height: 75,
-                      child: Center(
-                        child: ListTile(
-                          leading: Hero(
-                            tag: 'badge $i',
-                            child: getBadgeIcon(key, eligibleBadges[key]!),
+          return ShaderMask(
+            shaderCallback: ShaderCallbackHelper.getShaderCallback(),
+            blendMode: BlendMode.dstOut,
+            child: ListView(
+              padding: EdgeInsetsDirectional.fromSTEB(
+                5,
+                context.read<BackgroundAnimationProvider>().height / 2,
+                5,
+                0,
+              ),
+              physics: const BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics(),
+              ),
+              children: [
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: eligibleBadges.length,
+                  itemBuilder: (context, i) {
+                    String key = eligibleBadges.keys.elementAt(i);
+                    return FullScreenWidget(
+                      opacity: 0.8,
+                      padding: const EdgeInsets.all(20),
+                      enabled: eligibleBadges[key]!,
+                      fullScreenWidget: Hero(
+                        tag: 'badge $i',
+                        child: getBadgeIcon(key, eligibleBadges[key]!),
+                      ),
+                      child: SizedBox(
+                        height: 75,
+                        child: Center(
+                          child: ListTile(
+                            leading: Hero(
+                              tag: 'badge $i',
+                              child: getBadgeIcon(key, eligibleBadges[key]!),
+                            ),
+                            title: getBadgeTitle(key, eligibleBadges[key]!),
+                            subtitle: (eligibleBadges[key]!)
+                                ? null
+                                : const Text('badges.complete_to_unlock').tr(),
                           ),
-                          title: getBadgeTitle(key, eligibleBadges[key]!),
-                          subtitle: (eligibleBadges[key]!)
-                              ? null
-                              : const Text('badges.complete_to_unlock').tr(),
                         ),
                       ),
-                    ),
-                  );
-                },
-              ),
-              if (coveredMaterial.isEligibleForCompletionBadge()) ...[
-                const Divider(),
-                getCompletionBadge(),
+                    );
+                  },
+                ),
+                if (coveredMaterial.isEligibleForCompletionBadge()) ...[
+                  const Divider(),
+                  getCompletionBadge(),
+                ],
               ],
-            ],
+            ),
           );
         },
       ),

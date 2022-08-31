@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:animated_background/animated_background.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,7 +16,7 @@ class Splash extends StatefulWidget {
   State<Splash> createState() => _SplashState();
 }
 
-class _SplashState extends State<Splash> with TickerProviderStateMixin {
+class _SplashState extends State<Splash> {
   @override
   void initState() {
     super.initState();
@@ -29,67 +28,42 @@ class _SplashState extends State<Splash> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AnimatedContainer(
-        duration: const Duration(milliseconds: 500),
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        color: Theme.of(context).colorScheme.primary,
-        child: Consumer<BackgroundAnimationProvider>(
-          builder: (context, backgroundAnimation, child) {
-            return AnimatedOpacity(
-              opacity: backgroundAnimation.isVisible ? 1.0 : 0.0,
-              duration: const Duration(milliseconds: 500),
-              child: AnimatedBackground(
-                behaviour: RandomParticleBehaviour(
-                  options: ParticleOptions(
-                    particleCount: 100,
-                    minOpacity: 0.1,
-                    maxOpacity: 0.2,
-                    spawnMinSpeed: 5,
-                    spawnMaxSpeed: 10,
-                    baseColor: Theme.of(context)
+      body: Consumer<BackgroundAnimationProvider>(
+        builder: (context, backgroundAnimation, child) {
+          return AnimatedOpacity(
+            opacity: backgroundAnimation.isVisible ? 1.0 : 0.0,
+            duration: const Duration(milliseconds: 500),
+            child: Padding(
+              padding: const EdgeInsets.all(50),
+              child: AnimatedDefaultTextStyle(
+                duration: const Duration(milliseconds: 750),
+                style: TextStyle(
+                    color: Theme.of(context)
                                 .colorScheme
                                 .primary
                                 .computeLuminance() >
                             0.5
                         ? Colors.black
-                        : Colors.white,
-                  ),
-                ),
-                vsync: this,
-                child: Padding(
-                  padding: const EdgeInsets.all(50),
-                  child: AnimatedDefaultTextStyle(
-                    duration: const Duration(milliseconds: 750),
-                    style: TextStyle(
-                        color: Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .computeLuminance() >
-                                0.5
-                            ? Colors.black
-                            : Colors.white),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: SizedBox(
-                        width: min(MediaQuery.of(context).size.width / 2, 250),
-                        child: FittedBox(
-                          fit: BoxFit.fitWidth,
-                          child: const Text(
-                            'app_name',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ).tr(),
+                        : Colors.white),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: SizedBox(
+                    width: min(MediaQuery.of(context).size.width / 2, 250),
+                    child: FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: const Text(
+                        'app_name',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
                         ),
-                      ),
+                      ).tr(),
                     ),
                   ),
                 ),
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }
