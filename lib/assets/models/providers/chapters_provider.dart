@@ -1,26 +1,32 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 
+import '../../enums/assets_state.dart';
 import '../chapter_model.dart';
 import '../question_model.dart';
+import 'assets_provider.dart';
 
 class ChaptersProvider with ChangeNotifier {
   List<ChapterModel> _chapters = [];
-
-  ChaptersProvider() {
-    mountChapters();
-
-    notifyListeners();
-  }
 
   List<ChapterModel> get chapters => _chapters;
 
   set chapters(List<ChapterModel> value) {
     _chapters = value;
     notifyListeners();
+  }
+
+  void update(AssetsProvider assetsProvider) {
+    if (assetsProvider.assetsState == AssetsState.noUpdateRequired ||
+        assetsProvider.assetsState == AssetsState.finishedUpdating) {
+      mountChapters();
+
+      notifyListeners();
+    }
   }
 
   static String getChapterTranslatableName(String chapter) {
@@ -35,11 +41,12 @@ class ChaptersProvider with ChangeNotifier {
       String chapter) async {
     List<String> translatableLearningOutcomes = [];
 
-    dynamic data = await json
-        .decode(await rootBundle.loadString('assets/translations/en.json'));
+    dynamic data = await json.decode(await File(
+            '${(await getApplicationDocumentsDirectory()).path}/assets/translations/en.json')
+        .readAsString());
 
     dynamic outcomes = data['chapters']
-    [chapter.substring(chapter.indexOf('-') + 1)]['outcomes'];
+        [chapter.substring(chapter.indexOf('-') + 1)]['outcomes'];
 
     outcomes.keys.forEach((key) {
       translatableLearningOutcomes.add(
@@ -52,16 +59,17 @@ class ChaptersProvider with ChangeNotifier {
   static Future<String> getLessonContents(
       BuildContext context, String chapter, String lesson) async {
     String path =
-        'assets/chapters/${context.locale.toString()}/$chapter/lessons/$lesson';
-    return await rootBundle.loadString(path);
+        '${(await getApplicationDocumentsDirectory()).path}/assets/chapters/${context.locale.toString()}/$chapter/lessons/$lesson';
+
+    return await File(path).readAsString();
   }
 
   static Future<String> getQuizQuestionContents(
       BuildContext context, String chapter, String quiz) async {
     String path =
-        'assets/chapters/${context.locale.toString()}/$chapter/quiz/$quiz';
+        '${(await getApplicationDocumentsDirectory()).path}/assets/chapters/${context.locale.toString()}/$chapter/quiz/$quiz';
 
-    return await rootBundle.loadString(path);
+    return await File(path).readAsString();
   }
 
   static Future<List<String>> getQuizOptionsContents(
@@ -70,8 +78,9 @@ class ChaptersProvider with ChangeNotifier {
 
     for (String option in options) {
       String path =
-          'assets/chapters/${context.locale.toString()}/$chapter/quiz/$option';
-      contents.add(await rootBundle.loadString(path));
+          '${(await getApplicationDocumentsDirectory()).path}/assets/chapters/${context.locale.toString()}/$chapter/quiz/$option';
+
+      contents.add(await File(path).readAsString());
     }
 
     return contents;
@@ -81,8 +90,9 @@ class ChaptersProvider with ChangeNotifier {
     return 'chapters.${chapter.substring(chapter.indexOf('-') + 1)}.lessons.${lesson.substring(lesson.indexOf('-') + 1, lesson.lastIndexOf('.'))}.name';
   }
 
-  static String getImageFromLesson(String chapter, String lesson) {
-    return 'assets/images/chapters/$chapter/cover_images/${lesson.substring(0, lesson.indexOf("."))}.jpg';
+  static String getImageFromLesson(
+      AssetsProvider assetsProvider, String chapter, String lesson) {
+    return '${assetsProvider.applicationDocumentsDirectory}/assets/images/chapters/$chapter/cover_images/${lesson.substring(0, lesson.indexOf("."))}.jpg';
   }
 
   static bool isMultipleChoiceQuestion(QuestionModel question) {
@@ -93,17 +103,16 @@ class ChaptersProvider with ChangeNotifier {
   }
 
   Future<void> mountChapters() async {
-    final manifestJson = await rootBundle.loadString('AssetManifest.json');
-    final components = json
-        .decode(manifestJson)
-        .keys
-        .where((String key) =>
-            key.startsWith('assets/chapters/') && key.contains('/en/'))
+    String root =
+        '${(await getApplicationDocumentsDirectory()).path}/assets/chapters/en/';
+
+    final components = Directory(root)
+        .listSync(recursive: true)
+        .whereType<File>()
+        .map((e) => e.path)
         .toList();
 
     for (String component in components) {
-      String root = 'assets/chapters/en/';
-
       component = component.replaceFirst(root, '');
       String chapterComponent = component.substring(0, component.indexOf('/'));
 

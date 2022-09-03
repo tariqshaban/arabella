@@ -1,10 +1,12 @@
+import 'dart:io';
 import 'dart:ui';
 
-import 'package:easy_localization/easy_localization.dart';
+import 'package:arabella/assets/helpers/dynamic_tr.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/chapter_model.dart';
+import '../models/providers/assets_provider.dart';
 import '../models/providers/chapters_provider.dart';
 import '../models/providers/covered_material_provider.dart';
 import 'paging_scroll_physics.dart';
@@ -60,11 +62,14 @@ class _LessonListState extends State<LessonList> with WidgetsBindingObserver {
                                   backgroundImageKey: backgroundImageKey,
                                 ),
                                 children: [
-                                  Image.asset(
+                                  Image.file(
                                     key: backgroundImageKey,
-                                    ChaptersProvider.getImageFromLesson(
-                                      widget.chapter.chapterName,
-                                      lesson,
+                                    File(
+                                      ChaptersProvider.getImageFromLesson(
+                                        context.read<AssetsProvider>(),
+                                        widget.chapter.chapterName,
+                                        lesson,
+                                      ),
                                     ),
                                     fit: BoxFit.cover,
                                   ),
@@ -120,13 +125,12 @@ class _LessonListState extends State<LessonList> with WidgetsBindingObserver {
                               ),
                               child: Text(
                                 ChaptersProvider.getLessonTranslatableName(
-                                        widget.chapter.chapterName, lesson)
-                                    .tr(),
+                                    widget.chapter.chapterName, lesson),
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 16,
                                 ),
-                              ),
+                              ).dtr(context),
                             ),
                           ),
                           Positioned.fill(

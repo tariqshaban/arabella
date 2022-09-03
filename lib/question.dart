@@ -1,3 +1,4 @@
+import 'package:arabella/assets/helpers/dynamic_tr.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -9,6 +10,7 @@ import 'assets/components/extended_floating_action_button.dart';
 import 'assets/components/snack_bar.dart';
 import 'assets/helpers/shader_callback_helper.dart';
 import 'assets/models/providers/answered_questions_provider.dart';
+import 'assets/models/providers/assets_provider.dart';
 import 'assets/models/providers/background_animation_provider.dart';
 import 'assets/models/providers/chapters_provider.dart';
 import 'assets/models/providers/confetti_provider.dart';
@@ -38,7 +40,7 @@ class _QuestionState extends State<Question> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            '${ChaptersProvider.getChapterTranslatableName(widget.chapterName).tr()} - ${'quiz.quiz'.tr()}'),
+            '${ChaptersProvider.getChapterTranslatableName(widget.chapterName).dtr(context)} - ${'quiz.quiz'.tr()}'),
       ),
       body: NotificationListener<UserScrollNotification>(
         onNotification: (notification) {
@@ -68,8 +70,7 @@ class _QuestionState extends State<Question> {
                   shrinkWrap: true,
                   padding: EdgeInsetsDirectional.fromSTEB(
                     5,
-                    context.read<BackgroundAnimationProvider>().height / 2 -
-                        70,
+                    context.read<BackgroundAnimationProvider>().height / 2 - 70,
                     5,
                     0,
                   ),
@@ -84,16 +85,21 @@ class _QuestionState extends State<Question> {
                         builder: (ctx, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.done) {
-                            return MarkdownBody(
-                              fitContent: false,
-                              data: snapshot.data as String,
-                              onTapLink: (text, url, title) async {
-                                await launchUrl(
-                                  Uri.parse(url!),
-                                  mode: LaunchMode.externalApplication,
-                                );
-                              },
-                            );
+                            return Consumer<AssetsProvider>(
+                                builder: (context, assetsProvider, child) {
+                              return MarkdownBody(
+                                imageDirectory: assetsProvider
+                                    .applicationDocumentsDirectory,
+                                fitContent: false,
+                                data: snapshot.data as String,
+                                onTapLink: (text, url, title) async {
+                                  await launchUrl(
+                                    Uri.parse(url!),
+                                    mode: LaunchMode.externalApplication,
+                                  );
+                                },
+                              );
+                            });
                           }
                           return const SizedBox();
                         },
@@ -106,8 +112,7 @@ class _QuestionState extends State<Question> {
                     const SizedBox(height: 15),
                     FutureBuilder(
                       builder: (ctx, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.done) {
+                        if (snapshot.connectionState == ConnectionState.done) {
                           return Consumer<AnsweredQuestionsProvider>(
                             builder: (context, answeredQuestions, child) {
                               return LayoutBuilder(
@@ -115,14 +120,13 @@ class _QuestionState extends State<Question> {
                                   return GridView.builder(
                                     gridDelegate:
                                         SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount:
-                                          constraints.maxWidth > 900
-                                              ? constraints.maxWidth > 1200
-                                                  ? 4
-                                                  : 3
-                                              : constraints.maxWidth > 600
-                                                  ? 2
-                                                  : 1,
+                                      crossAxisCount: constraints.maxWidth > 900
+                                          ? constraints.maxWidth > 1200
+                                              ? 4
+                                              : 3
+                                          : constraints.maxWidth > 600
+                                              ? 2
+                                              : 1,
                                       mainAxisExtent: 70,
                                       mainAxisSpacing: 0,
                                       crossAxisSpacing: 15,
@@ -130,8 +134,8 @@ class _QuestionState extends State<Question> {
                                     shrinkWrap: true,
                                     physics:
                                         const NeverScrollableScrollPhysics(),
-                                    itemCount: widget
-                                        .currentQuestion.options.length,
+                                    itemCount:
+                                        widget.currentQuestion.options.length,
                                     itemBuilder: (context, i) {
                                       return Center(
                                         child: Card(
@@ -158,11 +162,10 @@ class _QuestionState extends State<Question> {
                                                   controlAffinity:
                                                       ListTileControlAffinity
                                                           .leading,
-                                                  shape:
-                                                      RoundedRectangleBorder(
+                                                  shape: RoundedRectangleBorder(
                                                     borderRadius:
-                                                        BorderRadius
-                                                            .circular(15),
+                                                        BorderRadius.circular(
+                                                            15),
                                                   ),
                                                   value: getCheckboxState(
                                                       context, i),
@@ -170,49 +173,62 @@ class _QuestionState extends State<Question> {
                                                     checkboxEventHandler(
                                                         context, i, value!);
                                                   },
-                                                  title: MarkdownBody(
-                                                    fitContent: false,
-                                                    data: (snapshot.data
-                                                        as List<String>)[i],
-                                                    onTapLink: (text, url,
-                                                        title) async {
-                                                      await launchUrl(
-                                                        Uri.parse(url!),
-                                                        mode: LaunchMode
-                                                            .externalApplication,
-                                                      );
-                                                    },
-                                                  ),
+                                                  title:
+                                                      Consumer<AssetsProvider>(
+                                                          builder: (context,
+                                                              assetsProvider,
+                                                              child) {
+                                                    return MarkdownBody(
+                                                      imageDirectory: assetsProvider
+                                                          .applicationDocumentsDirectory,
+                                                      fitContent: false,
+                                                      data: (snapshot.data
+                                                          as List<String>)[i],
+                                                      onTapLink: (text, url,
+                                                          title) async {
+                                                        await launchUrl(
+                                                          Uri.parse(url!),
+                                                          mode: LaunchMode
+                                                              .externalApplication,
+                                                        );
+                                                      },
+                                                    );
+                                                  }),
                                                 )
                                               : RadioListTile(
-                                                  shape:
-                                                      RoundedRectangleBorder(
+                                                  shape: RoundedRectangleBorder(
                                                     borderRadius:
-                                                        BorderRadius
-                                                            .circular(15),
+                                                        BorderRadius.circular(
+                                                            15),
                                                   ),
                                                   value: i,
-                                                  groupValue: getRadioState(
-                                                      context),
+                                                  groupValue:
+                                                      getRadioState(context),
                                                   onChanged: (value) {
-                                                    radioEventHandler(
-                                                        context,
-                                                        i,
-                                                        value as int);
+                                                    radioEventHandler(context,
+                                                        i, value as int);
                                                   },
-                                                  title: MarkdownBody(
-                                                    fitContent: false,
-                                                    data: (snapshot.data
-                                                        as List<String>)[i],
-                                                    onTapLink: (text, url,
-                                                        title) async {
-                                                      await launchUrl(
-                                                        Uri.parse(url!),
-                                                        mode: LaunchMode
-                                                            .externalApplication,
-                                                      );
-                                                    },
-                                                  ),
+                                                  title:
+                                                      Consumer<AssetsProvider>(
+                                                          builder: (context,
+                                                              assetsProvider,
+                                                              child) {
+                                                    return MarkdownBody(
+                                                      imageDirectory: assetsProvider
+                                                          .applicationDocumentsDirectory,
+                                                      fitContent: false,
+                                                      data: (snapshot.data
+                                                          as List<String>)[i],
+                                                      onTapLink: (text, url,
+                                                          title) async {
+                                                        await launchUrl(
+                                                          Uri.parse(url!),
+                                                          mode: LaunchMode
+                                                              .externalApplication,
+                                                        );
+                                                      },
+                                                    );
+                                                  }),
                                                 ),
                                         ),
                                       );
@@ -225,10 +241,8 @@ class _QuestionState extends State<Question> {
                         }
                         return const SizedBox();
                       },
-                      future: ChaptersProvider.getQuizOptionsContents(
-                          context,
-                          widget.chapterName,
-                          widget.currentQuestion.options),
+                      future: ChaptersProvider.getQuizOptionsContents(context,
+                          widget.chapterName, widget.currentQuestion.options),
                     ),
                     const SizedBox(height: 75),
                   ],

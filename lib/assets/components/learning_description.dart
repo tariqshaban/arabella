@@ -1,3 +1,4 @@
+import 'package:arabella/assets/helpers/dynamic_tr.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -30,8 +31,9 @@ class _LearningDescriptionState extends State<LearningDescription> {
         child: SizedBox(
           width: double.infinity,
           child: Text(
-            ChaptersProvider.getChapterTranslatableDescription(widget.chapter.chapterName),
-          ).tr(),
+            ChaptersProvider.getChapterTranslatableDescription(
+                widget.chapter.chapterName),
+          ).dtr(context),
         ),
       ),
     );

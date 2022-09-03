@@ -1,11 +1,13 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
+import 'package:arabella/assets/helpers/dynamic_tr.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -13,6 +15,7 @@ import 'assets/components/expandable_widget.dart';
 import 'assets/components/extended_floating_action_button.dart';
 import 'assets/components/points_of_interest.dart';
 import 'assets/models/chapter_model.dart';
+import 'assets/models/providers/assets_provider.dart';
 import 'assets/models/providers/background_animation_provider.dart';
 import 'assets/models/providers/chapters_provider.dart';
 import 'assets/models/providers/covered_material_provider.dart';
@@ -77,17 +80,23 @@ class _LessonState extends State<Lesson> {
                       ChaptersProvider.getLessonTranslatableName(
                           widget.chapter.chapterName, widget.lesson),
                       style: Theme.of(context).textTheme.headline6,
-                    ).tr(),
+                    ).dtr(context),
                     background: ColorFiltered(
                       colorFilter: ColorFilter.mode(
-                          Theme.of(context).colorScheme.primary.withOpacity(0.6),
+                          Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withOpacity(0.6),
                           BlendMode.dstATop),
                       child: Hero(
                         tag: 'lesson_image ${widget.lesson}',
-                        child: Image.asset(
-                          ChaptersProvider.getImageFromLesson(
-                            widget.chapter.chapterName,
-                            widget.lesson,
+                        child: Image.file(
+                          File(
+                            ChaptersProvider.getImageFromLesson(
+                              context.read<AssetsProvider>(),
+                              widget.chapter.chapterName,
+                              widget.lesson,
+                            ),
                           ),
                           fit: BoxFit.cover,
                         ),
@@ -109,7 +118,8 @@ class _LessonState extends State<Lesson> {
                       Expanded(
                         child: NotificationListener<UserScrollNotification>(
                           onNotification: (notification) {
-                            if (notification.direction == ScrollDirection.idle) {
+                            if (notification.direction ==
+                                ScrollDirection.idle) {
                               return true;
                             }
                             context.read<ScrollDirectionProvider>().direction =
@@ -137,12 +147,15 @@ class _LessonState extends State<Lesson> {
                                           style: TextStyle(fontSize: 20),
                                         ).tr(),
                                         body: PointsOfInterest(
-                                          chapterName: widget.chapter.chapterName,
+                                          chapterName:
+                                              widget.chapter.chapterName,
                                           lessonName: widget.lesson,
-                                          height:
-                                              MediaQuery.of(context).size.height /
-                                                  2,
-                                          borderRadius: BorderRadius.circular(15),
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height /
+                                              2,
+                                          borderRadius:
+                                              BorderRadius.circular(15),
                                         ),
                                       );
                                     }
@@ -151,15 +164,20 @@ class _LessonState extends State<Lesson> {
                                   future: doesContainsPointsOfInterest,
                                 ),
                                 const SizedBox(height: 25),
-                                MarkdownBody(
-                                  fitContent: false,
-                                  data: snapshot.data as String,
-                                  onTapLink: (text, url, title) async {
-                                    await launchUrl(
-                                      Uri.parse(url!),
-                                      mode: LaunchMode.externalApplication,
+                                Consumer<AssetsProvider>(
+                                    builder: (context, assetsProvider, child) {
+                                    return MarkdownBody(
+                                      imageDirectory: assetsProvider.applicationDocumentsDirectory,
+                                      fitContent: false,
+                                      data: snapshot.data as String,
+                                      onTapLink: (text, url, title) async {
+                                        await launchUrl(
+                                          Uri.parse(url!),
+                                          mode: LaunchMode.externalApplication,
+                                        );
+                                      },
                                     );
-                                  },
+                                  }
                                 ),
                                 const SizedBox(height: 75),
                               ],
@@ -223,8 +241,10 @@ class _LessonState extends State<Lesson> {
                         iconFirst: false,
                         onPressed: () {
                           Future.delayed(const Duration(milliseconds: 0), () {
-                            backgroundAnimationProvider.changeBackgroundAttributes(
-                                max(mediaQueryData.size.height * 0.2, 150), 40);
+                            backgroundAnimationProvider
+                                .changeBackgroundAttributes(
+                                    max(mediaQueryData.size.height * 0.2, 150),
+                                    40);
                           });
                           Navigator.of(context).pop();
                         },
@@ -255,7 +275,9 @@ class _LessonState extends State<Lesson> {
     String lessonName = widget.lesson
         .substring(widget.lesson.indexOf('-') + 1, widget.lesson.indexOf('.'));
 
-    String file = await rootBundle.loadString('assets/maps/maps_manifest.json');
+    String file = await File(
+            '${(await getApplicationDocumentsDirectory()).path}/assets/maps/maps_manifest.json')
+        .readAsString();
 
     try {
       dynamic pointsOfInterest =

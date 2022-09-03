@@ -1,16 +1,16 @@
 {
   "app_name": "أرابيلا",
+  "splash": {
+    "failure": "تعذر الاتصال بالخادم",
+    "attempt": "محاولة رقم",
+    "giving_up": "تم الغاء المحاولة",
+    "unknown_failure": "حدث خطأ ما، يرجى المحاولة لاحقا",
+    "contacting": "جاري الاتصال بالخادم...",
+    "downloading": "جاري تحديث قاعدة البيانات ...",
+    "mb": "ميغا بايت",
+    "done": "تم"
+  },
   "nav_drawer": {
-    "drawer_background": {
-      "just": {
-        "name": "جامعة العلوم والتكنولوجيا الأردنية",
-        "description": "تأسست عام 1986"
-      },
-      "yarmouk_university": {
-        "name": "جامعة اليرموك",
-        "description": "تأسست عام 1976"
-      }
-    },
     "dark_theme": "سمة داكنة",
     "color": "اللون",
     "too_light": "غير مناسب للسمة الفاتحة",
@@ -24,108 +24,7 @@
     "lessons_finished": "الدروس المنتهية",
     "grade": "العلامة",
     "description": "الوصف",
-    "learning_outcomes": "نتائج التعلم",
-    "history": {
-      "name": "التاريخ",
-      "description": "تفصيل التاريخ",
-      "outcomes": {
-        "1": "التعرف على أهم الأحداث التي حدثت في كل عصر.",
-        "2": "التعرف على التأثير الذي صنعه التاريخ في يومنا هذا."
-      },
-      "lessons": {
-        "bronze_age": {
-          "name": "العصر البرونزي",
-          "points_of_interest": {
-            "irbid_archaeological_museum": {
-              "title": "متحف دار السرايا",
-              "content": "المعروف ايضا باسم \"متحف إربد الأثري\"."
-            },
-            "umm_qais": {
-              "title": "أم قيس",
-              "content": "تقع في جدارا"
-            }
-          }
-        },
-        "hellenistic_era": {
-          "name": "العصر الهيليني",
-          "points_of_interest": {
-            "irbid_archaeological_museum": {
-              "title": "متحف دار السرايا",
-              "content": "المعروف ايضا باسم \"متحف إربد الأثري\"."
-            }
-          }
-        },
-        "roman_era": {
-          "name": "العصر الروماني",
-          "points_of_interest": {
-            "irbid_archaeological_museum": {
-              "title": "متحف دار السرايا",
-              "content": "المعروف ايضا باسم \"متحف إربد الأثري\"."
-            }
-          }
-        },
-        "islam_era": {
-          "name": "العصر الإسلامي"
-        },
-        "present_day": {
-          "name": "الوقت الحاضر"
-        }
-      }
-    },
-    "geography": {
-      "name": "الجغرافيا",
-      "description": "تفصيل الجغرافيا",
-      "outcomes": {
-        "1": "هدف 1",
-        "2": "هدف 2",
-        "3": "هدف 3",
-        "4": "هدف 3"
-      },
-      "lessons": {
-        "geography": {
-          "name": "الجغرافيا"
-        },
-        "administrative_divisions": {
-          "name": "التقسيمات الإدارية"
-        },
-        "demography": {
-          "name": "الديموغرافية"
-        }
-      }
-    },
-    "culture": {
-      "name": "الثقافة",
-      "description": "تفصيل الثقافة",
-      "outcomes": {
-        "1": "هدف 1",
-        "2": "هدف 2",
-        "3": "هدف 3",
-        "4": "هدف 3"
-      },
-      "lessons": {}
-    },
-    "tourism_and_archaeological_sites": {
-      "name": "السياحة والمواقع الأثرية",
-      "description": "تفصيل السياحة والمواقع الأثرية",
-      "outcomes": {
-        "1": "هدف 1",
-        "2": "هدف 2",
-        "3": "هدف 3",
-        "4": "هدف 3"
-      },
-      "lessons": {}
-    },
-    "education": {
-      "name": "التعليم",
-      "description": "تفصيل التعليم",
-      "outcomes": {
-        "1": "هدف 1",
-        "2": "هدف 2",
-        "3": "هدف 3",
-        "4": "هدف 3"
-      },
-      "lessons": {}
-    }
+    "learning_outcomes": "نتائج التعلم"
   },
   "lessons": {
     "next_lesson": "الدرس القادم",

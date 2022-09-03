@@ -1,4 +1,4 @@
-import 'package:easy_localization/easy_localization.dart';
+import 'package:arabella/assets/helpers/dynamic_tr.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -27,7 +27,7 @@ class _ChapterState extends State<Chapter> {
       appBar: AppBar(
         title: Text(ChaptersProvider.getChapterTranslatableName(
                 widget.chapter.chapterName))
-            .tr(),
+            .dtr(context),
       ),
       body: Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(5, 50, 5, 5),

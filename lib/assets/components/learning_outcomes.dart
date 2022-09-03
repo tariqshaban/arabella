@@ -1,3 +1,4 @@
+import 'package:arabella/assets/helpers/dynamic_tr.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -49,7 +50,7 @@ class _LearningOutcomesState extends State<LearningOutcomes> {
                       leading: const Icon(Icons.circle, size: 15),
                       title: Text(
                         chapterTranslatableLearningOutcomes[i],
-                      ).tr(),
+                      ).dtr(context),
                     );
                   },
                 );

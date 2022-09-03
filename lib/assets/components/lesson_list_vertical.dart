@@ -1,8 +1,11 @@
-import 'package:easy_localization/easy_localization.dart';
+import 'dart:io';
+
+import 'package:arabella/assets/helpers/dynamic_tr.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/chapter_model.dart';
+import '../models/providers/assets_provider.dart';
 import '../models/providers/chapters_provider.dart';
 import '../models/providers/covered_material_provider.dart';
 
@@ -52,10 +55,13 @@ class _LessonListVerticalState extends State<LessonListVertical> {
                               tag: 'lesson_image $lesson',
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(15),
-                                child: Image.asset(
-                                  ChaptersProvider.getImageFromLesson(
-                                    widget.chapter.chapterName,
-                                    lesson,
+                                child: Image.file(
+                                  File(
+                                    ChaptersProvider.getImageFromLesson(
+                                      context.read<AssetsProvider>(),
+                                      widget.chapter.chapterName,
+                                      lesson,
+                                    ),
                                   ),
                                   fit: BoxFit.cover,
                                 ),
@@ -66,10 +72,9 @@ class _LessonListVerticalState extends State<LessonListVertical> {
                           Expanded(
                             child: Text(
                               ChaptersProvider.getLessonTranslatableName(
-                                      widget.chapter.chapterName, lesson)
-                                  .tr(),
+                                  widget.chapter.chapterName, lesson),
                               style: const TextStyle(fontSize: 16),
-                            ),
+                            ).dtr(context),
                           ),
                           Padding(
                             padding: const EdgeInsetsDirectional.only(end: 12),

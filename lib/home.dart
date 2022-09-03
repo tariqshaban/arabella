@@ -1,6 +1,4 @@
-import 'dart:math';
-
-import 'package:arabella/assets/models/providers/post_navigation_animation_provider.dart';
+import 'package:arabella/assets/helpers/dynamic_tr.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +9,7 @@ import 'assets/helpers/shader_callback_helper.dart';
 import 'assets/models/providers/background_animation_provider.dart';
 import 'assets/models/providers/chapters_provider.dart';
 import 'assets/models/providers/covered_material_provider.dart';
+import 'assets/models/providers/post_navigation_animation_provider.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -25,15 +24,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(milliseconds: 4000), () {
-      context.read<BackgroundAnimationProvider>().changeBackgroundAttributes(
-          max(MediaQuery.of(context).size.height * 0.2, 150), 40);
-    });
-    Future.delayed(const Duration(milliseconds: 4000), () {
-      setState(() {
-        context.read<PostNavigationAnimationProvider>().animate = true;
-      });
-    });
   }
 
   @override
@@ -123,7 +113,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                                 .colorScheme
                                                 .primary,
                                           ),
-                                        ).tr(),
+                                        ).dtr(context),
                                         Hero(
                                           tag:
                                               'attempt_exam ${chapters.chapters[i].chapterName}',

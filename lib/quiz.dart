@@ -1,3 +1,4 @@
+import 'package:arabella/assets/helpers/dynamic_tr.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -34,7 +35,7 @@ class _QuizState extends State<Quiz> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            '${ChaptersProvider.getChapterTranslatableName(widget.chapterName).tr()} - ${'quiz.quiz'.tr()}'),
+            '${ChaptersProvider.getChapterTranslatableName(widget.chapterName).dtr(context)} - ${'quiz.quiz'.tr()}'),
       ),
       body: Column(
         children: [

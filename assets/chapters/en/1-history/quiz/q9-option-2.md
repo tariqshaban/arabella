@@ -1,1 +1,0 @@
-### It was far from the front lines

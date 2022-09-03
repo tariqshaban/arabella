@@ -1,16 +1,16 @@
 {
   "app_name": "Arabella",
+  "splash": {
+    "failure": "Could not connect to the server",
+    "attempt": "Attempt No.",
+    "giving_up": "Giving up",
+    "unknown_failure": "Something went wrong, please try later",
+    "contacting": "Contacting server...",
+    "downloading": "Updating Database...",
+    "mb": "MB",
+    "done": "Done"
+  },
   "nav_drawer": {
-    "drawer_background": {
-      "just": {
-        "name": "Jordan University of Science & Technology",
-        "description": "Established in 1986"
-      },
-      "yarmouk_university": {
-        "name": "Yarmouk University",
-        "description": "Established in 1976"
-      }
-    },
     "dark_theme": "Dark Theme",
     "color": "Color",
     "too_light": "Not suitable for the light theme",
@@ -24,108 +24,7 @@
     "lessons_finished": "Lessons finished",
     "grade": "Grade",
     "description": "Description",
-    "learning_outcomes": "Learning Outcomes",
-    "history": {
-      "name": "History",
-      "description": "History description",
-      "outcomes": {
-        "1": "Learn the main events that have transpired during each era.",
-        "2": "Learn the effect that history made in the present day."
-      },
-      "lessons": {
-        "bronze_age": {
-          "name": "Bronze Age",
-          "points_of_interest": {
-            "irbid_archaeological_museum": {
-              "title": "Dar As Saraya Museum",
-              "content": "Also known as \"Irbid Archaeological Museum\"."
-            }
-          }
-        },
-        "hellenistic_era": {
-          "name": "Hellenistic Era",
-          "points_of_interest": {
-            "irbid_archaeological_museum": {
-              "title": "Dar As Saraya Museum",
-              "content": "Also known as \"Irbid Archaeological Museum\"."
-            }
-          }
-        },
-        "roman_era": {
-          "name": "Roman Era",
-          "points_of_interest": {
-            "irbid_archaeological_museum": {
-              "title": "Dar As Saraya Museum",
-              "content": "Also known as \"Irbid Archaeological Museum\"."
-            },
-            "umm_qais": {
-              "title": "Umm Qais",
-              "content": "Located at Gadara"
-            }
-          }
-        },
-        "islam_era": {
-          "name": "Islam Era"
-        },
-        "present_day": {
-          "name": "Present Day"
-        }
-      }
-    },
-    "geography": {
-      "name": "Geography",
-      "description": "Geography description",
-      "outcomes": {
-        "1": "outcome 1",
-        "2": "outcome 2",
-        "3": "outcome 3",
-        "4": "outcome 4"
-      },
-      "lessons": {
-        "geography": {
-          "name": "Geography"
-        },
-        "administrative_divisions": {
-          "name": "Administrative Divisions"
-        },
-        "demography": {
-          "name": "Demography"
-        }
-      }
-    },
-    "culture": {
-      "name": "Culture",
-      "description": "Culture description",
-      "outcomes": {
-        "1": "outcome 1",
-        "2": "outcome 2",
-        "3": "outcome 3",
-        "4": "outcome 4"
-      },
-      "lessons": {}
-    },
-    "tourism_and_archaeological_sites": {
-      "name": "Tourism & Archaeological Sites",
-      "description": "Tourism & Archaeological Sites description",
-      "outcomes": {
-        "1": "outcome 1",
-        "2": "outcome 2",
-        "3": "outcome 3",
-        "4": "outcome 4"
-      },
-      "lessons": {}
-    },
-    "education": {
-      "name": "Education",
-      "description": "Education description",
-      "outcomes": {
-        "1": "outcome 1",
-        "2": "outcome 2",
-        "3": "outcome 3",
-        "4": "outcome 4"
-      },
-      "lessons": {}
-    }
+    "learning_outcomes": "Learning Outcomes"
   },
   "lessons": {
     "next_lesson": "Next Lesson",

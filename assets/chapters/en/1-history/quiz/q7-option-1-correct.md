@@ -1,1 +1,0 @@
-### Confront the Nabatean state in southern Jordan

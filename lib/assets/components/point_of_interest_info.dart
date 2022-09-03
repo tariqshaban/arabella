@@ -1,4 +1,4 @@
-import 'package:easy_localization/easy_localization.dart';
+import 'package:arabella/assets/helpers/dynamic_tr.dart';
 import 'package:flutter/material.dart';
 
 import '../enums/map_annotation_type.dart';
@@ -34,7 +34,7 @@ class _PointsOfInterestInfoState extends State<PointsOfInterestInfo> {
               leading: Icon(getMapAnnotationIcon()),
               title: Text(
                       'chapters.${widget.chapterName}.lessons.${widget.lessonName}.points_of_interest.${widget.pointOfInterestName}.title')
-                  .tr(),
+                  .dtr(context),
             ),
             Flexible(
               child: SingleChildScrollView(
@@ -48,7 +48,7 @@ class _PointsOfInterestInfoState extends State<PointsOfInterestInfo> {
                     width: double.infinity,
                     child: Text(
                       'chapters.${widget.chapterName}.lessons.${widget.lessonName}.points_of_interest.${widget.pointOfInterestName}.content',
-                    ).tr(),
+                    ).dtr(context),
                   ),
                 ),
               ),

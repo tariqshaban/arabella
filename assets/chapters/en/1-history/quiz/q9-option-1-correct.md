@@ -1,1 +1,0 @@
-### The proximity to the capital of the caliphate, Damascus

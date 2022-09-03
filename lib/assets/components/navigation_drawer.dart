@@ -1,13 +1,15 @@
-import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:arabella/assets/helpers/dynamic_tr.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:provider/provider.dart';
 
+import '../models/providers/assets_provider.dart';
 import '../models/providers/selected_color_provider.dart';
 import '../models/providers/theme_provider.dart';
 
@@ -47,11 +49,11 @@ class NavigationDrawer extends StatelessWidget {
           String imageText = 'nav_drawer.drawer_background.'
                   '${backgroundImage.substring(backgroundImage.lastIndexOf("/") + 1, backgroundImage.lastIndexOf("."))}'
                   '.name'
-              .tr();
+              .dtr(context);
           String imageDescription = 'nav_drawer.drawer_background.'
                   '${backgroundImage.substring(backgroundImage.lastIndexOf("/") + 1, backgroundImage.lastIndexOf("."))}'
                   '.description'
-              .tr();
+              .dtr(context);
           return UserAccountsDrawerHeader(
               accountName: Text(imageText),
               accountEmail: Text(imageDescription),
@@ -74,7 +76,7 @@ class NavigationDrawer extends StatelessWidget {
               ],
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage(backgroundImage),
+                  image: FileImage(File(backgroundImage)),
                   colorFilter: ColorFilter.mode(
                       Colors.black.withOpacity(0.2), BlendMode.darken),
                   fit: BoxFit.cover,
@@ -295,12 +297,10 @@ class NavigationDrawer extends StatelessWidget {
   }
 
   Future<String> getRandomBackgroundImage() async {
-    final manifestJson = await rootBundle.loadString('AssetManifest.json');
-    final images = json
-        .decode(manifestJson)
-        .keys
-        .where(
-            (String key) => key.startsWith('assets/images/drawer_background/'))
+    final images = Directory(
+            '${context.read<AssetsProvider>().applicationDocumentsDirectory}/assets/images/drawer_background/')
+        .listSync()
+        .map((e) => e.path)
         .toList();
     final randomImageIndex = Random().nextInt(images.length);
     return images[randomImageIndex];

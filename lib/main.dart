@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'assets/models/providers/answered_questions_provider.dart';
+import 'assets/models/providers/assets_provider.dart';
 import 'assets/models/providers/background_animation_provider.dart';
 import 'assets/models/providers/celebrate_provider.dart';
 import 'assets/models/providers/chapters_provider.dart';
@@ -55,8 +56,13 @@ class _MainState extends State<Main> with TickerProviderStateMixin {
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<ChaptersProvider>(
-            create: (context) => ChaptersProvider(), lazy: false),
+        ChangeNotifierProvider<AssetsProvider>(
+            create: (context) => AssetsProvider(), lazy: false),
+        ChangeNotifierProxyProvider<AssetsProvider, ChaptersProvider>(
+          create: (BuildContext context) => ChaptersProvider(),
+          update: (context, assets, chaptersProvider) =>
+          chaptersProvider!..update(assets),
+        ),
         ChangeNotifierProvider<ScrollDirectionProvider>(
             create: (context) => ScrollDirectionProvider()),
         ChangeNotifierProxyProvider<ChaptersProvider, CoveredMaterialProvider>(

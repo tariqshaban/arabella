@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/foundation.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../enums/map_annotation_type.dart';
@@ -118,7 +120,9 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
     String lessonName = widget.lessonName.substring(
         widget.lessonName.indexOf('-') + 1, widget.lessonName.indexOf('.'));
 
-    String file = await rootBundle.loadString('assets/maps/maps_manifest.json');
+    String file = await File(
+        '${(await getApplicationDocumentsDirectory()).path}/assets/maps/maps_manifest.json')
+        .readAsString();
 
     // Delay google maps widget build, since it slows the device, and causes to crash if rebuilt too often
     await Future.delayed(const Duration(seconds: 1));

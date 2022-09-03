@@ -1,12 +1,15 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:animated_background/animated_background.dart';
+import 'package:arabella/assets/helpers/dynamic_tr.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'assets/components/custom/fullscreen_widget.dart';
 import 'assets/helpers/shader_callback_helper.dart';
+import 'assets/models/providers/assets_provider.dart';
 import 'assets/models/providers/background_animation_provider.dart';
 import 'assets/models/providers/celebrate_provider.dart';
 import 'assets/models/providers/chapters_provider.dart';
@@ -25,6 +28,7 @@ class _BadgeState extends State<Badge> with TickerProviderStateMixin {
   late ConfettiProvider confettiProvider;
   late BackgroundAnimationProvider backgroundAnimationProvider;
   late MediaQueryData mediaQueryData;
+  late String applicationDocumentsDirectory;
 
   @override
   void initState() {
@@ -59,6 +63,9 @@ class _BadgeState extends State<Badge> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    applicationDocumentsDirectory =
+        context.read<AssetsProvider>().applicationDocumentsDirectory;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('badges.badges').tr(),
@@ -153,9 +160,11 @@ class _BadgeState extends State<Badge> with TickerProviderStateMixin {
 
   Widget getBadgeIcon(String chapterName, bool isEligible) {
     if (isEligible) {
-      return Image.asset('assets/images/badges/$chapterName.png');
+      return Image.file(File(
+          '$applicationDocumentsDirectory/assets/images/badges/$chapterName.png'));
     } else {
-      return Image.asset('assets/images/badges/locked.png');
+      return Image.file(File(
+          '$applicationDocumentsDirectory/assets/images/badges/locked.png'));
     }
   }
 
@@ -163,10 +172,10 @@ class _BadgeState extends State<Badge> with TickerProviderStateMixin {
     String text = '';
     if (context.locale.toString() == 'en') {
       text =
-          '${ChaptersProvider.getChapterTranslatableName(chapterName).tr()} ${'badges.fundamentals'.tr()}';
+          '${ChaptersProvider.getChapterTranslatableName(chapterName).dtr(context)} ${'badges.fundamentals'.tr()}';
     } else {
       text =
-          '${'badges.fundamentals'.tr()} ${ChaptersProvider.getChapterTranslatableName(chapterName).tr()}';
+          '${'badges.fundamentals'.tr()} ${ChaptersProvider.getChapterTranslatableName(chapterName).dtr(context)}';
     }
 
     return Text(text);
@@ -178,7 +187,8 @@ class _BadgeState extends State<Badge> with TickerProviderStateMixin {
       padding: const EdgeInsets.all(20),
       fullScreenWidget: Hero(
         tag: 'completion badge',
-        child: Image.asset('assets/images/badges/completion.png'),
+        child: Image.file(File(
+            '$applicationDocumentsDirectory/assets/images/badges/completion.png')),
       ),
       child: Container(
         color: Colors.yellow.withOpacity(0.1),
