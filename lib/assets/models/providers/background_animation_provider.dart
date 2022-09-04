@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class BackgroundAnimationProvider with ChangeNotifier {
   bool _isVisible = true;
-  double _height = MediaQueryData.fromWindow(WidgetsBinding.instance.window).size.height;
+  double _height =
+      MediaQueryData.fromWindow(WidgetsBinding.instance.window).size.height;
   double _bottomRadius = 0;
 
   bool get isVisible => _isVisible;

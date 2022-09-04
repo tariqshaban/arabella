@@ -1,5 +1,1 @@
-enum MapAnnotationType {
-  marker,
-  polyline,
-  polygon
-}
+enum MapAnnotationType { marker, polyline, polygon }

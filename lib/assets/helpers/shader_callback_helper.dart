@@ -7,7 +7,7 @@ class ShaderCallbackHelper {
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
         colors: [Colors.blue, Colors.transparent],
-        stops: [0.0, 0.1],
+        stops: [0.0, 0.05],
       ).createShader(rect);
     };
   }

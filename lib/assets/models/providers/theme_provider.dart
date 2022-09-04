@@ -50,8 +50,8 @@ class ThemeProvider with ChangeNotifier {
         brightness: Brightness.light,
       ),
       listTileTheme: ListTileThemeData(iconColor: _color),
-      radioTheme:
-          RadioThemeData(fillColor: MaterialStateProperty.all<Color>(_color.withOpacity(0.8))),
+      radioTheme: RadioThemeData(
+          fillColor: MaterialStateProperty.all<Color>(_color.withOpacity(0.8))),
       checkboxTheme: CheckboxThemeData(
           fillColor: MaterialStateProperty.all<Color>(_color.withOpacity(0.8))),
     );
@@ -75,8 +75,8 @@ class ThemeProvider with ChangeNotifier {
         brightness: Brightness.dark,
       ),
       listTileTheme: ListTileThemeData(iconColor: _color),
-      radioTheme:
-      RadioThemeData(fillColor: MaterialStateProperty.all<Color>(_color.withOpacity(0.8))),
+      radioTheme: RadioThemeData(
+          fillColor: MaterialStateProperty.all<Color>(_color.withOpacity(0.8))),
       checkboxTheme: CheckboxThemeData(
           fillColor: MaterialStateProperty.all<Color>(_color.withOpacity(0.8))),
     );

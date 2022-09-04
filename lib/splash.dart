@@ -17,8 +17,28 @@ class Splash extends StatefulWidget {
   State<Splash> createState() => _SplashState();
 }
 
-class _SplashState extends State<Splash> {
+class _SplashState extends State<Splash> with WidgetsBindingObserver {
   bool _didFinalize = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeMetrics() {
+    super.didChangeMetrics();
+    context
+        .read<BackgroundAnimationProvider>()
+        .changeBackgroundAttributes(MediaQuery.of(context).size.width, 0);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +159,9 @@ class _SplashState extends State<Splash> {
         key: Key(assetsProvider.assetsState.toString()),
         leading: Stack(
           children: [
-            const CircularProgressIndicator(),
+            assetsProvider.didGiveUp
+                ? const SizedBox()
+                : const CircularProgressIndicator(),
             SizedBox(
               height: 36,
               width: 36,
@@ -211,7 +233,7 @@ class _SplashState extends State<Splash> {
 
     Future.delayed(const Duration(milliseconds: 4000), () {
       backgroundAnimationProvider.changeBackgroundAttributes(
-          max(mediaQueryData.size.height * 0.2, 150), 40);
+          max(mediaQueryData.size.height * 0.1, 150), 40);
       postNavigationAnimationProvider.animate = true;
     });
   }

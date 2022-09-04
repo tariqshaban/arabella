@@ -100,14 +100,15 @@ class AssetsProvider with ChangeNotifier {
           'https://firebasestorage.googleapis.com/v0/b/arabella-dcc09.appspot.com/o/assets.zip'));
 
       HttpClientResponse response = await request.close();
-      response.transform(utf8.decoder).listen(
-        (data) {
-          contents.write(data);
-        },
-        onDone: () => completer.complete(
-          DateTime.parse(json.decode(contents.toString())['updated']),
-        ),
-      );
+      response.transform(utf8.decoder).listen((data) {
+        contents.write(data);
+      }, onDone: () {
+        try {
+          completer.complete(
+            DateTime.parse(json.decode(contents.toString())['updated']),
+          );
+        } catch (_) {}
+      });
       return completer.future;
     } catch (_) {
       return null;

@@ -49,7 +49,7 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
         bool isDark =
             await AdaptiveTheme.getThemeMode() == AdaptiveThemeMode.dark;
 
-        if(mounted) {
+        if (mounted) {
           assignMarkers(isDark);
           assignPolylines();
           assignPolygons();
@@ -121,7 +121,7 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
         widget.lessonName.indexOf('-') + 1, widget.lessonName.indexOf('.'));
 
     String file = await File(
-        '${(await getApplicationDocumentsDirectory()).path}/assets/maps/maps_manifest.json')
+            '${(await getApplicationDocumentsDirectory()).path}/assets/maps/maps_manifest.json')
         .readAsString();
 
     // Delay google maps widget build, since it slows the device, and causes to crash if rebuilt too often

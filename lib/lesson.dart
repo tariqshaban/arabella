@@ -36,17 +36,20 @@ class _LessonState extends State<Lesson> {
   late Future<String> getLessonContents = ChaptersProvider.getLessonContents(
       context, widget.chapter.chapterName, widget.lesson);
   late Future<bool> doesContainsPointsOfInterest = containsPointsOfInterest();
-  late BackgroundAnimationProvider backgroundAnimationProvider;
-  late MediaQueryData mediaQueryData;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      backgroundAnimationProvider = context.read<BackgroundAnimationProvider>();
-      mediaQueryData = MediaQuery.of(context);
-      backgroundAnimationProvider.changeBackgroundAttributes(0, 0);
+      context
+          .read<BackgroundAnimationProvider>()
+          .changeBackgroundAttributes(0, 0);
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -59,10 +62,8 @@ class _LessonState extends State<Lesson> {
 
     return WillPopScope(
       onWillPop: () async {
-        Future.delayed(const Duration(milliseconds: 0), () {
-          backgroundAnimationProvider.changeBackgroundAttributes(
-              max(mediaQueryData.size.height * 0.3, 150), 40);
-        });
+        context.read<BackgroundAnimationProvider>().changeBackgroundAttributes(
+            max(MediaQuery.of(context).size.height * 0.1, 150), 40);
         return true;
       },
       child: Scaffold(
@@ -166,19 +167,19 @@ class _LessonState extends State<Lesson> {
                                 const SizedBox(height: 25),
                                 Consumer<AssetsProvider>(
                                     builder: (context, assetsProvider, child) {
-                                    return MarkdownBody(
-                                      imageDirectory: assetsProvider.applicationDocumentsDirectory,
-                                      fitContent: false,
-                                      data: snapshot.data as String,
-                                      onTapLink: (text, url, title) async {
-                                        await launchUrl(
-                                          Uri.parse(url!),
-                                          mode: LaunchMode.externalApplication,
-                                        );
-                                      },
-                                    );
-                                  }
-                                ),
+                                  return MarkdownBody(
+                                    imageDirectory: assetsProvider
+                                        .applicationDocumentsDirectory,
+                                    fitContent: false,
+                                    data: snapshot.data as String,
+                                    onTapLink: (text, url, title) async {
+                                      await launchUrl(
+                                        Uri.parse(url!),
+                                        mode: LaunchMode.externalApplication,
+                                      );
+                                    },
+                                  );
+                                }),
                                 const SizedBox(height: 75),
                               ],
                             ),
@@ -240,12 +241,12 @@ class _LessonState extends State<Lesson> {
                         icon: const Icon(Icons.exit_to_app),
                         iconFirst: false,
                         onPressed: () {
-                          Future.delayed(const Duration(milliseconds: 0), () {
-                            backgroundAnimationProvider
-                                .changeBackgroundAttributes(
-                                    max(mediaQueryData.size.height * 0.2, 150),
-                                    40);
-                          });
+                          context
+                              .read<BackgroundAnimationProvider>()
+                              .changeBackgroundAttributes(
+                                  max(MediaQuery.of(context).size.height * 0.1,
+                                      150),
+                                  40);
                           Navigator.of(context).pop();
                         },
                       ),

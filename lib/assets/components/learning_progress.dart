@@ -45,21 +45,21 @@ class _LearningProgressState extends State<LearningProgress> {
                           color: Colors.transparent,
                           child: IconButton(
                             tooltip: 'chapters.attempt_quiz'.tr(),
+                            splashRadius: 20,
                             iconSize: 20,
-                            icon: const Icon(
-                              Icons.note_alt,
+                            icon: Icon(
+                              (coveredMaterial
+                                      .didPassQuiz(widget.chapter.chapterName))
+                                  ? Icons.assignment_turned_in
+                                  : Icons.note_alt,
                             ),
+                            color: Theme.of(context).colorScheme.primary,
                             onPressed: () {
                               Navigator.pushNamed(context, '/quiz', arguments: {
                                 'chapterName': widget.chapter.chapterName,
                                 'questions': widget.chapter.questions
                               });
                             },
-                            color: (coveredMaterial
-                                    .didPassQuiz(widget.chapter.chapterName))
-                                ? Colors.green
-                                : Theme.of(context).colorScheme.primary,
-                            splashRadius: 20,
                           ),
                         );
                       },
