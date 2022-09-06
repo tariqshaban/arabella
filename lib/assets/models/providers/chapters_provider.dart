@@ -12,6 +12,7 @@ import 'assets_provider.dart';
 
 class ChaptersProvider with ChangeNotifier {
   List<ChapterModel> _chapters = [];
+  bool didMount = false;
 
   List<ChapterModel> get chapters => _chapters;
 
@@ -23,7 +24,10 @@ class ChaptersProvider with ChangeNotifier {
   void update(AssetsProvider assetsProvider) {
     if (assetsProvider.assetsState == AssetsState.noUpdateRequired ||
         assetsProvider.assetsState == AssetsState.finishedUpdating) {
-      mountChapters();
+      if (!didMount) {
+        mountChapters();
+        didMount = true;
+      }
 
       notifyListeners();
     }

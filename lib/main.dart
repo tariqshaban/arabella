@@ -61,7 +61,7 @@ class _MainState extends State<Main> with TickerProviderStateMixin {
         ChangeNotifierProxyProvider<AssetsProvider, ChaptersProvider>(
           create: (BuildContext context) => ChaptersProvider(),
           update: (context, assets, chaptersProvider) =>
-          chaptersProvider!..update(assets),
+              chaptersProvider!..update(assets),
         ),
         ChangeNotifierProvider<ScrollDirectionProvider>(
             create: (context) => ScrollDirectionProvider()),

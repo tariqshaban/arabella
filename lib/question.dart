@@ -175,25 +175,26 @@ class _QuestionState extends State<Question> {
                                                   },
                                                   title:
                                                       Consumer<AssetsProvider>(
-                                                          builder: (context,
-                                                              assetsProvider,
-                                                              child) {
-                                                    return MarkdownBody(
-                                                      imageDirectory: assetsProvider
-                                                          .applicationDocumentsDirectory,
-                                                      fitContent: false,
-                                                      data: (snapshot.data
-                                                          as List<String>)[i],
-                                                      onTapLink: (text, url,
-                                                          title) async {
-                                                        await launchUrl(
-                                                          Uri.parse(url!),
-                                                          mode: LaunchMode
-                                                              .externalApplication,
-                                                        );
-                                                      },
-                                                    );
-                                                  }),
+                                                    builder: (context,
+                                                        assetsProvider, child) {
+                                                      return MarkdownBody(
+                                                        imageDirectory:
+                                                            assetsProvider
+                                                                .applicationDocumentsDirectory,
+                                                        fitContent: false,
+                                                        data: (snapshot.data
+                                                            as List<String>)[i],
+                                                        onTapLink: (text, url,
+                                                            title) async {
+                                                          await launchUrl(
+                                                            Uri.parse(url!),
+                                                            mode: LaunchMode
+                                                                .externalApplication,
+                                                          );
+                                                        },
+                                                      );
+                                                    },
+                                                  ),
                                                 )
                                               : RadioListTile(
                                                   shape: RoundedRectangleBorder(
@@ -210,25 +211,26 @@ class _QuestionState extends State<Question> {
                                                   },
                                                   title:
                                                       Consumer<AssetsProvider>(
-                                                          builder: (context,
-                                                              assetsProvider,
-                                                              child) {
-                                                    return MarkdownBody(
-                                                      imageDirectory: assetsProvider
-                                                          .applicationDocumentsDirectory,
-                                                      fitContent: false,
-                                                      data: (snapshot.data
-                                                          as List<String>)[i],
-                                                      onTapLink: (text, url,
-                                                          title) async {
-                                                        await launchUrl(
-                                                          Uri.parse(url!),
-                                                          mode: LaunchMode
-                                                              .externalApplication,
-                                                        );
-                                                      },
-                                                    );
-                                                  }),
+                                                    builder: (context,
+                                                        assetsProvider, child) {
+                                                      return MarkdownBody(
+                                                        imageDirectory:
+                                                            assetsProvider
+                                                                .applicationDocumentsDirectory,
+                                                        fitContent: false,
+                                                        data: (snapshot.data
+                                                            as List<String>)[i],
+                                                        onTapLink: (text, url,
+                                                            title) async {
+                                                          await launchUrl(
+                                                            Uri.parse(url!),
+                                                            mode: LaunchMode
+                                                                .externalApplication,
+                                                          );
+                                                        },
+                                                      );
+                                                    },
+                                                  ),
                                                 ),
                                         ),
                                       );

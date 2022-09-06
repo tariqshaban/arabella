@@ -80,30 +80,32 @@ class _SplashState extends State<Splash> with WidgetsBindingObserver {
                         ),
                       ),
                       Consumer<AssetsProvider>(
-                          builder: (context, assetsProvider, child) {
-                        return AnimatedOpacity(
-                          opacity: assetsProvider.assetsState !=
-                                  AssetsState.noUpdateRequired
-                              ? 1.0
-                              : 0,
-                          duration: const Duration(milliseconds: 300),
-                          child: Card(
-                            elevation: 5,
-                            shadowColor: Theme.of(context).colorScheme.primary,
-                            clipBehavior: Clip.antiAlias,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: SizedBox(
-                              height: 70,
-                              child: AnimatedSwitcher(
-                                duration: const Duration(milliseconds: 300),
-                                child: getAssetsDownloadState(assetsProvider),
+                        builder: (context, assetsProvider, child) {
+                          return AnimatedOpacity(
+                            opacity: assetsProvider.assetsState !=
+                                    AssetsState.noUpdateRequired
+                                ? 1.0
+                                : 0,
+                            duration: const Duration(milliseconds: 300),
+                            child: Card(
+                              elevation: 5,
+                              shadowColor:
+                                  Theme.of(context).colorScheme.primary,
+                              clipBehavior: Clip.antiAlias,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: SizedBox(
+                                height: 70,
+                                child: AnimatedSwitcher(
+                                  duration: const Duration(milliseconds: 300),
+                                  child: getAssetsDownloadState(assetsProvider),
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      }),
+                          );
+                        },
+                      ),
                     ],
                   ),
                 ),

@@ -149,12 +149,14 @@ class _QuizState extends State<Quiz> {
                                     borderRadius: BorderRadius.circular(15),
                                   ),
                                   onTap: () => Navigator.pushNamed(
-                                      context, '/question',
-                                      arguments: {
-                                        'chapterName': widget.chapterName,
-                                        'questions': widget.questions,
-                                        'currentQuestion': widget.questions[i],
-                                      }),
+                                    context,
+                                    '/question',
+                                    arguments: {
+                                      'chapterName': widget.chapterName,
+                                      'questions': widget.questions,
+                                      'currentQuestion': widget.questions[i],
+                                    },
+                                  ),
                                 ),
                               ),
                             );

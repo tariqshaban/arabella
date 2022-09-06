@@ -288,11 +288,14 @@ class NavigationDrawer extends StatelessWidget {
         );
       },
     ).then(
-      (_) => Future.delayed(const Duration(milliseconds: 150), () {
-        context
-            .read<ThemeProvider>()
-            .setColor(context, selectedColorProvider.selectedColor);
-      }),
+      (_) => Future.delayed(
+        const Duration(milliseconds: 150),
+        () {
+          context
+              .read<ThemeProvider>()
+              .setColor(context, selectedColorProvider.selectedColor);
+        },
+      ),
     );
   }
 

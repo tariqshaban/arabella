@@ -166,20 +166,21 @@ class _LessonState extends State<Lesson> {
                                 ),
                                 const SizedBox(height: 25),
                                 Consumer<AssetsProvider>(
-                                    builder: (context, assetsProvider, child) {
-                                  return MarkdownBody(
-                                    imageDirectory: assetsProvider
-                                        .applicationDocumentsDirectory,
-                                    fitContent: false,
-                                    data: snapshot.data as String,
-                                    onTapLink: (text, url, title) async {
-                                      await launchUrl(
-                                        Uri.parse(url!),
-                                        mode: LaunchMode.externalApplication,
-                                      );
-                                    },
-                                  );
-                                }),
+                                  builder: (context, assetsProvider, child) {
+                                    return MarkdownBody(
+                                      imageDirectory: assetsProvider
+                                          .applicationDocumentsDirectory,
+                                      fitContent: false,
+                                      data: snapshot.data as String,
+                                      onTapLink: (text, url, title) async {
+                                        await launchUrl(
+                                          Uri.parse(url!),
+                                          mode: LaunchMode.externalApplication,
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
                                 const SizedBox(height: 75),
                               ],
                             ),
