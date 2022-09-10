@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -117,20 +118,16 @@ class _QuestionState extends State<Question> {
                             builder: (context, answeredQuestions, child) {
                               return LayoutBuilder(
                                 builder: (context, constraints) {
-                                  return GridView.builder(
-                                    gridDelegate:
-                                        SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: constraints.maxWidth > 900
-                                          ? constraints.maxWidth > 1200
-                                              ? 4
-                                              : 3
-                                          : constraints.maxWidth > 600
-                                              ? 2
-                                              : 1,
-                                      mainAxisExtent: 70,
-                                      mainAxisSpacing: 0,
-                                      crossAxisSpacing: 15,
-                                    ),
+                                  return AlignedGridView.count(
+                                    crossAxisCount: constraints.maxWidth > 900
+                                        ? constraints.maxWidth > 1200
+                                            ? 4
+                                            : 3
+                                        : constraints.maxWidth > 600
+                                            ? 2
+                                            : 1,
+                                    mainAxisSpacing: 0,
+                                    crossAxisSpacing: 15,
                                     shrinkWrap: true,
                                     physics:
                                         const NeverScrollableScrollPhysics(),

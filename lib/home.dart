@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:arabella/assets/helpers/dynamic_tr.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
 
 import 'assets/components/lesson_list.dart';
@@ -63,15 +64,11 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                         blendMode: BlendMode.dstOut,
                         child: Consumer<BackgroundAnimationProvider>(
                           builder: (context, backgroundAnimation, child) {
-                            return GridView.builder(
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount:
-                                    constraints.maxWidth > 1200 ? 2 : 1,
-                                mainAxisExtent: 345,
-                                mainAxisSpacing: 10,
-                                crossAxisSpacing: 15,
-                              ),
+                            return AlignedGridView.count(
+                              crossAxisCount:
+                                  constraints.maxWidth > 1200 ? 2 : 1,
+                              mainAxisSpacing: 10,
+                              crossAxisSpacing: 15,
                               padding: EdgeInsetsDirectional.fromSTEB(
                                 5,
                                 max(backgroundAnimation.height / 2 - 50, 0),

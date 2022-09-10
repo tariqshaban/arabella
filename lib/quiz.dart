@@ -2,6 +2,7 @@ import 'package:arabella/assets/helpers/dynamic_tr.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
 
 import 'assets/components/extended_floating_action_button.dart';
@@ -91,19 +92,16 @@ class _QuizState extends State<Quiz> {
                   return ShaderMask(
                     shaderCallback: ShaderCallbackHelper.getShaderCallback(),
                     blendMode: BlendMode.dstOut,
-                    child: GridView.builder(
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: constraints.maxWidth > 900
-                            ? constraints.maxWidth > 1200
-                                ? 4
-                                : 3
-                            : constraints.maxWidth > 600
-                                ? 2
-                                : 1,
-                        mainAxisExtent: 70,
-                        mainAxisSpacing: 0,
-                        crossAxisSpacing: 15,
-                      ),
+                    child: AlignedGridView.count(
+                      crossAxisCount: constraints.maxWidth > 900
+                          ? constraints.maxWidth > 1200
+                              ? 4
+                              : 3
+                          : constraints.maxWidth > 600
+                              ? 2
+                              : 1,
+                      mainAxisSpacing: 0,
+                      crossAxisSpacing: 15,
                       shrinkWrap: true,
                       padding: EdgeInsetsDirectional.fromSTEB(
                         9,

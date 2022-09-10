@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:arabella/assets/helpers/dynamic_tr.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
 
 import '../models/chapter_model.dart';
@@ -23,13 +24,10 @@ class _LessonListVerticalState extends State<LessonListVertical> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        return GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: constraints.maxWidth > 600 ? 2 : 1,
-            mainAxisExtent: 100,
-            mainAxisSpacing: 10,
-            crossAxisSpacing: 15,
-          ),
+        return AlignedGridView.count(
+          crossAxisCount: constraints.maxWidth > 600 ? 2 : 1,
+          mainAxisSpacing: 10,
+          crossAxisSpacing: 15,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: widget.chapter.lessons.length,
