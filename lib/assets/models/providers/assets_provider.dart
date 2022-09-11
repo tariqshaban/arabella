@@ -130,9 +130,17 @@ class AssetsProvider with ChangeNotifier {
         notifyListeners();
       }).onDone(
         () async {
-          final file = File('$applicationDocumentsDirectory/assets.zip');
-          await file.writeAsBytes(_bytes);
-          _unzipFile();
+          Directory assetsDirectory =
+              Directory('$applicationDocumentsDirectory/assets/');
+          File assetsCompressed =
+              File('$applicationDocumentsDirectory/assets.zip');
+
+          if (assetsDirectory.existsSync()) {
+            assetsDirectory.deleteSync(recursive: true);
+          }
+          assetsCompressed.writeAsBytesSync(_bytes);
+          await _unzipFile();
+          assetsCompressed.deleteSync();
         },
       );
     } catch (_) {
