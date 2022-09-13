@@ -9,12 +9,14 @@ class ExpandableWidget extends StatefulWidget {
     this.icon,
     required this.header,
     required this.body,
+    this.onExpansionChanged,
   }) : super(key: key);
 
   final String expandedStateKey;
   final Widget header;
   final Widget? icon;
   final Widget body;
+  final Function(bool)? onExpansionChanged;
 
   @override
   State<ExpandableWidget> createState() => _ExpandableWidgetState();
@@ -40,6 +42,7 @@ class _ExpandableWidgetState extends State<ExpandableWidget> {
         collapsedIconColor: Theme.of(context).colorScheme.primary,
         iconColor: Theme.of(context).colorScheme.primary,
         maintainState: true,
+        onExpansionChanged: widget.onExpansionChanged,
         children: [widget.body],
       ),
     );

@@ -19,6 +19,7 @@ import 'assets/models/providers/assets_provider.dart';
 import 'assets/models/providers/background_animation_provider.dart';
 import 'assets/models/providers/chapters_provider.dart';
 import 'assets/models/providers/covered_material_provider.dart';
+import 'assets/models/providers/expandable_widget_state_provider.dart';
 import 'assets/models/providers/scroll_direction_provider.dart';
 
 class Lesson extends StatefulWidget {
@@ -143,6 +144,10 @@ class _LessonState extends State<Lesson> {
                                       return ExpandableWidget(
                                         expandedStateKey: 'points_of_interest',
                                         icon: const Icon(Icons.map),
+                                        onExpansionChanged: (value) => context
+                                            .read<
+                                                ExpandableWidgetStateProvider>()
+                                            .isExpanded = value,
                                         header: const Text(
                                           'lessons.points_of_interest',
                                           style: TextStyle(fontSize: 20),

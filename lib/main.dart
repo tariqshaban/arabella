@@ -15,6 +15,7 @@ import 'assets/models/providers/celebrate_provider.dart';
 import 'assets/models/providers/chapters_provider.dart';
 import 'assets/models/providers/confetti_provider.dart';
 import 'assets/models/providers/covered_material_provider.dart';
+import 'assets/models/providers/expandable_widget_state_provider.dart';
 import 'assets/models/providers/maps_icon_provider.dart';
 import 'assets/models/providers/post_navigation_animation_provider.dart';
 import 'assets/models/providers/scroll_direction_provider.dart';
@@ -93,6 +94,8 @@ class _MainState extends State<Main> with TickerProviderStateMixin {
         ),
         ChangeNotifierProvider<PostNavigationAnimationProvider>(
             create: (context) => PostNavigationAnimationProvider()),
+        ChangeNotifierProvider<ExpandableWidgetStateProvider>(
+            create: (context) => ExpandableWidgetStateProvider()),
       ],
       child: AdaptiveTheme(
         light: ThemeData(),

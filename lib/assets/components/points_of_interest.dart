@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -11,6 +12,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../enums/map_annotation_type.dart';
+import '../models/providers/expandable_widget_state_provider.dart';
 import '../models/providers/maps_icon_provider.dart';
 import 'point_of_interest_info.dart';
 
@@ -35,15 +37,21 @@ class PointsOfInterest extends StatefulWidget {
 }
 
 class _PointsOfInterestState extends State<PointsOfInterest> {
+  final controllerCompleter = Completer<void>();
   late GoogleMapController controller;
   late Future<dynamic> manifest = decodeMapsManifest();
   Set<Marker> markers = {};
   Set<Polyline> polylines = {};
   Set<Polygon> polygons = {};
+  late ExpandableWidgetStateProvider expandableWidgetStateProvider;
+  void Function()? openExpandableWidgetListener;
 
   @override
   void initState() {
     super.initState();
+    expandableWidgetStateProvider =
+        context.read<ExpandableWidgetStateProvider>();
+
     manifest.then(
       (_) async {
         bool isDark =
@@ -56,6 +64,33 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
         }
       },
     );
+
+    openExpandableWidgetListener = () {
+      controllerCompleter.future.then(
+        (value) => manifest.then((_) async {
+          expandableWidgetStateProvider
+              .removeListener(openExpandableWidgetListener!);
+          Future.delayed(const Duration(milliseconds: 100), () async {
+            controller.animateCamera(
+              CameraUpdate.newLatLngBounds(
+                  await getInitialCameraPosition(), 50),
+            );
+          });
+        }),
+      );
+    };
+
+    expandableWidgetStateProvider.addListener(openExpandableWidgetListener!);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    if (openExpandableWidgetListener != null) {
+      expandableWidgetStateProvider
+          .removeListener(openExpandableWidgetListener!);
+    }
   }
 
   @override
@@ -89,6 +124,7 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
                           defaultTargetPlatform == TargetPlatform.android),
                   onMapCreated: (GoogleMapController controller) async {
                     this.controller = controller;
+                    controllerCompleter.complete();
 
                     if (await AdaptiveTheme.getThemeMode() ==
                         AdaptiveThemeMode.dark) {
@@ -97,11 +133,6 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
                     } else {
                       controller.setMapStyle(null);
                     }
-
-                    controller.animateCamera(
-                      CameraUpdate.newLatLngBounds(
-                          await getInitialCameraPosition(), 50),
-                    );
                   },
                 );
               }
