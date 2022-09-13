@@ -137,6 +137,14 @@ class _SplashState extends State<Splash> with WidgetsBindingObserver {
         subtitle: Text(
             '${assetsProvider.getReceived()}/${assetsProvider.getTotal()} ${'splash.mb'.tr()}'),
       );
+    } else if (assetsProvider.assetsState == AssetsState.unpacking) {
+      return ListTile(
+        key: Key(assetsProvider.assetsState.toString()),
+        leading: const CircularProgressIndicator(),
+        title: const Text(
+          'splash.unpacking',
+        ).tr(),
+      );
     } else if (assetsProvider.assetsState == AssetsState.finishedUpdating) {
       finalizeSplash();
       return ListTile(

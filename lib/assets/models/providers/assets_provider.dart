@@ -130,17 +130,16 @@ class AssetsProvider with ChangeNotifier {
         notifyListeners();
       }).onDone(
         () async {
+          _assetsState = AssetsState.unpacking;
+          notifyListeners();
+
           Directory assetsDirectory =
               Directory('$applicationDocumentsDirectory/assets/');
-          File assetsCompressed =
-              File('$applicationDocumentsDirectory/assets.zip');
 
           if (assetsDirectory.existsSync()) {
             assetsDirectory.deleteSync(recursive: true);
           }
-          assetsCompressed.writeAsBytesSync(_bytes);
           await _unzipFile();
-          assetsCompressed.deleteSync();
         },
       );
     } catch (_) {
@@ -154,12 +153,12 @@ class AssetsProvider with ChangeNotifier {
     for (final file in archive) {
       final filename = file.name;
       if (file.isFile) {
-        final data = file.content as List<int>;
-        File('$applicationDocumentsDirectory/assets/$filename')
-          ..createSync(recursive: true)
-          ..writeAsBytesSync(data);
+        final data = file.content;
+        var outFile = File('$applicationDocumentsDirectory/assets/$filename');
+        outFile = await outFile.create(recursive: true);
+        await outFile.writeAsBytes(data);
       } else {
-        Directory('$applicationDocumentsDirectory/assets/$filename')
+        await Directory('$applicationDocumentsDirectory/assets/$filename')
             .create(recursive: true);
       }
     }
