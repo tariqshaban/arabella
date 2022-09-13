@@ -22,7 +22,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with TickerProviderStateMixin {
-  bool didAnimate = false;
   late BackgroundAnimationProvider backgroundAnimationProvider;
   late MediaQueryData mediaQueryData;
 
@@ -44,12 +43,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       drawer: NavigationDrawer(context: context),
       body: Consumer<PostNavigationAnimationProvider>(
         builder: (context, postNavigationAnimationProvider, child) {
-          if (postNavigationAnimationProvider.animate) {
-            didAnimate = true;
-          }
           return AnimatedPadding(
             duration: const Duration(milliseconds: 500),
-            padding: didAnimate
+            padding: postNavigationAnimationProvider.animate
                 ? const EdgeInsets.symmetric(horizontal: 4)
                 : EdgeInsets.only(top: MediaQuery.of(context).size.height),
             child: Consumer<ChaptersProvider>(

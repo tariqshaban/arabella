@@ -8,8 +8,5 @@ class PostNavigationAnimationProvider with ChangeNotifier {
   set animate(bool value) {
     _animate = true;
     notifyListeners();
-    Future.delayed(const Duration(milliseconds: 20), () {
-      _animate = false;
-    });
   }
 }
