@@ -54,34 +54,75 @@ class NavigationDrawer extends StatelessWidget {
                   '${backgroundImage.substring(backgroundImage.lastIndexOf("/") + 1, backgroundImage.lastIndexOf("."))}'
                   '.description'
               .dtr(context);
-          return UserAccountsDrawerHeader(
-              accountName: Text(imageText),
-              accountEmail: Text(imageDescription),
-              otherAccountsPictures: const [
-                CircleAvatar(
-                  backgroundImage:
-                      AssetImage('assets/images/drawer_circular/just.png'),
-                  backgroundColor: Colors.transparent,
-                ),
-                CircleAvatar(
-                  backgroundImage:
-                      AssetImage('assets/images/drawer_circular/ministry.png'),
-                  backgroundColor: Colors.transparent,
-                ),
-                CircleAvatar(
-                  backgroundImage:
-                      AssetImage('assets/images/drawer_circular/irbid.png'),
-                  backgroundColor: Colors.transparent,
-                ),
-              ],
+          return ClipRRect(
+            child: Container(
+              margin: const EdgeInsets.only(bottom: 20),
               decoration: BoxDecoration(
+                borderRadius: const BorderRadiusDirectional.only(
+                  bottomEnd: Radius.circular(30),
+                ),
                 image: DecorationImage(
                   image: FileImage(File(backgroundImage)),
-                  colorFilter: ColorFilter.mode(
-                      Colors.black.withOpacity(0.2), BlendMode.darken),
                   fit: BoxFit.cover,
                 ),
-              ));
+                boxShadow: [
+                  BoxShadow(
+                    color: Theme.of(context).colorScheme.primary,
+                    offset: const Offset(0, 3),
+                    blurRadius: 12,
+                  ),
+                ],
+              ),
+              child: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color.fromARGB(192, 0, 0, 0),
+                      Color.fromARGB(127, 0, 0, 0),
+                      Color.fromARGB(0, 0, 0, 0)
+                    ],
+                    stops: [0.0, 0.3, 1.0],
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                  ),
+                  borderRadius: BorderRadiusDirectional.only(
+                    bottomEnd: Radius.circular(30),
+                  ),
+                ),
+                child: ClipRRect(
+                  borderRadius: const BorderRadiusDirectional.only(
+                    bottomEnd: Radius.circular(30),
+                  ).resolve(Directionality.of(context)),
+                  child: UserAccountsDrawerHeader(
+                    margin: EdgeInsets.zero,
+                    accountName: Text(imageText),
+                    accountEmail: Padding(
+                      padding: const EdgeInsetsDirectional.only(end: 5),
+                      child: Text(imageDescription, maxLines: 2),
+                    ),
+                    otherAccountsPictures: const [
+                      CircleAvatar(
+                        backgroundImage: AssetImage(
+                            'assets/images/drawer_circular/just.png'),
+                        backgroundColor: Colors.transparent,
+                      ),
+                      CircleAvatar(
+                        backgroundImage: AssetImage(
+                            'assets/images/drawer_circular/ministry.png'),
+                        backgroundColor: Colors.transparent,
+                      ),
+                      CircleAvatar(
+                        backgroundImage: AssetImage(
+                            'assets/images/drawer_circular/irbid.png'),
+                        backgroundColor: Colors.transparent,
+                      ),
+                    ],
+                    decoration: const BoxDecoration(color: Colors.transparent),
+                  ),
+                ),
+              ),
+            ),
+          );
         }
         return const SizedBox();
       },
