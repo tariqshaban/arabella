@@ -119,9 +119,6 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
                   polylines: polylines,
                   polygons: polygons,
                   buildingsEnabled: false,
-                  zoomControlsEnabled:
-                      !(defaultTargetPlatform == TargetPlatform.iOS ||
-                          defaultTargetPlatform == TargetPlatform.android),
                   onMapCreated: (GoogleMapController controller) async {
                     this.controller = controller;
                     controllerCompleter.complete();
