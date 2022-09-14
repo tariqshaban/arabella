@@ -38,6 +38,8 @@ class PointsOfInterest extends StatefulWidget {
 }
 
 class _PointsOfInterestState extends State<PointsOfInterest> {
+  late String chapterName;
+  late String lessonName;
   final controllerCompleter = Completer<void>();
   late GoogleMapController controller;
   late Future<dynamic> manifest = decodeMapsManifest();
@@ -50,6 +52,12 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
   @override
   void initState() {
     super.initState();
+
+    chapterName =
+        widget.chapterName.substring(widget.chapterName.indexOf('-') + 1);
+    lessonName = widget.lessonName.substring(
+        widget.lessonName.indexOf('-') + 1, widget.lessonName.indexOf('.'));
+
     expandableWidgetStateProvider =
         context.read<ExpandableWidgetStateProvider>();
 
@@ -164,11 +172,6 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
   }
 
   Future<dynamic> decodeMapsManifest() async {
-    String chapterName =
-        widget.chapterName.substring(widget.chapterName.indexOf('-') + 1);
-    String lessonName = widget.lessonName.substring(
-        widget.lessonName.indexOf('-') + 1, widget.lessonName.indexOf('.'));
-
     String file = await File(
             '${(await getApplicationDocumentsDirectory()).path}/assets/maps/maps_manifest.json')
         .readAsString();
@@ -176,13 +179,26 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
     // Delay google maps widget build, since it slows the device, and causes to crash if rebuilt too often
     await Future.delayed(const Duration(seconds: 1));
 
-    return json.decode(file)[chapterName][lessonName];
+    dynamic manifest = json.decode(file);
+    dynamic assignedInterests = [];
+    List<String> assignedInterestsString = [];
+
+    manifest['assigned_interests'][chapterName][lessonName]
+        .forEach((value) => assignedInterestsString.add(value));
+
+    manifest['points_of_interest'].forEach((value) {
+      if (assignedInterestsString.contains(value['name'])) {
+        assignedInterests.add(value);
+      }
+    });
+
+    return assignedInterests;
   }
 
   Future<LatLngBounds> getInitialCameraPosition() async {
     List<LatLng> points = [];
 
-    for (dynamic pointOfInterest in (await manifest)['points_of_interest']) {
+    for (dynamic pointOfInterest in (await manifest)) {
       for (dynamic latLng in pointOfInterest['points']) {
         points.add(
           LatLng(
@@ -198,7 +214,7 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
 
   void assignMarkers(bool isDark) async {
     int counter = 0;
-    for (dynamic pointOfInterest in (await manifest)['points_of_interest']) {
+    for (dynamic pointOfInterest in (await manifest)) {
       if (pointOfInterest['type'] != 'point') {
         continue;
       }
@@ -226,7 +242,7 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
   Future<void> assignPolylines() async {
     int counter = 0;
     Color primaryColor = Theme.of(context).colorScheme.primary;
-    for (dynamic pointOfInterest in (await manifest)['points_of_interest']) {
+    for (dynamic pointOfInterest in (await manifest)) {
       if (pointOfInterest['type'] != 'polyline') {
         continue;
       }
@@ -269,7 +285,7 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
   Future<void> assignPolygons() async {
     int counter = 0;
     Color primaryColor = Theme.of(context).colorScheme.primary;
-    for (dynamic pointOfInterest in (await manifest)['points_of_interest']) {
+    for (dynamic pointOfInterest in (await manifest)) {
       if (pointOfInterest['type'] != 'polygon') {
         continue;
       }

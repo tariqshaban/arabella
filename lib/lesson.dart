@@ -283,9 +283,9 @@ class _LessonState extends State<Lesson> {
 
     try {
       dynamic pointsOfInterest =
-          json.decode(file)[chapterName][lessonName]['points_of_interest'];
+          json.decode(file)['assigned_interests'][chapterName][lessonName];
 
-      return pointsOfInterest != null;
+      return pointsOfInterest != null && pointsOfInterest.isNotEmpty;
     } catch (_) {
       return false;
     }

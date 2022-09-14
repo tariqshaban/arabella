@@ -33,7 +33,7 @@ class _PointsOfInterestInfoState extends State<PointsOfInterestInfo> {
               horizontalTitleGap: 0,
               leading: Icon(getMapAnnotationIcon()),
               title: Text(
-                      'chapters.${widget.chapterName}.lessons.${widget.lessonName}.points_of_interest.${widget.pointOfInterestName}.title')
+                      'points_of_interest.${widget.pointOfInterestName}.title')
                   .dtr(context),
             ),
             Flexible(
@@ -47,7 +47,7 @@ class _PointsOfInterestInfoState extends State<PointsOfInterestInfo> {
                   child: SizedBox(
                     width: double.infinity,
                     child: Text(
-                      'chapters.${widget.chapterName}.lessons.${widget.lessonName}.points_of_interest.${widget.pointOfInterestName}.content',
+                      'points_of_interest.${widget.pointOfInterestName}.content',
                     ).dtr(context),
                   ),
                 ),
