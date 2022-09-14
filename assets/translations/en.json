@@ -31,7 +31,8 @@
     "next_lesson": "Next Lesson",
     "previous_lesson": "Previous Lesson",
     "finish_chapter": "Finish Chapter",
-    "points_of_interest": "Points of Interest"
+    "points_of_interest": "Points of Interest",
+    "relocate": "Relocate"
   },
   "quiz": {
     "quiz": "Quiz",

@@ -31,7 +31,8 @@
     "next_lesson": "الدرس القادم",
     "previous_lesson": "الدرس السابق",
     "finish_chapter": "انهاء الفصل",
-    "points_of_interest": "نقاط الاهتمام"
+    "points_of_interest": "نقاط الاهتمام",
+    "relocate": "تحويل"
   },
   "quiz": {
     "quiz": "اختبار",

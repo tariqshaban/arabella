@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -104,33 +105,53 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
           child: FutureBuilder(
             builder: (ctx, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
-                return GoogleMap(
-                  gestureRecognizers: {
-                    Factory<EagerGestureRecognizer>(
-                        () => EagerGestureRecognizer())
-                  },
-                  initialCameraPosition: const CameraPosition(
-                    target: LatLng(31.4645395, 37.022226),
-                    zoom: 6.8,
-                  ),
-                  minMaxZoomPreference: const MinMaxZoomPreference(0, 18),
-                  mapToolbarEnabled: false,
-                  markers: markers,
-                  polylines: polylines,
-                  polygons: polygons,
-                  buildingsEnabled: false,
-                  onMapCreated: (GoogleMapController controller) async {
-                    this.controller = controller;
-                    controllerCompleter.complete();
+                return Stack(
+                  children: [
+                    GoogleMap(
+                      gestureRecognizers: {
+                        Factory<EagerGestureRecognizer>(
+                            () => EagerGestureRecognizer())
+                      },
+                      initialCameraPosition: const CameraPosition(
+                        target: LatLng(31.4645395, 37.022226),
+                        zoom: 6.8,
+                      ),
+                      minMaxZoomPreference: const MinMaxZoomPreference(0, 18),
+                      mapToolbarEnabled: false,
+                      markers: markers,
+                      polylines: polylines,
+                      polygons: polygons,
+                      buildingsEnabled: false,
+                      zoomControlsEnabled: false,
+                      onMapCreated: (GoogleMapController controller) async {
+                        this.controller = controller;
+                        controllerCompleter.complete();
 
-                    if (await AdaptiveTheme.getThemeMode() ==
-                        AdaptiveThemeMode.dark) {
-                      controller.setMapStyle(await rootBundle
-                          .loadString('assets/maps/dark_theme.json'));
-                    } else {
-                      controller.setMapStyle(null);
-                    }
-                  },
+                        if (await AdaptiveTheme.getThemeMode() ==
+                            AdaptiveThemeMode.dark) {
+                          controller.setMapStyle(await rootBundle
+                              .loadString('assets/maps/dark_theme.json'));
+                        } else {
+                          controller.setMapStyle(null);
+                        }
+                      },
+                    ),
+                    Positioned.directional(
+                      textDirection: Directionality.of(context),
+                      top: 5,
+                      end: 5,
+                      child: FloatingActionButton(
+                        mini: true,
+                        tooltip: 'lessons.relocate'.tr(),
+                        onPressed: () async => controller.animateCamera(
+                          CameraUpdate.newLatLngBounds(
+                              await getInitialCameraPosition(), 50),
+                        ),
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        child: const Icon(Icons.gps_fixed),
+                      ),
+                    )
+                  ],
                 );
               }
               return const SizedBox();
