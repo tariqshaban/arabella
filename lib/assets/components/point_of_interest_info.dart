@@ -24,38 +24,29 @@ class PointsOfInterestInfo extends StatefulWidget {
 class _PointsOfInterestInfoState extends State<PointsOfInterestInfo> {
   @override
   Widget build(BuildContext context) {
-    return DraggableScrollableSheet(
-      expand: false,
-      builder: (BuildContext context, ScrollController scrollController) {
-        return Column(
-          children: <Widget>[
-            ListTile(
-              horizontalTitleGap: 0,
-              leading: Icon(getMapAnnotationIcon()),
-              title: Text(
-                      'points_of_interest.${widget.pointOfInterestName}.title')
-                  .dtr(context),
-            ),
-            Flexible(
-              child: SingleChildScrollView(
-                controller: scrollController,
-                physics: const BouncingScrollPhysics(
-                  parent: AlwaysScrollableScrollPhysics(),
-                ),
-                child: Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 10),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: Text(
-                      'points_of_interest.${widget.pointOfInterestName}.content',
-                    ).dtr(context),
-                  ),
-                ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        ListTile(
+          horizontalTitleGap: 0,
+          leading: Icon(getMapAnnotationIcon()),
+          title: Text('points_of_interest.${widget.pointOfInterestName}.title')
+              .dtr(context),
+        ),
+        Flexible(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 30),
+              child: SizedBox(
+                width: double.infinity,
+                child: Text(
+                  'points_of_interest.${widget.pointOfInterestName}.content',
+                ).dtr(context),
               ),
             ),
-          ],
-        );
-      },
+          ),
+        ),
+      ],
     );
   }
 

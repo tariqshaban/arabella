@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -68,8 +69,8 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
 
         if (mounted) {
           assignMarkers(isDark);
-          assignPolylines();
-          assignPolygons();
+          assignPolylines(isDark);
+          assignPolygons(isDark);
         }
       },
     );
@@ -209,29 +210,34 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
       }
     }
 
-    return _getPointsCenter(points);
+    return _getPointsBounds(points);
   }
 
   void assignMarkers(bool isDark) async {
-    int counter = 0;
+    BitmapDescriptor icon = isDark
+        ? context.read<MapsIconProvider>().iconDark
+        : context.read<MapsIconProvider>().iconLight;
+
     for (dynamic pointOfInterest in (await manifest)) {
       if (pointOfInterest['type'] != 'point') {
         continue;
       }
 
-      BitmapDescriptor icon = isDark
-          ? context.read<MapsIconProvider>().iconDark
-          : context.read<MapsIconProvider>().iconLight;
+      LatLng point = LatLng(
+        pointOfInterest['points'][0]['lat'],
+        pointOfInterest['points'][0]['lng'],
+      );
 
       markers.add(
         Marker(
-          markerId: MarkerId('point ${counter++}'),
-          position: LatLng(
-            pointOfInterest['points'][0]['lat'],
-            pointOfInterest['points'][0]['lng'],
-          ),
+          markerId: MarkerId('point ${pointOfInterest['name']}'),
+          position: point,
           icon: icon,
           onTap: () {
+            controller.animateCamera(
+              CameraUpdate.newLatLngBounds(
+                  LatLngBounds(southwest: point, northeast: point), 50),
+            );
             showSheet(pointOfInterest['name'], MapAnnotationType.marker);
           },
         ),
@@ -239,9 +245,13 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
     }
   }
 
-  Future<void> assignPolylines() async {
-    int counter = 0;
+  Future<void> assignPolylines(bool isDark) async {
     Color primaryColor = Theme.of(context).colorScheme.primary;
+
+    BitmapDescriptor icon = isDark
+        ? context.read<MapsIconProvider>().iconDark
+        : context.read<MapsIconProvider>().iconLight;
+
     for (dynamic pointOfInterest in (await manifest)) {
       if (pointOfInterest['type'] != 'polyline') {
         continue;
@@ -254,26 +264,38 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
 
       polylines.add(
         Polyline(
-            polylineId: PolylineId('polyline $counter - border'),
+            polylineId:
+                PolylineId('polyline ${pointOfInterest['name']} - border'),
             consumeTapEvents: true,
             points: points,
-            color:
-                (await AdaptiveTheme.getThemeMode() == AdaptiveThemeMode.dark)
-                    ? Colors.white
-                    : Colors.black,
+            color: isDark ? Colors.white : Colors.black,
             width: 4),
       );
 
       polylines.add(
         Polyline(
-          polylineId: PolylineId('polyline ${counter++}'),
+          polylineId: PolylineId('polyline ${pointOfInterest['name']}'),
           consumeTapEvents: true,
           points: points,
           color: primaryColor,
           width: 3,
           onTap: () {
             controller.animateCamera(
-              CameraUpdate.newLatLngBounds(_getPointsCenter(points), 50),
+              CameraUpdate.newLatLngBounds(_getPointsBounds(points), 50),
+            );
+            showSheet(pointOfInterest['name'], MapAnnotationType.polyline);
+          },
+        ),
+      );
+
+      markers.add(
+        Marker(
+          markerId: MarkerId('point ${pointOfInterest['name']}'),
+          position: _getPolylineCenter(points),
+          icon: icon,
+          onTap: () {
+            controller.animateCamera(
+              CameraUpdate.newLatLngBounds(_getPointsBounds(points), 50),
             );
             showSheet(pointOfInterest['name'], MapAnnotationType.polyline);
           },
@@ -282,9 +304,13 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
     }
   }
 
-  Future<void> assignPolygons() async {
-    int counter = 0;
+  Future<void> assignPolygons(bool isDark) async {
     Color primaryColor = Theme.of(context).colorScheme.primary;
+
+    BitmapDescriptor icon = isDark
+        ? context.read<MapsIconProvider>().iconDark
+        : context.read<MapsIconProvider>().iconLight;
+
     for (dynamic pointOfInterest in (await manifest)) {
       if (pointOfInterest['type'] != 'polygon') {
         continue;
@@ -297,18 +323,29 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
 
       polygons.add(
         Polygon(
-          polygonId: PolygonId('polyline $counter - border'),
+          polygonId: PolygonId('polygon ${pointOfInterest['name']}'),
           consumeTapEvents: true,
           points: points,
           fillColor: primaryColor.withOpacity(0.5),
-          strokeColor:
-              (await AdaptiveTheme.getThemeMode() == AdaptiveThemeMode.dark)
-                  ? Colors.white
-                  : Colors.black,
+          strokeColor: isDark ? Colors.white : Colors.black,
           strokeWidth: 1,
           onTap: () {
             controller.animateCamera(
-              CameraUpdate.newLatLngBounds(_getPointsCenter(points), 50),
+              CameraUpdate.newLatLngBounds(_getPointsBounds(points), 50),
+            );
+            showSheet(pointOfInterest['name'], MapAnnotationType.polygon);
+          },
+        ),
+      );
+
+      markers.add(
+        Marker(
+          markerId: MarkerId('point ${pointOfInterest['name']}'),
+          position: _getPolygonCenter(points),
+          icon: icon,
+          onTap: () {
+            controller.animateCamera(
+              CameraUpdate.newLatLngBounds(_getPointsBounds(points), 50),
             );
             showSheet(pointOfInterest['name'], MapAnnotationType.polygon);
           },
@@ -317,7 +354,29 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
     }
   }
 
-  LatLngBounds _getPointsCenter(List<LatLng> points) {
+  double _calculateDistance(LatLng pointA, LatLng pointB) {
+    double lat1 = pointA.latitude;
+    double lon1 = pointA.longitude;
+    double lat2 = pointB.latitude;
+    double lon2 = pointB.longitude;
+
+    var p = 0.017453292519943295;
+    var c = cos;
+    var a = 0.5 -
+        c((lat2 - lat1) * p) / 2 +
+        c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
+    return 12742 * asin(sqrt(a));
+  }
+
+  LatLng getNearestPointOnPolyLine(LatLng point, List<LatLng> polyline) {
+    List<double> distances = polyline
+        .map((polyPoint) => _calculateDistance(point, polyPoint))
+        .toList();
+
+    return polyline[distances.indexOf(distances.reduce(min))];
+  }
+
+  LatLngBounds _getPointsBounds(List<LatLng> points) {
     double minLat = points
         .reduce((currentPoint, nextPoint) =>
             currentPoint.latitude > nextPoint.latitude
@@ -349,6 +408,25 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
     );
   }
 
+  LatLng _getPolylineCenter(List<LatLng> polyline) {
+    LatLngBounds latLngBounds = _getPointsBounds(polyline);
+    LatLng point = LatLng(
+        (latLngBounds.northeast.latitude + latLngBounds.southwest.latitude) / 2,
+        (latLngBounds.northeast.longitude + latLngBounds.southwest.longitude) /
+            2);
+
+    return getNearestPointOnPolyLine(point, polyline);
+  }
+
+  LatLng _getPolygonCenter(List<LatLng> polygon) {
+    LatLngBounds latLngBounds = _getPointsBounds(polygon);
+
+    return LatLng(
+        (latLngBounds.northeast.latitude + latLngBounds.southwest.latitude) / 2,
+        (latLngBounds.northeast.longitude + latLngBounds.southwest.longitude) /
+            2);
+  }
+
   void showSheet(String name, MapAnnotationType mapAnnotationType) {
     String chapterName =
         widget.chapterName.substring(widget.chapterName.indexOf('-') + 1);
@@ -361,6 +439,7 @@ class _PointsOfInterestState extends State<PointsOfInterest> {
         borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20), topRight: Radius.circular(20)),
       ),
+      isScrollControlled: true,
       builder: (context) => PointsOfInterestInfo(
         mapAnnotationType: mapAnnotationType,
         chapterName: chapterName,
