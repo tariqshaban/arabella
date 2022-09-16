@@ -1,6 +1,42 @@
 {
   "app_name": "Arabella",
   "splash": {
+    "slides": {
+      "skip": "Skip",
+      "done": "Done",
+      "0": {
+        "en": "Customize the application based on your needs",
+        "ar": "قم بتخصيص التطبيق بناءً على احتياجاتك"
+      },
+      "1": {
+        "en": "Easily track your progress on all chapters",
+        "ar": "تتبع تقدمك بسهولة في جميع الفصول"
+      },
+      "2": {
+        "en": "View the learning outcomes of each chapter",
+        "ar": "عرض نتائج التعلم لكل فصل"
+      },
+      "3": {
+        "en": "Each chapter contains an array of lessons",
+        "ar": "يحتوي كل فصل على مجموعة من الدروس"
+      },
+      "4": {
+        "en": "The lesson contains relevant points of interest",
+        "ar": "يحتوي الدرس على نقاط الاهتمام ذات الصلة"
+      },
+      "5": {
+        "en": "Try to pass the chapter's quiz to receive a badge",
+        "ar": "حاول اجتياز اختبار الفصل لتحصل على شارة"
+      },
+      "6": {
+        "en": "Some question might contain more than one answer",
+        "ar": "قد تحتوي بعض الأسئلة على أكثر من إجابة واحدة"
+      },
+      "7": {
+        "en": "Earn badges upon completing the chapter and passing its quiz",
+        "ar": "احصل على شارات عند إكمال الفصل واجتياز الاختبار"
+      }
+    },
     "failure": "Could not connect to the server",
     "attempt": "Attempt No.",
     "giving_up": "Giving up",

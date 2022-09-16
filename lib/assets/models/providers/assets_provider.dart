@@ -51,7 +51,7 @@ class AssetsProvider with ChangeNotifier {
       _downloadFile();
     } else if (_localDate != null) {
       _assetsState = AssetsState.noUpdateRequired;
-      mountTranslations();
+      _mountTranslations();
     } else if (_serverDate == null) {
       _assetsState = AssetsState.failedConnecting;
       _failureAttemptCount++;
@@ -168,10 +168,10 @@ class AssetsProvider with ChangeNotifier {
     prefs.setString('assetsModificationDate', _serverDate.toString());
     notifyListeners();
 
-    mountTranslations();
+    _mountTranslations();
   }
 
-  Future<void> mountTranslations() async {
+  Future<void> _mountTranslations() async {
     _english = json.decode(
         await File('$applicationDocumentsDirectory/assets/translations/en.json')
             .readAsString());

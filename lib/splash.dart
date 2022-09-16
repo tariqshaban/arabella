@@ -1,12 +1,16 @@
 import 'dart:math';
 
+import 'package:arabella/assets/enums/assets_state.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'assets/enums/assets_state.dart';
+import 'assets/components/assets_download_state.dart';
+import 'assets/components/intro.dart';
+import 'assets/helpers/delayed_curve.dart';
 import 'assets/models/providers/assets_provider.dart';
 import 'assets/models/providers/background_animation_provider.dart';
+import 'assets/models/providers/intro_provider.dart';
 import 'assets/models/providers/post_navigation_animation_provider.dart';
 import 'assets/models/providers/theme_provider.dart';
 
@@ -19,11 +23,30 @@ class Splash extends StatefulWidget {
 
 class _SplashState extends State<Splash> with WidgetsBindingObserver {
   bool _didFinalize = false;
+  bool isIntroShown = false;
+  late AssetsProvider assetsProvider;
+  late IntroProvider introProvider;
+  late Function() assetDownloadHandler;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    assetsProvider = context.read<AssetsProvider>();
+    introProvider = context.read<IntroProvider>();
+    assetDownloadHandler = () {
+      if (assetsProvider.assetsState == AssetsState.updating && !isIntroShown) {
+        isIntroShown = true;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          introProvider.shouldShowIntro = true;
+        });
+      }
+    };
+
+    Future.delayed(const Duration(milliseconds: 1000), () {
+      assetDownloadHandler();
+    });
+    assetsProvider.addListener(assetDownloadHandler);
   }
 
   @override
@@ -38,176 +61,116 @@ class _SplashState extends State<Splash> with WidgetsBindingObserver {
   void dispose() {
     super.dispose();
     WidgetsBinding.instance.removeObserver(this);
+    assetsProvider.removeListener(assetDownloadHandler);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Consumer<BackgroundAnimationProvider>(
-        builder: (context, backgroundAnimation, child) {
-          return AnimatedOpacity(
-            opacity: backgroundAnimation.isVisible ? 1.0 : 0.0,
-            duration: const Duration(milliseconds: 500),
-            child: Padding(
-              padding: const EdgeInsets.all(50),
-              child: AnimatedDefaultTextStyle(
-                duration: const Duration(milliseconds: 750),
-                style: TextStyle(
-                    color: Theme.of(context)
-                                .colorScheme
-                                .primary
-                                .computeLuminance() >
-                            0.5
-                        ? Colors.black
-                        : Colors.white),
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: SizedBox(
-                          width:
-                              min(MediaQuery.of(context).size.width / 2, 250),
-                          child: FittedBox(
-                            fit: BoxFit.fitWidth,
-                            child: const Text(
-                              'app_name',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ).tr(),
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+        body: Consumer3<BackgroundAnimationProvider, IntroProvider,
+            AssetsProvider>(
+          builder: (context, backgroundAnimation, intro, assets, child) {
+            return AnimatedOpacity(
+              opacity: backgroundAnimation.isVisible ? 1.0 : 0.0,
+              duration: const Duration(milliseconds: 500),
+              child: Align(
+                alignment: Alignment.center,
+                child: Stack(
+                  children: [
+                    AnimatedOpacity(
+                      opacity: intro.shouldShowIntro ? 1.0 : 0.0,
+                      duration: const Duration(milliseconds: 500),
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 100),
+                        child: Intro(
+                          onDonePressed:
+                              assets.assetsState == AssetsState.finishedUpdating
+                                  ? finalizeSplash
+                                  : null,
+                        ),
+                      ),
+                    ),
+                    AnimatedAlign(
+                      alignment: intro.shouldShowIntro
+                          ? Alignment.topCenter
+                          : Alignment.center,
+                      duration: const Duration(milliseconds: 300),
+                      child: Padding(
+                        padding: const EdgeInsets.all(50),
+                        child: AnimatedDefaultTextStyle(
+                          duration: const Duration(milliseconds: 750),
+                          style: TextStyle(
+                            color: Theme.of(context)
+                                        .colorScheme
+                                        .primary
+                                        .computeLuminance() >
+                                    0.5
+                                ? Colors.black
+                                : Colors.white,
+                          ),
+                          child: SizedBox(
+                            width: intro.shouldShowIntro
+                                ? min(
+                                    MediaQuery.of(context).size.width / 2, 125)
+                                : min(
+                                    MediaQuery.of(context).size.width / 2, 200),
+                            child: FittedBox(
+                              fit: BoxFit.fitWidth,
+                              child: const Text(
+                                'app_name',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ).tr(),
+                            ),
                           ),
                         ),
                       ),
-                      Consumer<AssetsProvider>(
-                        builder: (context, assetsProvider, child) {
-                          return AnimatedOpacity(
-                            opacity: assetsProvider.assetsState !=
-                                    AssetsState.noUpdateRequired
-                                ? 1.0
-                                : 0,
-                            duration: const Duration(milliseconds: 300),
-                            child: Card(
-                              elevation: 5,
-                              shadowColor:
-                                  Theme.of(context).colorScheme.primary,
-                              clipBehavior: Clip.antiAlias,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child: SizedBox(
-                                height: 70,
-                                child: AnimatedSwitcher(
-                                  duration: const Duration(milliseconds: 300),
-                                  child: getAssetsDownloadState(assetsProvider),
-                                ),
+                    ),
+                    AnimatedPositioned(
+                      duration: const Duration(milliseconds: 300),
+                      bottom: intro.shouldShowIntro ? 75 : 50,
+                      left: 0,
+                      right: 0,
+                      child: IgnorePointer(
+                        child: AnimatedOpacity(
+                          opacity:
+                              assets.assetsState != AssetsState.finishedUpdating
+                                  ? 1.0
+                                  : 0.0,
+                          curve: const DelayedCurve(),
+                          duration: const Duration(milliseconds: 1500),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 50),
+                            child: Align(
+                              alignment: Alignment.bottomCenter,
+                              child: AssetsDownloadState(
+                                onUpdateFinish: () {
+                                  if (!intro.shouldShowIntro) {
+                                    Future.delayed(
+                                        const Duration(milliseconds: 500), () {
+                                      finalizeSplash();
+                                    });
+                                  }
+                                },
                               ),
                             ),
-                          );
-                        },
+                          ),
+                        ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
-  }
-
-  Widget getAssetsDownloadState(AssetsProvider assetsProvider) {
-    if (assetsProvider.assetsState == AssetsState.contacting) {
-      return ListTile(
-        key: Key(assetsProvider.assetsState.toString()),
-        leading: const CircularProgressIndicator(),
-        title: const Text(
-          'splash.contacting',
-        ).tr(),
-      );
-    } else if (assetsProvider.assetsState == AssetsState.updating) {
-      return ListTile(
-        key: Key(assetsProvider.assetsState.toString()),
-        leading: CircularProgressIndicator(
-            value: assetsProvider.received / assetsProvider.total),
-        title: const Text(
-          'splash.downloading',
-        ).tr(),
-        subtitle: Text(
-            '${assetsProvider.getReceived()}/${assetsProvider.getTotal()} ${'splash.mb'.tr()}'),
-      );
-    } else if (assetsProvider.assetsState == AssetsState.unpacking) {
-      return ListTile(
-        key: Key(assetsProvider.assetsState.toString()),
-        leading: const CircularProgressIndicator(),
-        title: const Text(
-          'splash.unpacking',
-        ).tr(),
-      );
-    } else if (assetsProvider.assetsState == AssetsState.finishedUpdating) {
-      finalizeSplash();
-      return ListTile(
-        key: Key(assetsProvider.assetsState.toString()),
-        leading: Stack(
-          children: [
-            const CircularProgressIndicator(value: 1),
-            SizedBox(
-              height: 36,
-              width: 36,
-              child: Icon(Icons.check_circle,
-                  color: Theme.of(context).colorScheme.primary),
-            ),
-          ],
-        ),
-        title: const Text(
-          'splash.done',
-        ).tr(),
-      );
-    } else if (assetsProvider.assetsState == AssetsState.failedConnecting) {
-      return ListTile(
-        key: Key(assetsProvider.assetsState.toString()),
-        leading: Stack(
-          children: [
-            assetsProvider.didGiveUp
-                ? const SizedBox()
-                : const CircularProgressIndicator(),
-            SizedBox(
-              height: 36,
-              width: 36,
-              child: Icon(Icons.warning_amber,
-                  color: Theme.of(context).colorScheme.primary),
-            ),
-          ],
-        ),
-        title: const Text(
-          'splash.failure',
-        ).tr(),
-        subtitle: Text(
-          assetsProvider.didGiveUp
-              ? 'splash.giving_up'.tr()
-              : '${'splash.attempt'.tr()} ${assetsProvider.failureAttemptCount}',
-        ),
-      );
-    } else if (assetsProvider.assetsState == AssetsState.failedUpdating) {
-      return ListTile(
-        key: Key(assetsProvider.assetsState.toString()),
-        leading: SizedBox(
-          height: 36,
-          width: 36,
-          child: Icon(Icons.warning_amber,
-              color: Theme.of(context).colorScheme.primary),
-        ),
-        title: const Text(
-          'splash.unknown_failure',
-        ).tr(),
-      );
-    } else {
-      finalizeSplash();
-      return ListTile(
-        key: Key(assetsProvider.assetsState.toString()),
-      );
-    }
   }
 
   Future<void> changeTheme(BuildContext context) async {
@@ -223,15 +186,13 @@ class _SplashState extends State<Splash> with WidgetsBindingObserver {
 
     context.read<AssetsProvider>().precacheImages(context);
 
-    Future.delayed(const Duration(milliseconds: 1500), () {
-      changeTheme(context);
-    });
+    changeTheme(context);
 
-    Future.delayed(const Duration(milliseconds: 3000), () {
+    Future.delayed(const Duration(milliseconds: 1500), () {
       context.read<BackgroundAnimationProvider>().isVisible = false;
     });
 
-    Future.delayed(const Duration(milliseconds: 3500), () {
+    Future.delayed(const Duration(milliseconds: 2000), () {
       Navigator.of(context).pop();
     });
 
@@ -241,7 +202,7 @@ class _SplashState extends State<Splash> with WidgetsBindingObserver {
         context.read<PostNavigationAnimationProvider>();
     MediaQueryData mediaQueryData = MediaQuery.of(context);
 
-    Future.delayed(const Duration(milliseconds: 4000), () {
+    Future.delayed(const Duration(milliseconds: 2500), () {
       backgroundAnimationProvider.changeBackgroundAttributes(
           max(mediaQueryData.size.height * 0.1, 150), 40);
       postNavigationAnimationProvider.animate = true;
