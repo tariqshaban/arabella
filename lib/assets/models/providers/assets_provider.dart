@@ -46,12 +46,15 @@ class AssetsProvider with ChangeNotifier {
         (await getApplicationDocumentsDirectory()).path;
 
     if (_serverDate != null &&
+        _serverDate!.year != 0001 &&
         (_localDate == null || _serverDate!.isAfter(_localDate!))) {
       _assetsState = AssetsState.updating;
       _downloadFile();
     } else if (_localDate != null) {
       _assetsState = AssetsState.noUpdateRequired;
       _mountTranslations();
+    } else if (_serverDate != null && _serverDate!.year == 0001) {
+      _assetsState = AssetsState.failedUpdating;
     } else if (_serverDate == null) {
       _assetsState = AssetsState.failedConnecting;
       _failureAttemptCount++;
@@ -94,10 +97,12 @@ class AssetsProvider with ChangeNotifier {
 
   Future<DateTime?> _getServerModificationDate() async {
     try {
-      final completer = Completer<DateTime>();
+      final completer = Completer<DateTime?>();
       final contents = StringBuffer();
-      HttpClientRequest request = await HttpClient().getUrl(Uri.parse(
-          'https://firebasestorage.googleapis.com/v0/b/arabella-dcc09.appspot.com/o/assets.zip'));
+      HttpClientRequest request = await HttpClient()
+          .getUrl(Uri.parse(
+              'https://firebasestorage.googleapis.com/v0/b/arabella-dcc09.appspot.com/o/assets.zip'))
+          .timeout(const Duration(seconds: 10));
 
       HttpClientResponse response = await request.close();
       response.transform(utf8.decoder).listen((data) {
@@ -107,18 +112,23 @@ class AssetsProvider with ChangeNotifier {
           completer.complete(
             DateTime.parse(json.decode(contents.toString())['updated']),
           );
-        } catch (_) {}
+        } catch (_) {
+          completer.complete(DateTime(0001));
+        }
       });
       return completer.future;
     } catch (_) {
+      _assetsState = AssetsState.failedUpdating;
       return null;
     }
   }
 
   Future<void> _downloadFile() async {
     try {
-      HttpClientRequest request = await HttpClient().getUrl(Uri.parse(
-          'https://firebasestorage.googleapis.com/v0/b/arabella-dcc09.appspot.com/o/assets.zip?alt=media'));
+      HttpClientRequest request = await HttpClient()
+          .getUrl(Uri.parse(
+              'https://firebasestorage.googleapis.com/v0/b/arabella-dcc09.appspot.com/o/assets.zip?alt=media'))
+          .timeout(const Duration(seconds: 10));
 
       HttpClientResponse response = await request.close();
 

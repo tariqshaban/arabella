@@ -123,6 +123,7 @@ class _SplashState extends State<Splash> with WidgetsBindingObserver {
                               child: const Text(
                                 'app_name',
                                 style: TextStyle(
+                                  height: 1,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ).tr(),

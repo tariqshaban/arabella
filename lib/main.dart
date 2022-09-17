@@ -106,7 +106,6 @@ class _MainState extends State<Main> with TickerProviderStateMixin {
         initial: AdaptiveThemeMode.dark,
         builder: (theme, darkTheme) {
           return MaterialApp(
-            debugShowCheckedModeBanner: false,
             localizationsDelegates: context.localizationDelegates,
             supportedLocales: context.supportedLocales,
             locale: context.locale,
