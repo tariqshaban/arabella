@@ -1,12 +1,12 @@
 import 'dart:math';
 
-import 'package:arabella/assets/enums/assets_state.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'assets/components/assets_download_state.dart';
 import 'assets/components/intro.dart';
+import 'assets/enums/assets_state.dart';
 import 'assets/helpers/delayed_curve.dart';
 import 'assets/models/providers/assets_provider.dart';
 import 'assets/models/providers/background_animation_provider.dart';
