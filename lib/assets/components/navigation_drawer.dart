@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../models/providers/assets_provider.dart';
 import '../models/providers/selected_color_provider.dart';
@@ -100,21 +101,30 @@ class NavigationDrawer extends StatelessWidget {
                       padding: const EdgeInsetsDirectional.only(end: 5),
                       child: Text(imageDescription, maxLines: 2),
                     ),
-                    otherAccountsPictures: const [
-                      CircleAvatar(
-                        backgroundImage: AssetImage(
+                    otherAccountsPictures: [
+                      tappableCircularAvatar(
+                        backgroundImage: const AssetImage(
                             'assets/images/drawer_circular/just.png'),
-                        backgroundColor: Colors.transparent,
+                        onTap: () => launchUrl(
+                          Uri.parse('https://www.just.edu.jo'),
+                          mode: LaunchMode.externalApplication,
+                        ),
                       ),
-                      CircleAvatar(
-                        backgroundImage: AssetImage(
+                      tappableCircularAvatar(
+                        backgroundImage: const AssetImage(
                             'assets/images/drawer_circular/ministry.png'),
-                        backgroundColor: Colors.transparent,
+                        onTap: () => launchUrl(
+                          Uri.parse('https://culture.gov.jo'),
+                          mode: LaunchMode.externalApplication,
+                        ),
                       ),
-                      CircleAvatar(
-                        backgroundImage: AssetImage(
+                      tappableCircularAvatar(
+                        backgroundImage: const AssetImage(
                             'assets/images/drawer_circular/irbid.png'),
-                        backgroundColor: Colors.transparent,
+                        onTap: () => launchUrl(
+                          Uri.parse('https://irbid.gov.jo'),
+                          mode: LaunchMode.externalApplication,
+                        ),
                       ),
                     ],
                     decoration: const BoxDecoration(color: Colors.transparent),
@@ -348,5 +358,23 @@ class NavigationDrawer extends StatelessWidget {
         .toList();
     final randomImageIndex = Random().nextInt(images.length);
     return images[randomImageIndex];
+  }
+
+  Widget tappableCircularAvatar({
+    ImageProvider? backgroundImage,
+    Function()? onTap,
+  }) {
+    return CircleAvatar(
+      backgroundImage: backgroundImage,
+      child: Material(
+        shape: const CircleBorder(),
+        clipBehavior: Clip.hardEdge,
+        color: Colors.transparent,
+        child: InkWell(
+          splashColor: Theme.of(context).colorScheme.primary.withOpacity(0.5),
+          onTap: onTap,
+        ),
+      ),
+    );
   }
 }
