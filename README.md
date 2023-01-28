@@ -2,6 +2,8 @@ Arabella
 ==============================
 This is a submission for the **competition** of the **best application that introduces the city of Irbid**.
 
+The APK builds (split by ABI) can be found [here](build/app/outputs/flutter-apk).
+
 # Table of Contents
 
 * [Organizers](#organizers)
