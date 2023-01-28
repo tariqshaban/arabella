@@ -105,208 +105,214 @@ class _MainState extends State<Main> with TickerProviderStateMixin {
         dark: ThemeData(),
         initial: AdaptiveThemeMode.dark,
         builder: (theme, darkTheme) {
-          return MaterialApp(
-            localizationsDelegates: context.localizationDelegates,
-            supportedLocales: context.supportedLocales,
-            locale: context.locale,
-            theme: theme,
-            darkTheme: darkTheme,
-            initialRoute: '/splash',
-            builder: (context, child) {
-              return Stack(
-                children: [
-                  Consumer<BackgroundAnimationProvider>(
-                    builder: (context, backgroundAnimation, child) {
-                      return Container(
-                        color: Theme.of(context).scaffoldBackgroundColor,
-                        height: MediaQuery.of(context).size.height,
-                        width: MediaQuery.of(context).size.width,
-                        child: Align(
-                          alignment: Alignment.topCenter,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.vertical(
-                              bottom: Radius.elliptical(
-                                  MediaQuery.of(context).size.width,
-                                  backgroundAnimation.bottomRadius),
-                            ),
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 500),
-                              height: backgroundAnimation.height,
-                              decoration: BoxDecoration(
-                                boxShadow: const [BoxShadow(blurRadius: 40)],
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Theme.of(context).colorScheme.primary,
-                                    Theme.of(context).scaffoldBackgroundColor,
-                                  ],
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  stops: const [0, 1],
+          return LayoutBuilder(builder: (context, constraints) {
+            if (constraints.maxWidth == 0) {
+              return Container();
+            }
+
+            return MaterialApp(
+              localizationsDelegates: context.localizationDelegates,
+              supportedLocales: context.supportedLocales,
+              locale: context.locale,
+              theme: theme,
+              darkTheme: darkTheme,
+              initialRoute: '/splash',
+              builder: (context, child) {
+                return Stack(
+                  children: [
+                    Consumer<BackgroundAnimationProvider>(
+                      builder: (context, backgroundAnimation, child) {
+                        return Container(
+                          color: Theme.of(context).scaffoldBackgroundColor,
+                          height: MediaQuery.of(context).size.height,
+                          width: MediaQuery.of(context).size.width,
+                          child: Align(
+                            alignment: Alignment.topCenter,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.vertical(
+                                bottom: Radius.elliptical(
+                                    MediaQuery.of(context).size.width,
+                                    backgroundAnimation.bottomRadius),
+                              ),
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 500),
+                                height: backgroundAnimation.height,
+                                decoration: BoxDecoration(
+                                  boxShadow: const [BoxShadow(blurRadius: 40)],
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Theme.of(context).colorScheme.primary,
+                                      Theme.of(context).scaffoldBackgroundColor,
+                                    ],
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    stops: const [0, 1],
+                                  ),
+                                ),
+                                child: AnimatedBackground(
+                                  behaviour: RandomParticleBehaviour(
+                                    options: ParticleOptions(
+                                        particleCount: 50,
+                                        minOpacity: 0.1,
+                                        maxOpacity: 0.2,
+                                        spawnMinSpeed: 5,
+                                        spawnMaxSpeed: 10,
+                                        baseColor: Theme.of(context)
+                                                    .colorScheme
+                                                    .primary
+                                                    .computeLuminance() >
+                                                0.5
+                                            ? Colors.black
+                                            : Colors.white),
+                                  ),
+                                  vsync: this,
+                                  child: const SizedBox(),
                                 ),
                               ),
-                              child: AnimatedBackground(
-                                behaviour: RandomParticleBehaviour(
-                                  options: ParticleOptions(
-                                      particleCount: 50,
-                                      minOpacity: 0.1,
-                                      maxOpacity: 0.2,
-                                      spawnMinSpeed: 5,
-                                      spawnMaxSpeed: 10,
-                                      baseColor: Theme.of(context)
-                                                  .colorScheme
-                                                  .primary
-                                                  .computeLuminance() >
-                                              0.5
-                                          ? Colors.black
-                                          : Colors.white),
-                                ),
-                                vsync: this,
-                                child: const SizedBox(),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    Theme(
+                      data: Theme.of(context).copyWith(
+                          scaffoldBackgroundColor: Colors.transparent),
+                      child: child!,
+                    ),
+                    Consumer<ConfettiProvider>(
+                      builder: (context, confetti, child) {
+                        return Stack(
+                          children: [
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: ConfettiWidget(
+                                confettiController: confetti.controller,
+                                blastDirectionality:
+                                    BlastDirectionality.directional,
+                                blastDirection: 135 * pi / 180,
+                                maxBlastForce: confetti.maxBlastForce,
+                                minBlastForce: confetti.minBlastForce,
+                                emissionFrequency: confetti.emissionFrequency,
+                                numberOfParticles: confetti.numberOfParticles,
+                                gravity: confetti.gravity,
+                                shouldLoop: confetti.shouldLoop,
+                                createParticlePath: confetti.particlePath,
                               ),
                             ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                  Theme(
-                    data: Theme.of(context)
-                        .copyWith(scaffoldBackgroundColor: Colors.transparent),
-                    child: child!,
-                  ),
-                  Consumer<ConfettiProvider>(
-                    builder: (context, confetti, child) {
-                      return Stack(
-                        children: [
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: ConfettiWidget(
-                              confettiController: confetti.controller,
-                              blastDirectionality:
-                                  BlastDirectionality.directional,
-                              blastDirection: 135 * pi / 180,
-                              maxBlastForce: confetti.maxBlastForce,
-                              minBlastForce: confetti.minBlastForce,
-                              emissionFrequency: confetti.emissionFrequency,
-                              numberOfParticles: confetti.numberOfParticles,
-                              gravity: confetti.gravity,
-                              shouldLoop: confetti.shouldLoop,
-                              createParticlePath: confetti.particlePath,
+                            Align(
+                              alignment: Alignment.topLeft,
+                              child: ConfettiWidget(
+                                confettiController: confetti.controller,
+                                blastDirectionality:
+                                    BlastDirectionality.directional,
+                                blastDirection: 45 * pi / 180,
+                                maxBlastForce: confetti.maxBlastForce,
+                                minBlastForce: confetti.minBlastForce,
+                                emissionFrequency: confetti.emissionFrequency,
+                                numberOfParticles: confetti.numberOfParticles,
+                                gravity: confetti.gravity,
+                                shouldLoop: confetti.shouldLoop,
+                                createParticlePath: confetti.particlePath,
+                              ),
                             ),
-                          ),
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: ConfettiWidget(
-                              confettiController: confetti.controller,
-                              blastDirectionality:
-                                  BlastDirectionality.directional,
-                              blastDirection: 45 * pi / 180,
-                              maxBlastForce: confetti.maxBlastForce,
-                              minBlastForce: confetti.minBlastForce,
-                              emissionFrequency: confetti.emissionFrequency,
-                              numberOfParticles: confetti.numberOfParticles,
-                              gravity: confetti.gravity,
-                              shouldLoop: confetti.shouldLoop,
-                              createParticlePath: confetti.particlePath,
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: ConfettiWidget(
+                                confettiController: confetti.controller,
+                                blastDirectionality:
+                                    BlastDirectionality.directional,
+                                blastDirection: 135 * pi / 180,
+                                maxBlastForce: confetti.maxBlastForce,
+                                minBlastForce: confetti.minBlastForce,
+                                emissionFrequency: confetti.emissionFrequency,
+                                numberOfParticles: confetti.numberOfParticles,
+                                gravity: confetti.gravity,
+                                shouldLoop: confetti.shouldLoop,
+                              ),
                             ),
-                          ),
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: ConfettiWidget(
-                              confettiController: confetti.controller,
-                              blastDirectionality:
-                                  BlastDirectionality.directional,
-                              blastDirection: 135 * pi / 180,
-                              maxBlastForce: confetti.maxBlastForce,
-                              minBlastForce: confetti.minBlastForce,
-                              emissionFrequency: confetti.emissionFrequency,
-                              numberOfParticles: confetti.numberOfParticles,
-                              gravity: confetti.gravity,
-                              shouldLoop: confetti.shouldLoop,
+                            Align(
+                              alignment: Alignment.topLeft,
+                              child: ConfettiWidget(
+                                confettiController: confetti.controller,
+                                blastDirectionality:
+                                    BlastDirectionality.directional,
+                                blastDirection: 45 * pi / 180,
+                                maxBlastForce: confetti.maxBlastForce,
+                                minBlastForce: confetti.minBlastForce,
+                                emissionFrequency: confetti.emissionFrequency,
+                                numberOfParticles: confetti.numberOfParticles,
+                                gravity: confetti.gravity,
+                                shouldLoop: confetti.shouldLoop,
+                              ),
                             ),
-                          ),
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: ConfettiWidget(
-                              confettiController: confetti.controller,
-                              blastDirectionality:
-                                  BlastDirectionality.directional,
-                              blastDirection: 45 * pi / 180,
-                              maxBlastForce: confetti.maxBlastForce,
-                              minBlastForce: confetti.minBlastForce,
-                              emissionFrequency: confetti.emissionFrequency,
-                              numberOfParticles: confetti.numberOfParticles,
-                              gravity: confetti.gravity,
-                              shouldLoop: confetti.shouldLoop,
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                ],
-              );
-            },
-            onGenerateRoute: (settings) {
-              Map arguments = {};
-              if (settings.arguments != null) {
-                arguments = settings.arguments as Map;
-              }
+                          ],
+                        );
+                      },
+                    ),
+                  ],
+                );
+              },
+              onGenerateRoute: (settings) {
+                Map arguments = {};
+                if (settings.arguments != null) {
+                  arguments = settings.arguments as Map;
+                }
 
-              Widget selectedPage = const SizedBox();
+                Widget selectedPage = const SizedBox();
 
-              switch (settings.name) {
-                case '/':
-                  selectedPage = const Home();
-                  break;
-                case '/splash':
-                  selectedPage = const Splash();
-                  break;
-                case '/chapter':
-                  selectedPage = Chapter(chapter: arguments['chapter']);
-                  break;
-                case '/lesson':
-                  selectedPage = Lesson(
-                    chapter: arguments['chapter'],
-                    lesson: arguments['lesson'],
-                  );
-                  break;
-                case '/quiz':
-                  selectedPage = Quiz(
-                    chapterName: arguments['chapterName'],
-                    questions: arguments['questions'],
-                  );
-                  break;
-                case '/question':
-                  selectedPage = Question(
-                    chapterName: arguments['chapterName'],
-                    questions: arguments['questions'],
-                    currentQuestion: arguments['currentQuestion'],
-                  );
-                  break;
-                case '/badge':
-                  selectedPage = const Badge();
-                  break;
-              }
+                switch (settings.name) {
+                  case '/':
+                    selectedPage = const Home();
+                    break;
+                  case '/splash':
+                    selectedPage = const Splash();
+                    break;
+                  case '/chapter':
+                    selectedPage = Chapter(chapter: arguments['chapter']);
+                    break;
+                  case '/lesson':
+                    selectedPage = Lesson(
+                      chapter: arguments['chapter'],
+                      lesson: arguments['lesson'],
+                    );
+                    break;
+                  case '/quiz':
+                    selectedPage = Quiz(
+                      chapterName: arguments['chapterName'],
+                      questions: arguments['questions'],
+                    );
+                    break;
+                  case '/question':
+                    selectedPage = Question(
+                      chapterName: arguments['chapterName'],
+                      questions: arguments['questions'],
+                      currentQuestion: arguments['currentQuestion'],
+                    );
+                    break;
+                  case '/badge':
+                    selectedPage = const Badge();
+                    break;
+                }
 
-              return PageRouteBuilder(
-                settings: settings,
-                pageBuilder: (
-                  BuildContext context,
-                  Animation<double> animation,
-                  Animation<double> secondaryAnimation,
-                ) =>
-                    FadeTransition(
-                  opacity: Tween<double>(begin: 0, end: 1).animate(animation),
-                  child: FadeTransition(
-                    opacity: Tween<double>(begin: 1, end: 0)
-                        .animate(secondaryAnimation),
-                    child: selectedPage,
+                return PageRouteBuilder(
+                  settings: settings,
+                  pageBuilder: (
+                    BuildContext context,
+                    Animation<double> animation,
+                    Animation<double> secondaryAnimation,
+                  ) =>
+                      FadeTransition(
+                    opacity: Tween<double>(begin: 0, end: 1).animate(animation),
+                    child: FadeTransition(
+                      opacity: Tween<double>(begin: 1, end: 0)
+                          .animate(secondaryAnimation),
+                      child: selectedPage,
+                    ),
                   ),
-                ),
-              );
-            },
-          );
+                );
+              },
+            );
+          });
         },
       ),
     );
